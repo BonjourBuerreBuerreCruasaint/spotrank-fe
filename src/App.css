@@ -1,0 +1,436 @@
+/* App.css */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  background-color: #87CEEB;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo-icon {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+  filter: brightness(0) saturate(100%) invert(100%) sepia(0%) 
+          saturate(0%) hue-rotate(93deg) brightness(103%) contrast(103%);
+}
+
+.graph-circle {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 3px solid #87CEEB;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 10px;
+  background-color: white;
+}
+
+.graph-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 22px;
+}
+
+.graph-bars span {
+  width: 4px;
+  background-color: #87CEEB;
+  display: inline-block;
+}
+
+.graph-bars span:nth-child(1) { height: 10px; }
+.graph-bars span:nth-child(2) { height: 14px; }
+.graph-bars span:nth-child(3) { height: 18px; }
+.graph-bars span:nth-child(4) { height: 22px; }
+
+.location-marker {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 10px;
+  height: 10px;
+  background-color: #87CEEB;
+  border-radius: 50%;
+}
+
+.logo-text {
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
+  letter-spacing: 1px;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-button {
+  background: none;
+  border: none;
+  color: black;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.login-button {
+  color: white;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 8px 16px;
+  transition: all 0.2s;
+}
+
+.login-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.main-content {
+  display: flex;
+  height: calc(100vh - 50px);
+}
+
+.sidebar {
+  width: 250px;
+  min-width: 250px;
+  height: 100%;
+  background-color: white;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.hot-places {
+  margin-top: 35px;
+}
+
+.hot-places h2 {
+  font-size: 17px;
+  margin-bottom: 15px;
+}
+
+.hot-places h2 span {
+  font-size: 13px;
+  color: #666;
+  font-weight: normal;
+}
+
+.hot-places ul {
+  list-style: none;
+}
+
+.hot-places li {
+  padding: 0.5rem 0;
+}
+
+.recommendation {
+  padding: 10px;
+  flex: 0.3;
+  border-top: 1px solid #eee;
+  margin-bottom: 10px;
+}
+
+.recommendation h2 {
+  font-size: 17px;
+  margin: 0 0 10px 0;
+}
+
+.random-restaurants {
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.random-restaurants:hover {
+  background-color: #e5e5e5;
+}
+
+.map-container {
+  flex: 1;
+  height: 100%;
+}
+
+.restaurant-item {
+  padding: 8px 5px;
+  font-size: 14px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.restaurant-item:last-child {
+  border-bottom: none;
+}
+
+.restaurant-item:hover {
+  background-color: #f0f0f0;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.title-container h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.category-toggle {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  padding: 1px;
+}
+
+.toggle-button {
+  border: none;
+  background: none;
+  padding: 3px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.toggle-button.active {
+  color: #87CEEB;
+  font-weight: bold;
+}
+
+.toggle-button:hover:not(.active) {
+  color: #87CEEB;
+}
+
+.divider {
+  color: #ccc;
+  margin: 0 1px;
+}
+
+.time-info {
+  font-size: 13px;
+  color: #666;
+}
+
+/* 패널 컨테이너 */
+.panels-container {
+  width: 280px;
+  min-width: 280px;
+  background-color: #f8f9fa;
+  border-right: 1px solid #ddd;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 공통 패널 스타일 */
+.panel {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 핫플레이스 패널 */
+.hot-places-panel {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  height: 65%;
+  overflow-y: auto;
+  padding: 12px;
+}
+
+/* 추천 패널 */
+.recommendation-panel {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  height: 35%;
+  padding: 12px;
+}
+
+/* 핫플레이스 헤더 */
+.hot-places h2 {
+  font-size: 15px;
+  margin: 0 0 12px 0;
+  color: #333;
+}
+
+/* 카테고리 토글 */
+.category-toggle {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  padding: 1px;
+}
+
+.toggle-button {
+  border: none;
+  background: none;
+  padding: 3px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #666;
+}
+
+.hot-places h2 {
+  font-size: 17px;
+  margin-bottom: 15px;
+}
+
+.restaurant-item {
+  padding: 6px 5px;
+  font-size: 13px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.restaurant-item:hover {
+  background-color: #f8f9fa;
+}
+
+/* 지도 컨테이너 */
+.map-container {
+  flex: 1;
+  height: 100%;
+}
+
+/* 추천 섹션 스타일 */
+.recommendation h2 {
+  font-size: 15px;
+  margin: 0 0 12px 0;
+  color: #333;
+}
+
+/* 메인 컨텐츠 영역 */
+.main-content {
+  display: flex;
+  height: calc(100vh - 50px);
+}
+
+/* 왼쪽 패널 (핫플레이스) */
+.left-panel {
+  width: 280px;
+  min-width: 280px;
+  background: white;
+  border-right: 1px solid #ddd;
+  padding: 12px;
+  position: relative;
+  height: 100%;
+}
+
+/* 오른쪽 패널 (오늘 뭐 먹지) */
+.right-panel {
+  width: 280px;
+  min-width: 280px;
+  background: white;
+  border-left: 1px solid #ddd;
+  padding: 12px;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  z-index: 1;
+}
+
+/* 카테고리 토글 */
+.category-toggle {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  padding: 1px;
+}
+
+.toggle-button {
+  border: none;
+  background: none;
+  padding: 3px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #666;
+}
+
+.toggle-button.active {
+  color: #87CEEB;
+  font-weight: bold;
+}
+
+/* 핫플레이스 섹션 */
+.hot-places {
+  margin-top: 35px;
+}
+
+.hot-places h2 {
+  font-size: 15px;
+  margin: 0 0 12px 0;
+  color: #333;
+}
+
+/* 식당 리스트 */
+.restaurant-item {
+  padding: 6px 5px;
+  font-size: 13px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.restaurant-item:hover {
+  background-color: #f8f9fa;
+}
+
+/* 지도 컨테이너 */
+.map-container {
+  flex: 1;
+  height: 100%;
+}
+
+/* 추천 섹션 */
+.recommendation {
+  padding: 12px 0;
+}
+
+.recommendation h2 {
+  font-size: 15px;
+  margin: 0 0 12px 0;
+  color: #333;
+}

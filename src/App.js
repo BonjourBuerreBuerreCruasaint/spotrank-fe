@@ -1,11 +1,6 @@
 import React from 'react';
-<<<<<<< Updated upstream
 import MainPage from './components/MainPage/MainPage';
 
-const App = () => {
-  return <MainPage />;
-};
-=======
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login/Login';
 import MainPage from './components/MainPage/MainPage';
@@ -25,6 +20,5 @@ function App() {
     </Router>
   );
 }
->>>>>>> Stashed changes
 
 export default App;

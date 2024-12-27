@@ -116,11 +116,6 @@ const MainPage = () => {
     navigate('/login');
   };
 
-  // 홈으로 이동하는 핸들러 추가
-  const handleHomeClick = () => {
-    window.location.href = '/'; // 또는 React Router 사용 시: navigate('/')
-  };
-
   return (
     <div className="app">
       <header className="header">

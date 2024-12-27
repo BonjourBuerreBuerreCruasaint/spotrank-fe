@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
-// import logo from '../../assets/spotrank-logo.png';  // 주석 처리
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -31,13 +30,20 @@ const Login = () => {
       setEmailError('이메일 형식으로 입력해주세요');
       return;
     }
-    navigate('/main');
+    localStorage.setItem('isLoggedIn', 'true');
+    navigate('/');
+  };
+
+  const handleLogoClick = () => {
+    navigate('/');
   };
 
   return (
     <div className="login-container">
       <div className="login-box">
-        <h1 className="login-title">SpotRank</h1>
+        <h1 className="login-title" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
+          SpotRank
+        </h1>
         
         <form onSubmit={handleLogin}>
           <div className="input-container">
@@ -77,6 +83,12 @@ const Login = () => {
           <a href="/forgot-password" className="text-button">
             비밀번호 찾기
           </a>
+          <a href="/find-id" className="text-button">
+            아이디 찾기
+          </a>
+          <button className="text-button" onClick={() => navigate('/signup')}>
+            회원가입
+          </button>
         </div>
       </div>
     </div>

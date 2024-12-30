@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,7 +32,7 @@ const Login = () => {
       return;
     }
     localStorage.setItem('isLoggedIn', 'true');
-    navigate('/');
+    navigate('/ceo-main');
   };
 
   const handleLogoClick = () => {
@@ -80,12 +81,12 @@ const Login = () => {
         </button>
         
         <div className="login-footer">
-          <a href="/forgot-password" className="text-button">
-            비밀번호 찾기
-          </a>
-          <a href="/find-id" className="text-button">
+          <button className="text-button" onClick={() => navigate('/find-id')}>
             아이디 찾기
-          </a>
+          </button>
+          <button className="text-button" onClick={() => navigate('/find-password')}>
+            비밀번호 찾기
+          </button>
           <button className="text-button" onClick={() => navigate('/signup')}>
             회원가입
           </button>

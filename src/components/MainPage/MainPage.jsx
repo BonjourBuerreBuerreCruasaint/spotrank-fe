@@ -1,112 +1,77 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../App.css';
 
 const MainPage = () => {
-  const [randomRestaurants, setRandomRestaurants] = useState([]);
+  const [randomRestaurants, setRandomRestaurants] = useState('');
   const [currentTime, setCurrentTime] = useState('');
-  const [category, setCategory] = useState('음식점');
-  
-  // 각 카테고리별 독립적인 순위 데이터
+  const [category, setCategory] = useState('restaurants'); // 기본값: 음식점
+  const navigate = useNavigate();
+
+  // API로부터 받아올 데이터 상태
   const [places, setPlaces] = useState({
-    restaurants: [
-      { id: 1, name: "후라토 식당", rank: 1, sales: 150 },
-      { id: 2, name: "핵밥", rank: 2, sales: 145 },
-      { id: 3, name: "아웃닭", rank: 3, sales: 140 },
-      { id: 4, name: "한신포차", rank: 4, sales: 135 },
-      { id: 5, name: "평안도", rank: 5, sales: 130 },
-      { id: 6, name: "정순", rank: 6, sales: 125 },
-      { id: 7, name: "전집", rank: 7, sales: 120 },
-      { id: 8, name: "로바타", rank: 8, sales: 115 },
-      { id: 9, name: "김밥천국", rank: 9, sales: 110 },
-      { id: 10, name: "단토리", rank: 10, sales: 105 }
-    ],
-    cafes: [
-      { id: 1, name: "스타벅스", rank: 1, sales: 200 },
-      { id: 2, name: "이디야", rank: 2, sales: 180 },
-      { id: 3, name: "메가커피", rank: 3, sales: 170 },
-      { id: 4, name: "빽다방", rank: 4, sales: 160 },
-      { id: 5, name: "커피빈", rank: 5, sales: 150 },
-      { id: 6, name: "블루보틀", rank: 6, sales: 140 },
-      { id: 7, name: "폴바셋", rank: 7, sales: 130 },
-      { id: 8, name: "투썸플레이스", rank: 8, sales: 120 },
-      { id: 9, name: "카페베네", rank: 9, sales: 110 },
-      { id: 10, name: "할리스", rank: 10, sales: 100 }
-    ]
+    restaurants: [],
+    cafes: [],
   });
 
-  
-    // 현재 선택된 카테고리의 데이터 가져오기
-    const currentPlaces = places[category === '음식점' ? 'restaurants' : 'cafes'];
-  const handleRestaurantClick = (restaurantName) => {
-    console.log(`${restaurantName} 클릭됨 - 상세 페이지로 이동 예정`);
-    // 나중에 여기에 상세 페이지 이동 로직 추가
-  };
+  // 현재 선택된 카테고리 데이터 가져오기
+  const currentPlaces = places[category];
 
-  // 현재 시간 업데이트 함수 수정
-  const updateCurrentTime = useCallback(() => {
-    const now = new Date();
-    const hours = now.getHours();
-    // 항상 "00"분으로 표시
-    const formattedHours = hours.toString().padStart(2, '0');
-    setCurrentTime(`${formattedHours}:00`);
-  }, []);
-
-  // useCallback으로 함수 메모이제이션
-  const fetchHotPlacesData = useCallback(async () => {
+  // Flask API에서 데이터 가져오기
+  const fetchPlacesFromAPI = useCallback(async () => {
     try {
-      const now = new Date();
-      const minutes = now.getMinutes();
-      
-      // 정시(분이 0일 때)에만 데이터 업데이트
-      if (minutes === 0) {
-        // 각 카테고리별로 독립적으로 순위 업데이트
-        const updatePlaceData = (placeList) => {
-          return placeList
-            .map(place => ({
-              ...place,
-              sales: place.sales + Math.floor(Math.random() * 10 - 5) // 약간의 변동
-            }))
-            .sort((a, b) => b.sales - a.sales)
-            .map((place, index) => ({
-              ...place,
-              rank: index + 1 // 각 카테고리 내에서 1~10위 독립적으로 부여
-            }));
-        };
-
-        setPlaces(prev => ({
-          restaurants: updatePlaceData(prev.restaurants),
-          cafes: updatePlaceData(prev.cafes)
-        }));
-      }
+      const response = await fetch('http://127.0.0.1:5000/api/ranking'); // Flask API URL
+      if (!response.ok) throw new Error('API 요청 실패');
+      const data = await response.json();
+      setPlaces({
+        restaurants: data.restaurant_ranking,
+        cafes: data.cafe_ranking,
+      });
     } catch (error) {
       console.error('데이터 가져오기 실패:', error);
     }
   }, []);
 
-  // 랜덤 식당 업데이트를 위한 useEffect
-  useEffect(() => {
-    // 3초마다 랜덤 식당 변경
-    const interval = setInterval(() => {
-      const randomIndex = Math.floor(Math.random() * places.restaurants.length);
-      setRandomRestaurants(places.restaurants[randomIndex].name);
-    }, 3000);
+  // 현재 시간 업데이트 함수
+  const updateCurrentTime = useCallback(() => {
+    const now = new Date();
+    const hours = now.getHours();
+    const formattedHours = hours.toString().padStart(2, '0');
+    setCurrentTime(`${formattedHours}:00`);
+  }, []);
 
-    return () => clearInterval(interval);
+  // 랜덤 추천 식당 업데이트
+  useEffect(() => {
+    if (places.restaurants.length > 0) {
+      const interval = setInterval(() => {
+        const randomIndex = Math.floor(Math.random() * places.restaurants.length);
+        setRandomRestaurants(places.restaurants[randomIndex].shop_name);
+      }, 3000); // 3초마다 변경
+      return () => clearInterval(interval);
+    }
   }, [places.restaurants]);
 
-  // 시간과 데이터 업데이트
+  // Flask API 데이터 및 시간 업데이트
   useEffect(() => {
+    fetchPlacesFromAPI();
     updateCurrentTime();
-    fetchHotPlacesData();
 
-    // 1분마다 시간 업데이트 및 데이터 체크
+    // 1분마다 데이터 및 시간 업데이트
     const interval = setInterval(() => {
+      fetchPlacesFromAPI();
       updateCurrentTime();
-      fetchHotPlacesData();
-    }, 60000); // 1분마다 체크
-
+    }, 60000); // 1분 간격
     return () => clearInterval(interval);
-  }, [updateCurrentTime, fetchHotPlacesData]);
+  }, [fetchPlacesFromAPI, updateCurrentTime]);
+
+  const handleCategoryChange = (newCategory) => {
+    setCategory(newCategory);
+  };
+
+  const handleRestaurantClick = (restaurantName) => {
+    console.log(`${restaurantName} 클릭됨 - 상세 페이지로 이동 예정`);
+    // 상세 페이지 이동 로직 추가 가능
+  };
 
   useEffect(() => {
     const loadKakaoMap = () => {
@@ -121,7 +86,6 @@ const MainPage = () => {
       // 지도 객체 생성
       const map = new window.kakao.maps.Map(container, options);
       
-
       // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성
       const mapTypeControl = new window.kakao.maps.MapTypeControl();
       map.addControl(mapTypeControl, window.kakao.maps.ControlPosition.TOPRIGHT);
@@ -138,6 +102,79 @@ const MainPage = () => {
 
       // 마커를 지도에 표시
       marker.setMap(map);
+
+      // 버티고 빌딩 영역 좌표
+      const buildingPath = [
+        new window.kakao.maps.LatLng(37.556329, 126.936979),
+        new window.kakao.maps.LatLng(37.556329, 126.937179),
+        new window.kakao.maps.LatLng(37.556129, 126.937179),
+        new window.kakao.maps.LatLng(37.556129, 126.936979)
+      ];
+
+      // 건물 영역 폴리곤 생성
+      const building = new window.kakao.maps.Polygon({
+        path: buildingPath,
+        strokeWeight: 2,
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeStyle: 'solid',
+        fillColor: '#FFB6C1',  // 연한 빨간색
+        fillOpacity: 0.5
+      });
+
+      // 건물 폴리곤을 지도에 표시
+      building.setMap(map);
+
+      // 500m 범위 원 생성
+      const circle = new window.kakao.maps.Circle({
+        center: markerPosition, // 원의 중심좌표
+        radius: 500, // 미터 단위의 반지름
+        strokeWeight: 2, // 선의 두께
+        strokeColor: '#87CEEB', // 선의 색깔
+        strokeOpacity: 0.8, // 선의 불투명도
+        strokeStyle: 'solid', // 선의 스타일
+        fillColor: '#87CEEB', // 채우기 색깔
+        fillOpacity: 0.2 // 채우기 불투명도
+      });
+
+      // 원을 지도에 표시
+      circle.setMap(map);
+
+      // 새로운 마커 생성 (신촌 현백)
+      const markerPosition2 = new window.kakao.maps.LatLng(37.556042, 126.935807);
+      const marker2 = new window.kakao.maps.Marker({
+        position: markerPosition2
+      });
+      marker2.setMap(map);
+
+      // 새로운 마커 생성 (추가된 위치)
+      const markerPosition3 = new window.kakao.maps.LatLng(37.556467, 126.937160);
+      const marker3 = new window.kakao.maps.Marker({
+        position: markerPosition3
+      });
+      marker3.setMap(map);
+
+      // 새로운 건물 영역 좌표
+      const buildingPath2 = [
+        new window.kakao.maps.LatLng(37.556567, 126.937060),
+        new window.kakao.maps.LatLng(37.556567, 126.937260),
+        new window.kakao.maps.LatLng(37.556367, 126.937260),
+        new window.kakao.maps.LatLng(37.556367, 126.937060)
+      ];
+
+      // 새로운 건물 영역 폴리곤 생성
+      const building2 = new window.kakao.maps.Polygon({
+        path: buildingPath2,
+        strokeWeight: 2,
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeStyle: 'solid',
+        fillColor: '#FFB6C1',  // 연한 빨간색
+        fillOpacity: 0.5
+      });
+
+      // 건물 폴리곤을 지도에 표시
+      building2.setMap(map);
     };
 
     // 카카오맵 SDK가 로드된 후 실행
@@ -148,16 +185,19 @@ const MainPage = () => {
 
   // 로그인 버튼 클릭 핸들러 추가
   const handleLoginClick = () => {
-    console.log('로그인 버튼 클릭됨 - 로그인 페이지로 이동 예정');
-    // 나중에 실제 로그인 페이지로 이동하는 로직 추가
-    // 예: navigate('/login') 또는 window.location.href = '/login'
+    navigate('/login'); // '/login' 경로로 이동
+  };
+
+  // 홈으로 이동하는 핸들러 추가
+  const handleHomeClick = () => {
+    window.location.href = '/'; // 또는 React Router 사용 시: navigate('/')
   };
 
   return (
     <div className="app">
       <header className="header">
         <div className="logo">
-          <span className="logo-text" onClick={handleHomeClick}>
+          <span className="logo-text" onClick={() => (window.location.href = '/')}>
             SpotRank
           </span>
         </div>
@@ -172,16 +212,16 @@ const MainPage = () => {
         <div className="left-panels">
           <div className="panel hot-places-panel">
             <div className="category-toggle">
-              <button 
-                className={`toggle-button ${category === '음식점' ? 'active' : ''}`}
-                onClick={() => setCategory('음식점')}
+              <button
+                className={`toggle-button ${category === 'restaurants' ? 'active' : ''}`}
+                onClick={() => handleCategoryChange('restaurants')}
               >
                 음식점
               </button>
               <span className="divider">|</span>
-              <button 
-                className={`toggle-button ${category === '카페' ? 'active' : ''}`}
-                onClick={() => setCategory('카페')}
+              <button
+                className={`toggle-button ${category === 'cafes' ? 'active' : ''}`}
+                onClick={() => handleCategoryChange('cafes')}
               >
                 카페
               </button>
@@ -191,12 +231,12 @@ const MainPage = () => {
               <h2>핫플레이스 <span>({currentTime} 판매량 기준)</span></h2>
               <ul>
                 {currentPlaces.map((place) => (
-                  <li 
-                    key={place.id}
-                    onClick={() => handleRestaurantClick(place.name)}
+                  <li
+                    key={place.shop_name}
+                    onClick={() => handleRestaurantClick(place.shop_name)}
                     className="restaurant-item"
                   >
-                    {place.rank}. {place.name}
+                    {place.rank}. {place.shop_name}
                   </li>
                 ))}
               </ul>
@@ -207,12 +247,12 @@ const MainPage = () => {
             <div className="recommendation">
               <h2>오늘 뭐 먹지?</h2>
               <div className="random-restaurants">
-                {randomRestaurants}
+                {randomRestaurants || '로딩 중...'}
               </div>
             </div>
           </div>
         </div>
-        
+
         <div id="map" className="map-container"></div>
       </div>
     </div>

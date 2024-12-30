@@ -76,11 +76,9 @@ const MainPage = () => {
   useEffect(() => {
     const loadKakaoMap = () => {
       const container = document.getElementById('map');
-      
-      // 지도의 중심좌표 (신촌 버티고빌딩)
       const options = {
         center: new window.kakao.maps.LatLng(37.556229, 126.937079),
-        level: 3 // 지도의 확대 레벨
+        level: 3
       };
 
       // 지도 객체 생성
@@ -102,6 +100,33 @@ const MainPage = () => {
 
       // 마커를 지도에 표시
       marker.setMap(map);
+
+      // InfoWindow 생성
+      const infoWindow = new window.kakao.maps.InfoWindow({
+        content: `
+          <div style="
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            background-color: white;
+            font-family: 'Pretendard', sans-serif;
+          ">
+            <h4 style="margin: 0; font-size: 16px; color: #333;">커피빈 신촌점</h4>
+            <p style="margin: 5px 0 0; font-size: 14px; color: #666;">평점: 5.0</p>
+          </div>
+        `,
+        removable: true
+      });
+
+      // 마커에 마우스 오버 이벤트 등록
+      window.kakao.maps.event.addListener(marker, 'mouseover', () => {
+        infoWindow.open(map, marker);
+      });
+
+      // 마커에 마우스 아웃 이벤트 등록
+      window.kakao.maps.event.addListener(marker, 'mouseout', () => {
+        infoWindow.close();
+      });
 
       // 버티고 빌딩 영역 좌표
       const buildingPath = [

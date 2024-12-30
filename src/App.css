@@ -305,24 +305,20 @@ body {
 /* 핫플레이스 패널 */
 .hot-places-panel {
   background: white;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 12px 15px 15px 10px;
-  position: relative;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
   height: 65%;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
+  overflow-y: auto;
+  padding: 12px;
 }
 
 /* 추천 패널 */
 .recommendation-panel {
   background: white;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 15px;
-  height: 30%;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  height: 35%;
+  padding: 12px;
 }
 
 /* 핫플레이스 헤더 */

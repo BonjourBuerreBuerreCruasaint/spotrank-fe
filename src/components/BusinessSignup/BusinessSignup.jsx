@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './BusinessSignup.css';
 
 const BusinessSignup = () => {
@@ -6,11 +7,12 @@ const BusinessSignup = () => {
     businessNumber: '',
     storeName: '',
     address: '',
-    detailedAddress: '',
-    category: '',
+    category: 'restaurants',
     description: '',
     image: null,
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -23,11 +25,25 @@ const BusinessSignup = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('사업자 정보:', formData);
+    navigate('/login');
+  };
+
+  const isFormValid = () => {
+    return (
+      formData.businessNumber &&
+      formData.storeName &&
+      formData.address &&
+      formData.category
+    );
+  };
+
+  const handleLogoClick = () => {
+    navigate('/');
   };
 
   return (
     <div className="business-signup-container">
-      <h1 className="business-signup-title">회원가입 - 사업자정보 입력</h1>
+      <h1 className="business-signup-title" onClick={handleLogoClick}>SpotRank</h1>
       <form onSubmit={handleSubmit} className="business-signup-form">
         <div className="form-group">
           <label>사업자등록번호</label>
@@ -59,27 +75,18 @@ const BusinessSignup = () => {
             onChange={handleChange}
             required
           />
-          <button type="button">주소 검색</button>
-        </div>
-        <div className="form-group">
-          <input
-            type="text"
-            name="detailedAddress"
-            placeholder="상세 주소 입력"
-            value={formData.detailedAddress}
-            onChange={handleChange}
-            required
-          />
         </div>
         <div className="form-group">
           <label>카테고리</label>
-          <input
-            type="text"
+          <select
             name="category"
             value={formData.category}
             onChange={handleChange}
             required
-          />
+          >
+            <option value="restaurants">음식점</option>
+            <option value="cafes">카페</option>
+          </select>
         </div>
         <div className="form-group">
           <label>소개글</label>
@@ -89,7 +96,6 @@ const BusinessSignup = () => {
             value={formData.description}
             onChange={handleChange}
             maxLength="1000"
-            required
           />
         </div>
         <div className="form-group">
@@ -100,7 +106,13 @@ const BusinessSignup = () => {
             onChange={handleChange}
           />
         </div>
-        <button type="submit" className="submit-button">회원가입 완료</button>
+        <button
+          type="submit"
+          className="submit-button"
+          disabled={!isFormValid()}
+        >
+          회원가입 완료
+        </button>
       </form>
     </div>
   );

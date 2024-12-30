@@ -86,7 +86,6 @@ const MainPage = () => {
       // 지도 객체 생성
       const map = new window.kakao.maps.Map(container, options);
       
-
       // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성
       const mapTypeControl = new window.kakao.maps.MapTypeControl();
       map.addControl(mapTypeControl, window.kakao.maps.ControlPosition.TOPRIGHT);
@@ -103,6 +102,79 @@ const MainPage = () => {
 
       // 마커를 지도에 표시
       marker.setMap(map);
+
+      // 버티고 빌딩 영역 좌표
+      const buildingPath = [
+        new window.kakao.maps.LatLng(37.556329, 126.936979),
+        new window.kakao.maps.LatLng(37.556329, 126.937179),
+        new window.kakao.maps.LatLng(37.556129, 126.937179),
+        new window.kakao.maps.LatLng(37.556129, 126.936979)
+      ];
+
+      // 건물 영역 폴리곤 생성
+      const building = new window.kakao.maps.Polygon({
+        path: buildingPath,
+        strokeWeight: 2,
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeStyle: 'solid',
+        fillColor: '#FFB6C1',  // 연한 빨간색
+        fillOpacity: 0.5
+      });
+
+      // 건물 폴리곤을 지도에 표시
+      building.setMap(map);
+
+      // 500m 범위 원 생성
+      const circle = new window.kakao.maps.Circle({
+        center: markerPosition, // 원의 중심좌표
+        radius: 500, // 미터 단위의 반지름
+        strokeWeight: 2, // 선의 두께
+        strokeColor: '#87CEEB', // 선의 색깔
+        strokeOpacity: 0.8, // 선의 불투명도
+        strokeStyle: 'solid', // 선의 스타일
+        fillColor: '#87CEEB', // 채우기 색깔
+        fillOpacity: 0.2 // 채우기 불투명도
+      });
+
+      // 원을 지도에 표시
+      circle.setMap(map);
+
+      // 새로운 마커 생성 (신촌 현백)
+      const markerPosition2 = new window.kakao.maps.LatLng(37.556042, 126.935807);
+      const marker2 = new window.kakao.maps.Marker({
+        position: markerPosition2
+      });
+      marker2.setMap(map);
+
+      // 새로운 마커 생성 (추가된 위치)
+      const markerPosition3 = new window.kakao.maps.LatLng(37.556467, 126.937160);
+      const marker3 = new window.kakao.maps.Marker({
+        position: markerPosition3
+      });
+      marker3.setMap(map);
+
+      // 새로운 건물 영역 좌표
+      const buildingPath2 = [
+        new window.kakao.maps.LatLng(37.556567, 126.937060),
+        new window.kakao.maps.LatLng(37.556567, 126.937260),
+        new window.kakao.maps.LatLng(37.556367, 126.937260),
+        new window.kakao.maps.LatLng(37.556367, 126.937060)
+      ];
+
+      // 새로운 건물 영역 폴리곤 생성
+      const building2 = new window.kakao.maps.Polygon({
+        path: buildingPath2,
+        strokeWeight: 2,
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeStyle: 'solid',
+        fillColor: '#FFB6C1',  // 연한 빨간색
+        fillOpacity: 0.5
+      });
+
+      // 건물 폴리곤을 지도에 표시
+      building2.setMap(map);
     };
 
     // 카카오맵 SDK가 로드된 후 실행
@@ -113,7 +185,12 @@ const MainPage = () => {
 
   // 로그인 버튼 클릭 핸들러 추가
   const handleLoginClick = () => {
-    navigate('/login');
+    navigate('/login'); // '/login' 경로로 이동
+  };
+
+  // 홈으로 이동하는 핸들러 추가
+  const handleHomeClick = () => {
+    window.location.href = '/'; // 또는 React Router 사용 시: navigate('/')
   };
 
   return (
@@ -125,7 +202,7 @@ const MainPage = () => {
           </span>
         </div>
         <div className="nav-buttons">
-          <button className="login-button" onClick={() => console.log('로그인 클릭')}>
+          <button className="login-button" onClick={handleLoginClick}>
             Login
           </button>
         </div>

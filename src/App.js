@@ -5,8 +5,8 @@ import Login from './components/Login/Login';
 import FindID from './components/FindID/FindID';
 import FindPassWord from './components/FindPassWord/FindPassWord';
 import CeoMainPage from './components/CeoMainPage/CeoMainPage';
+import CeoDashBoard from './components/CeoDashBoard/CeoDashBoard';
 import './App.css';
-
 
 import Signup from './components/Signup/Signup';
 import BusinessSignup from './components/BusinessSignup/BusinessSignup';
@@ -23,6 +23,7 @@ function App() {
         <Route path="/ceo-main" element={<CeoMainPage />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/business-signup" element={<BusinessSignup />} />
+        <Route path="/ceo-dashboard" element={<CeoDashBoard />} />
       </Routes>
     </Router>
   );

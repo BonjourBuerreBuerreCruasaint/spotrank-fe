@@ -60,13 +60,12 @@ const CeoMainPage = () => {
   const handleLogout = () => {
     // 로그아웃 기능 구현
     console.log("로그아웃 버튼 클릭됨");
-    // navigate('/login'); // 로그인 페이지로 이동
+    navigate('/'); // MainPage로 이동
   };
 
   const handleOwner = () => {
-    // 나는 사장 버튼 기능 구현
-    console.log("나는 사장 버튼 클릭됨");
-    // navigate('/owner'); // 사장 페이지로 이동
+    // "나는 사장" 버튼 클릭 시 CeoDashBoard로 이동
+    navigate('/ceo-dashboard'); // CeoDashBoard 페이지로 이동
   };
 
   useEffect(() => {

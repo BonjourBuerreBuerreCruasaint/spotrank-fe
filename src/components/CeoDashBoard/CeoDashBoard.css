@@ -1,0 +1,99 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+  }
+  
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #87CEEB;
+    color: white;
+    padding: 1rem;
+  }
+  
+  header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+  
+  header .login-btn {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    border: 1px solid white;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+  }
+  
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .dashboard-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 1rem;
+    flex-grow: 1;
+  }
+  
+  .dashboard-item {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    height: 7%;
+    min-height: 200px;
+    max-height: 300px;
+  }
+  
+  .dashboard-item h3 {
+    margin-top: 0;
+  }
+  
+  @media (min-width: 768px) {
+    .dashboard-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .dashboard-container {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .submit-button {
+    background-color: #87CEEB;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .submit-button:hover {
+    background-color: #66B2D8;
+  }
+  
+  .view-all-sales-button {
+    background-color: #87CEEB;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 1rem;
+  }
+  
+  .view-all-sales-button:hover {
+    background-color: #66B2D8;
+  }
+  

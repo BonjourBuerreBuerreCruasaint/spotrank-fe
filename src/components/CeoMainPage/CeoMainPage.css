@@ -28,42 +28,25 @@ html, body {
 
 .ceo-button-group {
   display: flex;
-  gap: 5px;
-  margin-left: -30px;
+  justify-content: flex-start;
+  gap: 10px;
 }
 
-.ceo-ceo-button {
-  color: white;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  padding: 8px 16px;
-  transition: all 0.2s;
-  margin-left: 30px;
-}
-
-.ceo-ceo-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  margin-left: 30px;
-}
-
+.ceo-ceo-button,
 .ceo-logout-button {
-  color: white;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
+  padding: 10px 20px;
   font-size: 16px;
-  padding: 8px 16px;
-  transition: all 0.2s;
-  margin-left: 30px;
+  background-color: transparent;
+  color: #f5f5f5;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
 }
 
+.ceo-ceo-button:hover,
 .ceo-logout-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  margin-left: 0px;
+  background-color: transparent;
+  color: #f5f5f5;
 }
 
 .ceo-main-content {
@@ -98,4 +81,95 @@ html, body {
   font-size: 50px;
   color: #fff;
   margin: 0;
+}
+
+.overlay {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 300px;
+  z-index: 1;
+  padding: 0;
+  background-color: transparent;
+  border-radius: 0;
+}
+
+.hot-places {
+  margin-bottom: 10px;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  height: 300px;
+  overflow-y: auto;
+}
+
+.hot-places h2,
+.recommendation h2 {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 19px;
+  font-weight: 600;
+  margin: 0;
+  padding-left: 5px;
+  line-height: 1;
+}
+
+.hot-places ul {
+  margin-top: 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.restaurant-item {
+  padding: 6px 5px;
+  font-size: 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s;
+}
+
+.restaurant-item:last-child {
+  border-bottom: none;
+}
+
+.restaurant-item:hover {
+  background-color: #f8f9fa;
+}
+
+.recommendation {
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+}
+
+.random-restaurants {
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.random-restaurants:hover {
+  background-color: #e5e5e5;
+}
+
+/* 토글 버튼 스타일 */
+.toggle-button {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px; /* 토글과 섹션 간격 */
+}
+
+.toggle-button button {
+  padding: 10px 15px;
+  font-size: 16px;
+  background-color: #007bff; /* 버튼 배경색 */
+  color: white; /* 버튼 글자색 */
+  border: none; /* 테두리 제거 */
+  border-radius: 4px; /* 모서리 둥글게 */
+  cursor: pointer; /* 커서 포인터로 변경 */
+}
+
+.toggle-button button.active {
+  background-color: #0056b3; /* 활성화된 버튼 색상 */
 }

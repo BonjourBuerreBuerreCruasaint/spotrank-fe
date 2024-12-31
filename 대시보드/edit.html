@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>SpotRank - 정보 수정</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>SpotRank</h1>
+    </header>
+
+    <div class="edit-container">
+        <h2>사진 등록 및 수정</h2>
+        
+        <form id="editForm">
+            <div class="image-section">
+                <div class="images-container">
+                    <!-- 메인 이미지 -->
+                    <div class="main-image-container">
+                        <div class="main-image-box">
+                            <input type="file" id="mainImage" accept="image/*">
+                            <label for="mainImage">
+                                <span class="plus-icon">+</span>
+                                <img id="mainPreview" src="#" alt="">
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 추가 이미지 그리드 -->
+                    <div class="sub-images-grid">
+                        <div class="image-box">
+                            <input type="file" id="subImage1" accept="image/*">
+                            <label for="subImage1">
+                                <span class="plus-icon">+</span>
+                                <img id="subPreview1" src="#" alt="">
+                            </label>
+                        </div>
+                        <div class="image-box">
+                            <input type="file" id="subImage2" accept="image/*">
+                            <label for="subImage2">
+                                <span class="plus-icon">+</span>
+                                <img id="subPreview2" src="#" alt="">
+                            </label>
+                        </div>
+                        <div class="image-box">
+                            <input type="file" id="subImage3" accept="image/*">
+                            <label for="subImage3">
+                                <span class="plus-icon">+</span>
+                                <img id="subPreview3" src="#" alt="">
+                            </label>
+                        </div>
+                        <div class="image-box">
+                            <input type="file" id="subImage4" accept="image/*">
+                            <label for="subImage4">
+                                <span class="plus-icon">+</span>
+                                <img id="subPreview4" src="#" alt="">
+                            </label>
+                        </div>
+                        <div class="image-box">
+                            <input type="file" id="subImage5" accept="image/*">
+                            <label for="subImage5">
+                                <span class="plus-icon">+</span>
+                                <img id="subPreview5" src="#" alt="">
+                            </label>
+                        </div>
+                        <div class="image-box">
+                            <input type="file" id="subImage6" accept="image/*">
+                            <label for="subImage6">
+                                <span class="plus-icon">+</span>
+                                <img id="subPreview6" src="#" alt="">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="description-section">
+                <h2>소개글 수정</h2>
+                <textarea id="description" maxlength="500" placeholder="500자 이내로 작성해주세요"></textarea>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="submit-btn">수정완료</button>
+                <a href="index.html" class="cancel-btn">취소</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="edit.js"></script>
+</body>
+</html>

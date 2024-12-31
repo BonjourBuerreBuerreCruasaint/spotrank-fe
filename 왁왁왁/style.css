@@ -1,0 +1,224 @@
+/* 기본 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+/* 헤더 스타일 */
+header {
+    background-color: #87CEEB;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    color: white;
+}
+
+.login-btn {
+    color: white;
+    text-decoration: none;
+}
+
+/* 메인 컨테이너 레이아웃 */
+.main-container {
+    display: flex;
+    height: calc(100vh - 60px);
+}
+
+/* 사이드 메뉴 스타일 */
+.side-menu {
+    width: 200px;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.side-menu ul {
+    list-style: none;
+}
+
+.side-menu li {
+    padding: 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.side-menu li:hover {
+    background-color: #f0f0f0;
+}
+
+.side-menu li.active {
+    background-color: #87CEEB;
+    color: white;
+}
+
+/* 대시보드 컨테이너 스타일 */
+.dashboard-container {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* 뷰 콘텐츠 스타일 */
+.view-content {
+    display: none;
+    grid-gap: 20px;
+}
+
+.view-content.active {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* 대시보드 아이템 스타일 */
+.dashboard-item {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-height: 300px;
+}
+
+/* 매출 현황표 스타일 */
+.sales-table {
+    grid-column: 1 / -1;
+}
+
+.sales-table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+/* 테이블 tbody에 스크롤 적용 */
+.sales-table table tbody {
+    display: block;
+    max-height: 400px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+/* thead와 tfoot을 tbody와 같은 너비로 맞추기 */
+.sales-table table thead,
+.sales-table table tbody tr,
+.sales-table table tfoot {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+/* 각 열의 너비 지정 */
+.sales-table table th,
+.sales-table table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    width: 20%;
+}
+
+/* 스크롤바 스타일링 개선 */
+.sales-table table tbody::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sales-table table tbody::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.sales-table table tbody::-webkit-scrollbar-thumb {
+    background: #87CEEB;
+    border-radius: 4px;
+}
+
+.sales-table table tbody::-webkit-scrollbar-thumb:hover {
+    background: #5facd0;
+}
+
+/* 홀수/짝수 행 구분을 위한 스타일 */
+.sales-table table tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+.sales-table table tbody tr:hover {
+    background-color: #f0f7fa;
+}
+
+.sales-table thead th {
+    background-color: #f5f5f5;
+}
+
+.sales-table tfoot td {
+    font-weight: bold;
+}
+
+/* 메뉴 범례 스타일 */
+.menu-legend {
+    margin-top: 15px;
+}
+
+.menu-legend p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/* 달력 스타일 커스터마이징 */
+.flatpickr-calendar {
+    width: 100% !important;
+}
+
+/* 메뉴 판매량 차트(도넛 그래프)의 크기만 조절 */
+#menuChart,
+#dayMenuChart,
+#weekMenuChart,
+#monthMenuChart {
+    height: 380px !important;  /* 도넛 그래프 세로 크기 - 더 작게 하려면 숫자를 줄이세요 */
+    width: 380px !important;   /* 도넛 그래프 가로 크기 - 더 작게 하려면 숫자를 줄이세요 */
+    margin: 0 auto;           /* 가운데 정렬 */
+} 
+#salesChart, #dailyChart, #weeklyChart, .date-picker-zone{
+    width: 874px !important;
+    height: 437px !important;
+}
+#monthlyCalendar{
+    display: none;
+}
+.month-calendarwrap{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* 일일 매출 정보 스타일 */
+.daily-sales-display {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+/* Flatpickr 달력 커스텀 스타일 */
+.flatpickr-calendar {
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+.flatpickr-day.selected {
+    background: #87CEEB;
+    border-color: #87CEEB;
+}
+
+.flatpickr-day:hover {
+    background: #e6f3f7;
+}

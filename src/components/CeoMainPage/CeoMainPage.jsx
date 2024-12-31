@@ -1,15 +1,72 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './CeoMainPage.css';
 
 const CeoMainPage = () => {
-  const handleLogout = () => {
-    // 로그아웃 로직 추가
-    alert('로그아웃 되었습니다.');
+  const navigate = useNavigate();
+  const [randomRestaurants, setRandomRestaurants] = useState('');
+  const [currentTime, setCurrentTime] = useState('');
+  const [places, setPlaces] = useState({
+    restaurants: [],
+    cafes: [],
+  });
+  const [isRestaurant, setIsRestaurant] = useState(true); // 음식점/카페 토글 상태
+
+  // 랜덤 추천 식당 업데이트
+  useEffect(() => {
+    if (places.restaurants.length > 0) {
+      const interval = setInterval(() => {
+        const randomIndex = Math.floor(Math.random() * places.restaurants.length);
+        setRandomRestaurants(places.restaurants[randomIndex].shop_name);
+      }, 3000); // 3초마다 변경
+      return () => clearInterval(interval);
+    }
+  }, [places.restaurants]);
+
+  // Flask API에서 데이터 가져오기
+  const fetchPlacesFromAPI = useCallback(async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/api/ranking'); // Flask API URL
+      if (!response.ok) throw new Error('API 요청 실패');
+      const data = await response.json();
+      setPlaces({
+        restaurants: data.restaurant_ranking,
+        cafes: data.cafe_ranking,
+      });
+    } catch (error) {
+      console.error('데이터 가져오기 실패:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchPlacesFromAPI();
+    const interval = setInterval(() => {
+      fetchPlacesFromAPI();
+    }, 60000); // 1분 간격
+    return () => clearInterval(interval);
+  }, [fetchPlacesFromAPI]);
+
+  useEffect(() => {
+    const now = new Date();
+    const hours = now.getHours();
+    const formattedHours = hours.toString().padStart(2, '0');
+    setCurrentTime(`${formattedHours}:00`);
+  }, []);
+
+  const handleToggle = () => {
+    setIsRestaurant(!isRestaurant);
   };
 
-  const handleCeoClick = () => {
-    // "나는 사장" 버튼 클릭 시 로직 추가
-    alert('오신걸 환영합니다.');
+  const handleLogout = () => {
+    // 로그아웃 기능 구현
+    console.log("로그아웃 버튼 클릭됨");
+    // navigate('/login'); // 로그인 페이지로 이동
+  };
+
+  const handleOwner = () => {
+    // 나는 사장 버튼 기능 구현
+    console.log("나는 사장 버튼 클릭됨");
+    // navigate('/owner'); // 사장 페이지로 이동
   };
 
   useEffect(() => {
@@ -70,16 +127,37 @@ const CeoMainPage = () => {
           <h1 className="logo">SpotRank</h1>
         </div>
         <div className="ceo-button-group">
-          <button onClick={handleCeoClick} className="ceo-ceo-button">
-            나는 사장
-          </button>
-          <button onClick={handleLogout} className="ceo-logout-button">
-            Logout
-          </button>
+          <button className="ceo-ceo-button" onClick={handleOwner}>나는 사장</button>
+          <button className="ceo-logout-button" onClick={handleLogout}>로그아웃</button>
         </div>
       </header>
       <main className="ceo-main-content">
-        <p>회원 전용 페이지입니다.</p>
+        <div className="overlay">
+          <div className="toggle-button">
+            <button className={isRestaurant ? 'active' : ''} onClick={handleToggle}>
+              음식점
+            </button>
+            <button className={!isRestaurant ? 'active' : ''} onClick={handleToggle}>
+              카페
+            </button>
+          </div>
+          <div className="hot-places">
+            <h2>핫플레이스 <span>({currentTime} 판매량 기준)</span></h2>
+            <ul>
+              {(isRestaurant ? places.restaurants : places.cafes).map((place) => (
+                <li key={place.shop_name} className="restaurant-item">
+                  {place.rank}. {place.shop_name}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="recommendation">
+            <h2>오늘 뭐 먹지?</h2>
+            <div className="random-restaurants">
+              {randomRestaurants || '로딩 중...'}
+            </div>
+          </div>
+        </div>
         <div id="ceo-map" className="ceo-map-container" style={{ width: '100%', height: '100%' }}></div>
       </main>
     </div>

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Signup.css';
-// import spotrankLogo from '../../assets/spotranklogo.png'; // 사용되지 않음
+import axios from 'axios';
+
 const Signup = () => {
   const [formData, setFormData] = useState({
     id: '',
@@ -79,7 +80,7 @@ const Signup = () => {
     }
   };
 
-  const handleBusinessSignup = (e) => {
+  const handleBusinessSignup = async (e) => {
     e.preventDefault();
     if (!formData.agree) {
       alert('개인정보 수집 및 이용에 동의해야 합니다.');
@@ -93,7 +94,14 @@ const Signup = () => {
       alert('모든 필드를 입력해야 합니다.');
       return;
     }
-    navigate('/business-signup');
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/signup', formData);
+      alert(response.data.message);
+      navigate('/business-signup'); // 사업자 인증 페이지로 이동
+    } catch (error) {
+      alert('회원가입 중 오류가 발생했습니다.');
+    }
   };
 
   // SpotRank 클릭 메인 페이지로 이동

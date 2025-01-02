@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Signup.css';
-// import spotrankLogo from '../../assets/spotranklogo.png'; // 사용되지 않음
+import whitespotrank from '../../assets/whitespotrank.png';
+
 const Signup = () => {
   const [formData, setFormData] = useState({
     id: '',
@@ -103,7 +104,10 @@ const Signup = () => {
 
   return (
     <div className="signup-container">
-      <h1 className="signup-title" onClick={handleLogoClick}>SpotRank</h1>
+      <h1 className="signup-title" onClick={handleLogoClick}>
+        <img src={whitespotrank} alt="SpotRank Logo" style={{ width: '30px', marginRight: '10px' }} />
+        SpotRank
+      </h1>
       <div className="privacy-box">
         <label className="privacy-label">
           <input

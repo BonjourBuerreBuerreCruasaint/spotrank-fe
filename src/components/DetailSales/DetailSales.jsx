@@ -1,10 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./DetailSales.css";
 import { Chart, registerables } from "chart.js";
 
 Chart.register(...registerables);
 
 const DetailSales = () => {
+  const navigate = useNavigate(); // useNavigate 훅 사용
   const lineChartRef = React.useRef(null);
   const pieChartRef = React.useRef(null);
   const lineChartInstance = React.useRef(null);
@@ -39,8 +41,8 @@ const DetailSales = () => {
               top: -10,
               bottom: -5,
               left: 10,
-              right: 10
-            }
+              right: 10,
+            },
           },
           scales: {
             y: {
@@ -77,16 +79,17 @@ const DetailSales = () => {
 
   return (
     <div className="detail-sales-container">
-      <header className="header">
+      <header
+        className="detail-sales-header"
+        onClick={() => navigate("/ceo-main")} // navigate 사용
+      >
         <h1>SpotRank</h1>
-        <button className="login-button">Login</button>
       </header>
 
       <div className="content-container">
-        <nav className="sidebar">
+        <nav className="detail-sales-sidebar">
           <ul>
             <li>실시간</li>
-            <li>요일별</li>
             <li>주간</li>
             <li>월간</li>
           </ul>
@@ -98,17 +101,17 @@ const DetailSales = () => {
               <canvas
                 ref={lineChartRef}
                 style={{
-                  width: '562px',
-                  height: '300px',
-                  boxSizing: 'border-box',
-                  display: 'block',
+                  width: "562px",
+                  height: "300px",
+                  boxSizing: "border-box",
+                  display: "block",
                 }}
                 width="703"
                 height="234"
               ></canvas>
             </div>
             <div className="pie-chart">
-              <canvas ref={pieChartRef} style={{ width: '100%', height: '100px' }}></canvas>
+              <canvas ref={pieChartRef} style={{ width: "100%", height: "100px" }}></canvas>
             </div>
           </div>
           <div className="summary-section">

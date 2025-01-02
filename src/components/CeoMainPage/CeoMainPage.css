@@ -30,7 +30,7 @@ html, body {
   display: flex;
   justify-content: flex-start;
   gap: 10px;
-  margin-right: 5%;
+  margin-right: 2%;
 }
 
 .ceo-ceo-button,
@@ -70,7 +70,7 @@ html, body {
   color: #fff;
   margin: 0;
   font-size: 24px;
-  margin-left: -10px;
+  margin-left: 0px;
 }
 
 .logo-container {

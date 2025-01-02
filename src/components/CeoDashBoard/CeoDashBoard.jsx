@@ -106,7 +106,7 @@ const CeoDashBoard = () => {
           <div>
             <p>총 매출: {salesData.reduce((a, b) => a + b, 0)} 원</p>
             <canvas id="salesInfoChart" />
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginTop: '1rem' }}>
               <button className="view-all-sales-button" onClick={handleViewAllSales}>매출 전체보기</button>
             </div>
           </div>
@@ -125,7 +125,7 @@ const CeoDashBoard = () => {
               placeholder="가게 정보를 입력하세요."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              style={{ width: '100%', height: '100px', marginBottom: '1rem' }}
+              style={{ width: '100%', height: '7px', marginBottom: '1rem' }}
             />
             <button className="submit-button" onClick={handleSubmit}>수정하기</button>
           </div>

@@ -30,6 +30,7 @@ html, body {
   display: flex;
   justify-content: flex-start;
   gap: 10px;
+  margin-right: 2%;
 }
 
 .ceo-ceo-button,
@@ -188,4 +189,10 @@ html, body {
 .custom-category-toggle .divider {
   color: #ccc; /* 구분선 색상 */
   margin: 0 1px; /* 좌우 간격 */
+}
+
+.category-toggle {
+  margin-top: 10px; /* 원하는 만큼 아래로 내리기 위해 여백 추가 */
+  display: flex; /* 플렉스 박스 사용 */
+  justify-content: center; /* 중앙 정렬 */
 }

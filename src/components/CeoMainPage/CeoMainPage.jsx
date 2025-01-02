@@ -10,7 +10,7 @@ const CeoMainPage = () => {
     restaurants: [],
     cafes: [],
   });
-  const [isRestaurant, setIsRestaurant] = useState(true); // 음식점/카페 토글 상태
+  const [category, setCategory] = useState('restaurants'); // 카테고리 상태
 
   // 랜덤 추천 식당 업데이트
   useEffect(() => {
@@ -53,8 +53,8 @@ const CeoMainPage = () => {
     setCurrentTime(`${formattedHours}:00`);
   }, []);
 
-  const handleToggle = () => {
-    setIsRestaurant(!isRestaurant);
+  const handleCategoryChange = (newCategory) => {
+    setCategory(newCategory);
   };
 
   const handleLogout = () => {
@@ -76,6 +76,18 @@ const CeoMainPage = () => {
         level: 3
       };
       const map = new window.kakao.maps.Map(container, options);
+
+      // 500m 반경 원 추가
+      const circle = new window.kakao.maps.Circle({
+        center: new window.kakao.maps.LatLng(37.556229, 126.937079), // 기준 좌표
+        radius: 500, // 반경 500m
+        strokeWeight: 2,
+        strokeColor: '#87CEEB',
+        strokeOpacity: 0.8,
+        fillColor: '#87CEEB',
+        fillOpacity: 0.3
+      });
+      circle.setMap(map);
 
       const mapTypeControl = new window.kakao.maps.MapTypeControl();
       map.addControl(mapTypeControl, window.kakao.maps.ControlPosition.TOPRIGHT);
@@ -127,23 +139,30 @@ const CeoMainPage = () => {
         </div>
         <div className="ceo-button-group">
           <button className="ceo-ceo-button" onClick={handleOwner}>나는 사장</button>
-          <button className="ceo-logout-button" onClick={handleLogout}>로그아웃</button>
+          <button className="ceo-logout-button" onClick={handleLogout}>Logout</button>
         </div>
       </header>
       <main className="ceo-main-content">
         <div className="overlay">
-          <div className="toggle-button">
-            <button className={isRestaurant ? 'active' : ''} onClick={handleToggle}>
-              음식점
-            </button>
-            <button className={!isRestaurant ? 'active' : ''} onClick={handleToggle}>
-              카페
-            </button>
-          </div>
           <div className="hot-places">
             <h2>핫플레이스 <span>({currentTime} 판매량 기준)</span></h2>
+            <div className="category-toggle">
+              <button
+                className={`toggle-button ${category === 'restaurants' ? 'active' : ''}`}
+                onClick={() => handleCategoryChange('restaurants')}
+              >
+                음식점
+              </button>
+              <span className="divider">|</span>
+              <button
+                className={`toggle-button ${category === 'cafes' ? 'active' : ''}`}
+                onClick={() => handleCategoryChange('cafes')}
+              >
+                카페
+              </button>
+            </div>
             <ul>
-              {(isRestaurant ? places.restaurants : places.cafes).map((place) => (
+              {(category === 'restaurants' ? places.restaurants : places.cafes).map((place) => (
                 <li key={place.shop_name} className="restaurant-item">
                   {place.rank}. {place.shop_name}
                 </li>

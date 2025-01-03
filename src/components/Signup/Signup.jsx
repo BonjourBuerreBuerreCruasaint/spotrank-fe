@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Signup.css';
+import axios from 'axios';
 import whitespotrank from '../../assets/whitespotrank.png';
+
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -19,8 +21,10 @@ const Signup = () => {
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
   const [birthdateError, setBirthdateError] = useState('');
   const [phoneError, setPhoneError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false); // 제출 상태 관리
   const navigate = useNavigate();
 
+  // 입력값 변경 핸들러
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value });
@@ -39,6 +43,7 @@ const Signup = () => {
     }
   };
 
+  // 이메일 형식 검사
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!regex.test(email)) {
@@ -48,14 +53,17 @@ const Signup = () => {
     }
   };
 
+  // 비밀번호 강도 체크 (8~15자리, 숫자와 특수문자 포함)
   const validatePassword = (password) => {
-    if (password.length < 8 || password.length > 15) {
-      setPasswordError('비밀번호는 8~15자리여야 합니다.');
+    const regex = /^(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/;
+    if (!regex.test(password)) {
+      setPasswordError('비밀번호는 8~15자리, 숫자 및 특수문자를 포함해야 합니다.');
     } else {
       setPasswordError('');
     }
   };
 
+  // 비밀번호 확인 체크
   const validateConfirmPassword = (confirmPassword, password) => {
     if (confirmPassword !== password) {
       setConfirmPasswordError('비밀번호가 일치하지 않습니다.');
@@ -64,6 +72,7 @@ const Signup = () => {
     }
   };
 
+  // 생년월일 형식 검사
   const validateBirthdate = (birthdate) => {
     if (birthdate.length !== 8) {
       setBirthdateError('생년월일은 8자리여야 합니다.');
@@ -72,6 +81,7 @@ const Signup = () => {
     }
   };
 
+  // 전화번호 길이 검사
   const validatePhone = (phone) => {
     if (phone.length !== 11) {
       setPhoneError('휴대전화번호는 11자리여야 합니다.');
@@ -80,24 +90,56 @@ const Signup = () => {
     }
   };
 
-  const handleBusinessSignup = (e) => {
+  // 회원가입 처리 함수
+  const handleBusinessSignup = async (e) => {
     e.preventDefault();
+    
+    // 개인정보 동의 체크
     if (!formData.agree) {
       alert('개인정보 수집 및 이용에 동의해야 합니다.');
       return;
     }
+
+    // 입력 오류 체크
     if (emailError || passwordError || confirmPasswordError || birthdateError || phoneError) {
       alert('입력한 정보가 올바르지 않습니다.');
       return;
     }
+
+    // 빈값 체크
     if (Object.values(formData).some(value => value === '' || value === false)) {
       alert('모든 필드를 입력해야 합니다.');
       return;
     }
-    navigate('/business-signup');
+
+    setIsSubmitting(true);  // 제출 중일 때 버튼 비활성화
+
+    try {
+      // 서버에 데이터 전송
+      const response = await axios.post('http://127.0.0.1:5000/api/signup', formData);
+      alert(response.data.message);
+      
+      // 성공 시 폼 초기화
+      setFormData({
+        id: '',
+        password: '',
+        confirmPassword: '',
+        name: '',
+        birthdate: '',
+        phone: '',
+        agree: false,
+      });
+
+      // 사업자 인증 페이지로 이동
+      navigate('/business-signup');
+    } catch (error) {
+      alert('회원가입 중 오류가 발생했습니다.');
+    } finally {
+      setIsSubmitting(false);  // 버튼 활성화
+    }
   };
 
-  // SpotRank 클릭 메인 페이지로 이동
+  // 로고 클릭 시 메인 페이지로 이동
   const handleLogoClick = () => {
     navigate('/');
   };
@@ -180,7 +222,9 @@ const Signup = () => {
           required
         />
         {phoneError && <span className="error-message">{phoneError}</span>}
-        <button type="submit" className="signup-button">사업자인증단계</button>
+        <button type="submit" className="signup-button" disabled={isSubmitting}>
+          사업자인증단계
+        </button>
       </form>
     </div>
   );

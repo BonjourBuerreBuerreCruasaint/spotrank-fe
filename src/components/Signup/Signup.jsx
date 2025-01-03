@@ -5,14 +5,16 @@ import './Signup.css';
 import axios from 'axios';
 import whitespotrank from '../../assets/whitespotrank.png';
 
+axios.defaults.baseURL = 'http://127.0.0.1:5000';
+axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 
 const Signup = () => {
   const [formData, setFormData] = useState({
-    id: '',
+    email: '',
     password: '',
     confirmPassword: '',
-    name: '',
+    username: '',
     birthdate: '',
     phone: '',
     agree: false,
@@ -31,7 +33,7 @@ const Signup = () => {
     const { name, value, type, checked } = e.target;
     setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value });
 
-    if (name === 'id') {
+    if (name === 'email') {
       validateEmail(value);
     } else if (name === 'password') {
       validatePassword(value);
@@ -115,18 +117,18 @@ const Signup = () => {
     }
 
     setIsSubmitting(true);  // 제출 중일 때 버튼 비활성화
-
+    console.log(formData);
     try {
       // 서버에 데이터 전송
-      const response = await axios.post('http://127.0.0.1:5000/api/signup', formData);
+      const response = await axios.post('/api/signup', formData);
       alert(response.data.message);
-      
+      console.log(response.data.messsage);
       // 성공 시 폼 초기화
       setFormData({
-        id: '',
+        email: '',
         password: '',
         confirmPassword: '',
-        name: '',
+        username: '',
         birthdate: '',
         phone: '',
         agree: false,
@@ -172,9 +174,9 @@ const Signup = () => {
       <form onSubmit={handleBusinessSignup} className="signup-form">
         <input
           type="email"
-          name="id"
+          name="email"
           placeholder="이메일"
-          value={formData.id}
+          value={formData.email}
           onChange={handleChange}
           required
         />
@@ -199,7 +201,7 @@ const Signup = () => {
         {confirmPasswordError && <span className="error-message">{confirmPasswordError}</span>}
         <input
           type="text"
-          name="name"
+          name="username"
           placeholder="이름"
           value={formData.name}
           onChange={handleChange}

@@ -24,10 +24,37 @@ const BusinessSignup = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('사업자 정보:', formData);
-    navigate('/login');
+
+    const formDataToSend = new FormData();
+    formDataToSend.append('businessNumber', formData.businessNumber);
+    formDataToSend.append('storeName', formData.storeName);
+    formDataToSend.append('address', formData.address);
+    formDataToSend.append('category', formData.category);
+    formDataToSend.append('description', formData.description);
+    
+    if (formData.image) {
+      formDataToSend.append('image', formData.image);
+    }
+
+    try {
+      const response = await fetch('http://localhost:5001/api/business-signup', {
+        method: 'POST',
+        body: formDataToSend,
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        console.log('회원가입 성공:', result.message);
+        navigate('/login');
+      } else {
+        console.error('회원가입 실패:', result.error);
+      }
+    } catch (error) {
+      console.error('서버 오류:', error);
+    }
   };
 
   const isFormValid = () => {

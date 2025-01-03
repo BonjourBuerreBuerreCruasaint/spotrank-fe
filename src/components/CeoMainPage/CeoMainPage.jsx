@@ -144,23 +144,23 @@ const CeoMainPage = () => {
       </header>
       <main className="ceo-main-content">
         <div className="overlay">
+          <div className="category-toggle">
+            <button
+              className={`toggle-button ${category === 'restaurants' ? 'active' : ''}`}
+              onClick={() => handleCategoryChange('restaurants')}
+            >
+              음식점
+            </button>
+            <span className="divider">|</span>
+            <button
+              className={`toggle-button ${category === 'cafes' ? 'active' : ''}`}
+              onClick={() => handleCategoryChange('cafes')}
+            >
+              카페
+            </button>
+          </div>
           <div className="hot-places">
             <h2>핫플레이스 <span>({currentTime} 판매량 기준)</span></h2>
-            <div className="category-toggle">
-              <button
-                className={`toggle-button ${category === 'restaurants' ? 'active' : ''}`}
-                onClick={() => handleCategoryChange('restaurants')}
-              >
-                음식점
-              </button>
-              <span className="divider">|</span>
-              <button
-                className={`toggle-button ${category === 'cafes' ? 'active' : ''}`}
-                onClick={() => handleCategoryChange('cafes')}
-              >
-                카페
-              </button>
-            </div>
             <ul>
               {(category === 'restaurants' ? places.restaurants : places.cafes).map((place) => (
                 <li key={place.shop_name} className="restaurant-item">

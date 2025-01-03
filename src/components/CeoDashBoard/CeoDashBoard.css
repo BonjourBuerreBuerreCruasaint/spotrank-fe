@@ -44,12 +44,13 @@ body {
   
   .dashboard-item {
     background: white;
-    padding: 1.5rem;
+    padding: 2.5rem;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     height: 7%;
-    min-height: 200px;
-    max-height: 300px;
+    min-height: 220px;
+    max-height: 250px;
+    margin-bottom: -10px;
   }
   
   .dashboard-item h3 {
@@ -77,7 +78,7 @@ body {
     cursor: pointer;
     transition: background-color 0.3s;
     margin-bottom: 10px;
-    margin-top: -70px;
+    margin-top: -80px;
   }
   
   .submit-button:hover {
@@ -99,4 +100,16 @@ body {
   .view-all-sales-button:hover {
     background-color: #66B2D8;
   }
+  
+  .edit-dashboard-item textarea {
+    width: 400px;
+    height: 150px;
+    resize: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+
   

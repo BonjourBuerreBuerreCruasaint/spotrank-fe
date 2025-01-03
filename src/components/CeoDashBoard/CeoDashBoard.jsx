@@ -11,6 +11,7 @@ const CeoDashBoard = () => {
   const [menuData, setMenuData] = useState([]);
   const [images, setImages] = useState([]);
   const [description, setDescription] = useState("");
+  
 
   useEffect(() => {
     // 임의의 데이터 생성
@@ -83,6 +84,7 @@ const CeoDashBoard = () => {
 
   const handleViewAllSales = () => {
     // 매출 전체보기 버튼 클릭 시 처리 로직
+    navigate('/detail-sales');
     console.log("매출 전체보기 버튼 클릭됨");
   };
 
@@ -125,7 +127,7 @@ const CeoDashBoard = () => {
               placeholder="가게 정보를 입력하세요."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              style={{ width: '100%', height: '7px', marginBottom: '1rem' }}
+              style={{ width: '100%', height: '50px', marginBottom: 'rem' }}
             />
             <button className="submit-button" onClick={handleSubmit}>수정하기</button>
           </div>

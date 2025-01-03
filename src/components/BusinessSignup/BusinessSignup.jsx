@@ -37,7 +37,7 @@ const BusinessSignup = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5001/api/business-signup', {
+      const response = await fetch('/api/business-signup', {
         method: 'POST',
         body: formDataToSend,
       });

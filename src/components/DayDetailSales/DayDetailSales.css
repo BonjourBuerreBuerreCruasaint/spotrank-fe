@@ -1,0 +1,179 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+  }
+  
+  .day-detail-sales-container {
+    padding: 0px;
+    background-color: #f5f5f5;
+    max-width: 1600px; /* 최대 너비 설정 */
+    width: 100%; /* 너비를 100%로 설정하여 화면에 꽉 차게 */
+    margin: 0 auto; /* 중앙 정렬 */
+    box-sizing: border-box; /* 패딩을 포함한 너비 계산 */
+  }
+  
+  .day-detail-sales-header {
+    width: 100%; /* 너비를 100%로 설정 */
+    max-width: 1600px; /* detail-sales-container와 동일한 최대 너비 설정 */
+    margin: 0 auto; /* 중앙 정렬 */
+    padding: 20px; /* 패딩 추가 */
+    background-color: #87CEEB; /* 배경 색상 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+  }
+  
+  .day-header h1 {
+    margin: 0;
+  }
+  
+  
+  .day-content-container {
+    display: flex;
+    flex: 1;
+    padding: 0px;
+  }
+  
+  .day-detail-sales-sidebar {
+    width: 100px;
+    background-color: #f5f5f5;
+    padding: 10px;
+  }
+  
+  .day-detail-sales-sidebar ul {
+    padding: 0;
+    list-style-type: none;
+  }
+  
+  .day-detail-sales-sidebar li {
+    margin-bottom: 10px;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    color: #333;
+    left: 0;
+    top: 0;
+  }
+  
+  .day-detail-sales-sidebar li:hover {
+    background-color: #ddd;
+  }
+  
+  .day-main-content {
+    flex: 1;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .day-chart-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .day-line-chart,
+  .day-pie-chart {
+    background-color: white;
+    padding: 20px;
+    height: 300px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 210%;
+  }
+  
+  .day-pie-chart {
+    width: 100%;
+    height: 300px;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  .day-table-section,
+  .day-summary-section {
+    background-color: white;
+    padding: 0px;
+    border-radius: 19px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 100px;
+    margin-top: -10px;
+  }
+  
+  .day-table-section h2,
+  .day-summary-section h2 {
+    margin-top: 20px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  thead {
+    background-color: #f5f5f5;
+  }
+  
+  thead th {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 2px solid #ddd;
+  }
+  
+  tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .day-detail-sales-chart-item {
+    flex: 1;
+    margin: 0 10px;
+    max-width: 80%;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .day-detail-sales-pie-chart {
+    width: 100%;
+    height: 300px;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  .day-detail-sales-charts-container {
+    display: flex; /* Flexbox 사용 */
+    flex-direction: column; /* 세로 방향으로 정렬 */
+    width: 100%; /* 너비를 100%로 설정 */
+  }
+  
+  .day-detail-sales-chart-item {
+    margin-bottom: 20px; /* 차트 간격 */
+    width: 100%; /* 차트 너비를 100%로 설정 */
+  }
+  
+  .day-detail-sales-line-chart,
+  .day-detail-sales-pie-chart {
+    width: 100%; /* 차트 너비를 100%로 설정 */
+    height: auto; /* 높이를 자동으로 조정 */
+  }
+  
+  .day-detail-sales-summary {
+    margin-top: 20px; /* 상단 여백 추가 */
+    background-color: white; /* 배경 색상 */
+    padding: 15px; /* 패딩 추가 */
+    border-radius: 5px; /* 모서리 둥글게 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+  }
+  
+    .day-detail-sales-summary-section {
+    margin-top:20px; /* 상단 여백 추가 */
+    background-color: white; /* 배경 색상 */
+    padding: 15px; /* 패딩 추가 */
+    border-radius: 5px; /* 모서리 둥글게 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+  }

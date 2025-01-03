@@ -90,7 +90,7 @@ const DetailSales = () => {
             <li onClick={() => navigate("/detail-sales")}>실시간</li>
             <li onClick={() => navigate("/day-detail-sales")}>일간</li>
             <li onClick={() => navigate("/week-detail-sales")}>주간</li>
-            <li>월간</li>
+            <li onClick={() => navigate("/month-detail-sales")}>월간</li>
           </ul>
         </nav>
 

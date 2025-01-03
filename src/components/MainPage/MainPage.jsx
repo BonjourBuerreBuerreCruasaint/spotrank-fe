@@ -101,6 +101,11 @@ const MainPage = () => {
       // 마커를 지도에 표시
       marker.setMap(map);
 
+      // 마커 클릭 이벤트 추가
+      window.kakao.maps.event.addListener(marker, 'click', () => {
+        navigate('/store-detail'); // StoreDetail 페이지로 이동
+      });
+
       // InfoWindow 생성
       const infoWindow = new window.kakao.maps.InfoWindow({
         content: `
@@ -172,7 +177,7 @@ const MainPage = () => {
       });
       marker2.setMap(map);
 
-      // 새로운 마커 생성 (추가된 위치)
+      // 새로운 마커 생성 (추가된 위치)//스타벅스
       const markerPosition3 = new window.kakao.maps.LatLng(37.556467, 126.937160);
       const marker3 = new window.kakao.maps.Marker({
         position: markerPosition3
@@ -206,7 +211,7 @@ const MainPage = () => {
     if (window.kakao && window.kakao.maps) {
       loadKakaoMap();
     }
-  }, []);
+  }, [navigate]);
 
   // 로그인 버튼 클릭 핸들러 추가
   const handleLoginClick = () => {

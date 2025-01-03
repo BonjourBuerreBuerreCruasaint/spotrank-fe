@@ -11,16 +11,20 @@ import './App.css';
 import Signup from './components/Signup/Signup';
 import BusinessSignup from './components/BusinessSignup/BusinessSignup';
 import './App.css';
+import DayDetailSales from './components/DayDetailSales/DayDetailSales';    
+import WeekDetailSales from './components/WeekDetailSales/WeekDetailSales';
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
+      <Routes>  
+        <Route path="/login" element={<Login />} /> 
         <Route path="/" element={<MainPage />} />
         <Route path="/find-id" element={<FindID />} />
         <Route path="/find-password" element={<FindPassWord />} />
         <Route path="/detail-sales" element={<DetailSales />} />
+        <Route path="/day-detail-sales" element={<DayDetailSales />} />
+        <Route path="/week-detail-sales" element={<WeekDetailSales />} />
         <Route path="/ceo-main" element={<CeoMainPage />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/business-signup" element={<BusinessSignup />} />

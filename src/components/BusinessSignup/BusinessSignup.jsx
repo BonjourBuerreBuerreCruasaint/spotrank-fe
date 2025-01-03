@@ -5,11 +5,13 @@ import './BusinessSignup.css';
 const BusinessSignup = () => {
   const [formData, setFormData] = useState({
     businessNumber: '',
+    businessName: '',
     storeName: '',
     address: '',
     category: 'restaurants',
     description: '',
     image: null,
+    openingDate: '',
   });
 
   const navigate = useNavigate();
@@ -58,6 +60,7 @@ const BusinessSignup = () => {
   const isFormValid = () => {
     return (
       formData.businessNumber &&
+      formData.businessName &&
       formData.storeName &&
       formData.address &&
       formData.category
@@ -66,6 +69,14 @@ const BusinessSignup = () => {
 
   const handleLogoClick = () => {
     navigate('/');
+  };
+
+  const handleCheckClick = () => {
+    if (!formData.businessName || !formData.openingDate) {
+      alert('사업자 이름과 개업일을 입력해 주세요.');
+    } else {
+      alert('모든 정보가 입력되었습니다!');
+    }
   };
 
   return (
@@ -81,7 +92,27 @@ const BusinessSignup = () => {
             onChange={handleChange}
             required
           />
-          <button type="button">확인</button>
+          <button type="button" onClick={handleCheckClick}>확인</button>
+        </div>
+        <div className="form-group">
+          <label>사업자 이름</label>
+          <input
+            type="text"
+            name="businessName"
+            value={formData.businessName}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>개업일</label>
+          <input
+            type="date"
+            name="openingDate"
+            value={formData.openingDate}
+            onChange={handleChange}
+            required
+          />
         </div>
         <div className="form-group">
           <label>가게 상호명</label>

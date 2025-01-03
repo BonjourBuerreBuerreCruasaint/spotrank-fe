@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Signup.css';
+/*import spotranklogo from '../../assets/spotranklogo.png';*/
 import axios from 'axios';
 import whitespotrank from '../../assets/whitespotrank.png';
+
 
 
 const Signup = () => {
@@ -147,7 +149,6 @@ const Signup = () => {
   return (
     <div className="signup-container">
       <h1 className="signup-title" onClick={handleLogoClick}>
-        <img src={whitespotrank} alt="SpotRank Logo" style={{ width: '30px', marginRight: '10px' }} />
         SpotRank
       </h1>
       <div className="privacy-box">

@@ -36,17 +36,15 @@ const DetailSales = () => {
         options: {
           responsive: true,
           maintainAspectRatio: true,
-          layout: {
-            padding: {
-              top: -10,
-              bottom: -5,
-              left: 10,
-              right: 10,
-            },
-          },
           scales: {
             y: {
               beginAtZero: true,
+              title: {
+                display: true,
+                text: '단위: 만원',
+                padding: 20,
+                position: 'center',
+              },
             },
           },
         },
@@ -89,8 +87,9 @@ const DetailSales = () => {
       <div className="content-container">
         <nav className="detail-sales-sidebar">
           <ul>
-            <li>실시간</li>
-            <li>주간</li>
+            <li onClick={() => navigate("/detail-sales")}>실시간</li>
+            <li onClick={() => navigate("/day-detail-sales")}>일간</li>
+            <li onClick={() => navigate("/week-detail-sales")}>주간</li>
             <li>월간</li>
           </ul>
         </nav>
@@ -115,7 +114,37 @@ const DetailSales = () => {
             </div>
           </div>
           <div className="summary-section">
-            <h2>총 매출 현황표</h2>
+            <h2>우리매장 인기상품★</h2>
+            <table>
+                <thead>
+                  <tr>
+                    <th>메뉴</th>
+                    <th>가격</th>
+                    <th>총 개수</th>
+                    <th>매출 합계</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>예시 메뉴 1</td>
+                    <td>0원</td>
+                    <td>0개</td>
+                    <td>0원</td>
+                  </tr>
+                  <tr>
+                    <td>예시 메뉴 2</td>
+                    <td>0원</td>
+                    <td>0개</td>
+                    <td>0원</td>
+                  </tr>
+                  <tr>
+                    <td>예시 메뉴 3</td>
+                    <td>0원</td>
+                    <td>0개</td>
+                    <td>0원</td>
+                  </tr>
+                </tbody>
+            </table>
           </div>
         </main>
       </div>

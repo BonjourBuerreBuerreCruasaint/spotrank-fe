@@ -13,6 +13,8 @@ import BusinessSignup from './components/BusinessSignup/BusinessSignup';
 import './App.css';
 import DayDetailSales from './components/DayDetailSales/DayDetailSales';    
 import WeekDetailSales from './components/WeekDetailSales/WeekDetailSales';
+import MonthDetailSales from './components/MonthDetailSales/MonthDetailSales';
+import StoreDetail from './components/StoreDetail/StoreDetail';
 
 function App() {
   return (
@@ -25,10 +27,12 @@ function App() {
         <Route path="/detail-sales" element={<DetailSales />} />
         <Route path="/day-detail-sales" element={<DayDetailSales />} />
         <Route path="/week-detail-sales" element={<WeekDetailSales />} />
+        <Route path="/month-detail-sales" element={<MonthDetailSales />} />
         <Route path="/ceo-main" element={<CeoMainPage />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/business-signup" element={<BusinessSignup />} />
         <Route path="/ceo-dashboard" element={<CeoDashBoard />} />
+        <Route path="/store-detail" element={<StoreDetail />} />
       </Routes>
     </Router>
   );

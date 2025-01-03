@@ -33,6 +33,7 @@ const BusinessSignup = () => {
     formDataToSend.append('address', formData.address);
     formDataToSend.append('category', formData.category);
     formDataToSend.append('description', formData.description);
+    formDataToSend.append('openingDate',formData.openingDate);
     
     if (formData.image) {
       formDataToSend.append('image', formData.image);
@@ -45,7 +46,7 @@ const BusinessSignup = () => {
       });
 
       const result = await response.json();
-
+      console.log(result);
       if (response.ok) {
         console.log('회원가입 성공:', result.message);
         navigate('/login');
@@ -63,7 +64,8 @@ const BusinessSignup = () => {
       formData.businessName &&
       formData.storeName &&
       formData.address &&
-      formData.category
+      formData.category &&
+      formData.openingDate
     );
   };
 
@@ -71,11 +73,35 @@ const BusinessSignup = () => {
     navigate('/');
   };
 
-  const handleCheckClick = () => {
-    if (!formData.businessName || !formData.openingDate) {
-      alert('사업자 이름과 개업일을 입력해 주세요.');
-    } else {
-      alert('모든 정보가 입력되었습니다!');
+  const handleCheckClick = async () => {
+    if (!formData.businessNumber || !formData.openingDate || !formData.businessName) {
+      alert('사업자등록번호, 개업일, 대표자 성명을 모두 입력하세요.');
+      return;
+    }
+  
+    try {
+      const response = await fetch('/api/verify-business', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          businessNumber: formData.businessNumber,
+          openingDate: formData.openingDate,
+          businessName: formData.businessName,
+        }),
+      });
+  
+      const result = await response.json();
+  
+      if (response.ok) {
+        alert(`사업자 진위 여부 확인 성공: ${result.message}`);
+      } else {
+        alert(`확인 실패: ${result.message}`);
+      }
+    } catch (error) {
+      console.error('서버 오류:', error);
+      alert('서버와 통신 중 오류가 발생했습니다.');
     }
   };
 

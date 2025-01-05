@@ -190,3 +190,8 @@ body {
     max-height: 400px; /* 최대 높이 설정 */
     overflow-y: auto; /* 수직 스크롤 추가 */
   }
+  
+  .month-detail-sales-sidebar li.active {
+    background-color: #87CEEB; /* 활성화된 버튼의 배경색 */
+    color: white; /* 활성화된 버튼의 글자색 */
+  }

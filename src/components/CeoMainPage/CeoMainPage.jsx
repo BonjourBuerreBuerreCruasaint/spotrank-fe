@@ -65,7 +65,7 @@ const CeoMainPage = () => {
 
   const handleOwner = () => {
     // "나는 사장" 버튼 클릭 시 CeoDashBoard로 이동
-    navigate('/ceo-dashboard'); // CeoDashBoard 페이지로 이동
+    navigate('/detail-sales'); // DetailSales 페이지로 이동
   };
 
   useEffect(() => {

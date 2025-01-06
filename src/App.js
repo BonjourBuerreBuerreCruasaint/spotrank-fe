@@ -14,6 +14,7 @@ import DayDetailSales from './components/DayDetailSales/DayDetailSales';
 import WeekDetailSales from './components/WeekDetailSales/WeekDetailSales';
 import MonthDetailSales from './components/MonthDetailSales/MonthDetailSales';
 import StoreDetail from './components/StoreDetail/StoreDetail';
+import ResetPassWord from './components/ResetPassWord/ResetPassWord'; 
 import ShopEditPage from './components/ShopEdit/ShopEditPage';
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/business-signup" element={<BusinessSignup />} />
         <Route path="/store-detail" element={<StoreDetail />} />
+        <Route path="/reset-password" element={<ResetPassWord />} />
         <Route path="/shop-edit" element={<ShopEditPage />} />
       </Routes>
     </Router>

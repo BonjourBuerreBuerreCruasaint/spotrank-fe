@@ -14,6 +14,8 @@ const MainPage = () => {
     cafes: [],
   });
 
+  const [userLocation, setUserLocation] = useState(null);
+
   // 현재 선택된 카테고리 데이터 가져오기
   const currentPlaces = places[category];
 
@@ -73,6 +75,23 @@ const MainPage = () => {
     // 상세 페이지 이동 로직 추가 가능
   };
 
+  // 사용자 위치 가져오기
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setUserLocation({ latitude, longitude });
+        },
+        (error) => {
+          console.error('위치 정보를 가져오는 중 오류 발생:', error);
+        }
+      );
+    } else {
+      console.warn('Geolocation이 지원되지 않습니다.');
+    }
+  }, []);
+
   useEffect(() => {
     const loadKakaoMap = () => {
       const container = document.getElementById('map');
@@ -92,22 +111,27 @@ const MainPage = () => {
       const zoomControl = new window.kakao.maps.ZoomControl();
       map.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT);
 
-      // 마커 생성
-      const markerPosition = new window.kakao.maps.LatLng(37.556229, 126.937079);
-      const marker = new window.kakao.maps.Marker({
-        position: markerPosition
-      });
+      if (userLocation){
+        const userMarkerPosition = new window.kakao.maps.LatLng(
+          userLocation.latitude,
+          userLocation.longitude
+        );
 
-      // 마커를 지도에 표시
-      marker.setMap(map);
+        const userMarker = new window.kakao.maps.Marker({
+          position: userMarkerPosition,
+        });
+
+        // 마커를 지도에 표시
+      userMarker.setMap(map);
+      map.setCenter(userMarkerPosition);
 
       // 마커 클릭 이벤트 추가
-      window.kakao.maps.event.addListener(marker, 'click', () => {
+      window.kakao.maps.event.addListener(userMarker, 'click', () => {
         navigate('/store-detail'); // StoreDetail 페이지로 이동
       });
 
       // InfoWindow 생성
-      const infoWindow = new window.kakao.maps.InfoWindow({
+      const userInfoWindow = new window.kakao.maps.InfoWindow({
         content: `
           <div style="
             padding: 10px;
@@ -124,40 +148,20 @@ const MainPage = () => {
       });
 
       // 마커에 마우스 오버 이벤트 등록
-      window.kakao.maps.event.addListener(marker, 'mouseover', () => {
-        infoWindow.open(map, marker);
+      window.kakao.maps.event.addListener(userMarker, 'mouseover', () => {
+        userInfoWindow.open(map, userMarker);
       });
 
       // 마커에 마우스 아웃 이벤트 등록
-      window.kakao.maps.event.addListener(marker, 'mouseout', () => {
-        infoWindow.close();
+      window.kakao.maps.event.addListener(userMarker, 'mouseout', () => {
+        userInfoWindow.close();
       });
 
-      // 버티고 빌딩 영역 좌표
-      const buildingPath = [
-        new window.kakao.maps.LatLng(37.556329, 126.936979),
-        new window.kakao.maps.LatLng(37.556329, 126.937179),
-        new window.kakao.maps.LatLng(37.556129, 126.937179),
-        new window.kakao.maps.LatLng(37.556129, 126.936979)
-      ];
-
-      // 건물 영역 폴리곤 생성
-      const building = new window.kakao.maps.Polygon({
-        path: buildingPath,
-        strokeWeight: 2,
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.8,
-        strokeStyle: 'solid',
-        fillColor: '#FFB6C1',  // 연한 빨간색
-        fillOpacity: 0.5
-      });
-
-      // 건물 폴리곤을 지도에 표시
-      building.setMap(map);
+      
 
       // 500m 범위 원 생성
       const circle = new window.kakao.maps.Circle({
-        center: markerPosition, // 원의 중심좌표
+        center: userMarkerPosition, // 원의 중심좌표
         radius: 500, // 미터 단위의 반지름
         strokeWeight: 2, // 선의 두께
         strokeColor: '#87CEEB', // 선의 색깔
@@ -171,47 +175,34 @@ const MainPage = () => {
       circle.setMap(map);
 
       // 새로운 마커 생성 (신촌 현백)
-      const markerPosition2 = new window.kakao.maps.LatLng(37.556042, 126.935807);
-      const marker2 = new window.kakao.maps.Marker({
-        position: markerPosition2
-      });
-      marker2.setMap(map);
+      // const markerPosition2 = new window.kakao.maps.LatLng(37.556042, 126.935807);
+      // const marker2 = new window.kakao.maps.Marker({
+      //   position: markerPosition2
+      // });
+      // marker2.setMap(map);
 
-      // 새로운 마커 생성 (추가된 위치)//스타벅스
-      const markerPosition3 = new window.kakao.maps.LatLng(37.556467, 126.937160);
-      const marker3 = new window.kakao.maps.Marker({
-        position: markerPosition3
-      });
-      marker3.setMap(map);
+      // // 새로운 마커 생성 (추가된 위치)//스타벅스
+      // const markerPosition3 = new window.kakao.maps.LatLng(37.556467, 126.937160);
+      // const marker3 = new window.kakao.maps.Marker({
+      //   position: markerPosition3
+      // });
+      // marker3.setMap(map);
 
-      // 새로운 건물 영역 좌표
-      const buildingPath2 = [
-        new window.kakao.maps.LatLng(37.556567, 126.937060),
-        new window.kakao.maps.LatLng(37.556567, 126.937260),
-        new window.kakao.maps.LatLng(37.556367, 126.937260),
-        new window.kakao.maps.LatLng(37.556367, 126.937060)
-      ];
+      }
 
-      // 새로운 건물 영역 폴리곤 생성
-      const building2 = new window.kakao.maps.Polygon({
-        path: buildingPath2,
-        strokeWeight: 2,
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.8,
-        strokeStyle: 'solid',
-        fillColor: '#FFB6C1',  // 연한 빨간색
-        fillOpacity: 0.5
-      });
-
-      // 건물 폴리곤을 지도에 표시
-      building2.setMap(map);
+      
+      // 마커 생성
+      // const markerPosition = new window.kakao.maps.LatLng(37.556229, 126.937079);
+      // const marker = new window.kakao.maps.Marker({
+      //   position: markerPosition
+      // });
     };
 
     // 카카오맵 SDK가 로드된 후 실행
-    if (window.kakao && window.kakao.maps) {
+    if (window.kakao && window.kakao.maps && userLocation) {
       loadKakaoMap();
     }
-  }, [navigate]);
+  }, [navigate, userLocation]);
 
   // 로그인 버튼 클릭 핸들러 추가
   const handleLoginClick = () => {

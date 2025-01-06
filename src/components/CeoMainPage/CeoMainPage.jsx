@@ -11,6 +11,7 @@ const CeoMainPage = () => {
     cafes: [],
   });
   const [category, setCategory] = useState('restaurants'); // 카테고리 상태
+  let map; // map 변수를 여기서 정의
 
   // 랜덤 추천 식당 업데이트
   useEffect(() => {
@@ -26,17 +27,72 @@ const CeoMainPage = () => {
   // Flask API에서 데이터 가져오기
   const fetchPlacesFromAPI = useCallback(async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/api/ranking'); // Flask API URL
-      if (!response.ok) throw new Error('API 요청 실패');
-      const data = await response.json();
-      setPlaces({
-        restaurants: data.restaurant_ranking,
-        cafes: data.cafe_ranking,
-      });
+      // 서울 열린 데이터 광장에서 데이터 가져오기
+      const seoulDataResponse = await fetch('http://127.0.0.1:5000/api/business-areas'); // Flask API URL
+      if (!seoulDataResponse.ok) throw new Error('서울 데이터 요청 실패');
+      
+      const seoulData = await seoulDataResponse.json(); // JSON으로 변환
+      console.log('서울 데이터:', seoulData); // 데이터 확인을 위한 로그
+
+      // TbgisTrdarRelm.row 배열을 가져오기
+      const areas = seoulData.TbgisTrdarRelm.row;
+
+      // 지역별 색상 구분을 위한 좌표와 컬럼명 사용
+      if (Array.isArray(areas)) {
+        areas.forEach(area => {
+          const latitude = parseFloat(area.YDNTS_VALUE); // 위도
+          const longitude = parseFloat(area.XCNTS_VALUE); // 경도
+          const category = area.trdar_se_cd_nm; // 카테고리
+          const color = getColorByCategory(category); // 색상 결정
+
+          // 위도, 경도를 기준으로 사각형의 경계 좌표 계산
+          const path = [
+            new window.kakao.maps.LatLng(latitude, longitude), // 좌상단
+            new window.kakao.maps.LatLng(latitude, longitude + 0.0005), // 우상단 (0.0005는 약 50m)
+            new window.kakao.maps.LatLng(latitude + 0.0005, longitude + 0.0005), // 우하단
+            new window.kakao.maps.LatLng(latitude + 0.0005, longitude) // 좌하단
+          ];
+
+          // 다각형 생성
+          const polygon = new window.kakao.maps.Polygon({
+            path: path,
+            strokeWeight: 2,
+            strokeColor: color,
+            strokeOpacity: 0.8,
+            fillColor: color,
+            fillOpacity: 0.3
+          });
+          polygon.setMap(map); // map에 다각형 추가
+        });
+      } else {
+        console.error('areas는 배열이 아닙니다:', areas);
+      }
+
     } catch (error) {
       console.error('데이터 가져오기 실패:', error);
     }
   }, []);
+
+  // 색상 결정 함수
+  const getColorByCategory = (category) => {
+    switch(category) {
+      case '골목상권':
+        return '#87CEEB';
+        break; // 하늘색
+      case '발달상권':
+        return '#90EE90';
+        break; // 연한 초록색
+      case '전통시장':
+        return '#FFC0CB';
+        break; // 연분홍색
+      case '관광특구':
+        return '#FFD700';
+        break; // 금색
+      default:
+        return '#D3D3D3';
+        break; // 기본 회색
+    }
+  };
 
   useEffect(() => {
     fetchPlacesFromAPI();
@@ -75,7 +131,7 @@ const CeoMainPage = () => {
         center: new window.kakao.maps.LatLng(37.556229, 126.937079),
         level: 3
       };
-      const map = new window.kakao.maps.Map(container, options);
+      map = new window.kakao.maps.Map(container, options); // map 변수를 여기서 정의
 
       // 500m 반경 원 추가
       const circle = new window.kakao.maps.Circle({

@@ -96,7 +96,7 @@ const DetailSales = () => {
     <div className="detail-sales-container">
       <header
         className="detail-sales-header"
-        onClick={() => navigate("/ceo-main")} // navigate 사용
+        onClick={() => navigate("/ceo-main")}
       >
         <h1>SpotRank</h1>
       </header>
@@ -108,6 +108,7 @@ const DetailSales = () => {
             <li className={getButtonClass("/day-detail-sales")} onClick={() => navigate("/day-detail-sales")}>일간</li>
             <li className={getButtonClass("/week-detail-sales")} onClick={() => navigate("/week-detail-sales")}>주간</li>
             <li className={getButtonClass("/month-detail-sales")} onClick={() => navigate("/month-detail-sales")}>월간</li>
+            <li className={getButtonClass("/shop-edit")} onClick={() => navigate("/shop-edit")}>정보 수정</li>
           </ul>
         </nav>
 

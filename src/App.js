@@ -15,6 +15,7 @@ import DayDetailSales from './components/DayDetailSales/DayDetailSales';
 import WeekDetailSales from './components/WeekDetailSales/WeekDetailSales';
 import MonthDetailSales from './components/MonthDetailSales/MonthDetailSales';
 import StoreDetail from './components/StoreDetail/StoreDetail';
+import ResetPassWord from './components/ResetPassWord/ResetPassWord'; 
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/business-signup" element={<BusinessSignup />} />
         <Route path="/ceo-dashboard" element={<CeoDashBoard />} />
         <Route path="/store-detail" element={<StoreDetail />} />
+        <Route path="/reset-password" element={<ResetPassWord />} />
       </Routes>
     </Router>
   );

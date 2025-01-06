@@ -1,35 +1,24 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './FindID.css';
 
 const FindID = () => {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
-    email: '',
   });
 
-  const [emailError, setEmailError] = useState('');
   const [phoneError, setPhoneError] = useState('');
+  const [responseMessage, setResponseMessage] = useState(''); // 서버 응답 메시지 상태 추가
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
 
-    if (name === 'email') {
-      validateEmail(value);
-    } else if (name === 'phone') {
+    if (name === 'phone') {
       validatePhone(value);
-    }
-  };
-
-  const validateEmail = (email) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!regex.test(email)) {
-      setEmailError('이메일 형식으로 입력해주세요');
-    } else {
-      setEmailError('');
     }
   };
 
@@ -41,18 +30,32 @@ const FindID = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (emailError || phoneError) {
+
+    // 에러 확인
+    if (phoneError) {
       alert('입력한 정보가 올바르지 않습니다.');
       return;
     }
-    if (Object.values(formData).some(value => value === '')) {
+    if (Object.values(formData).some((value) => value === '')) {
       alert('모든 필드를 입력해야 합니다.');
       return;
     }
-    alert('이메일로 아이디가 발송되었습니다.');
-    navigate('/login');
+
+    try {
+      const response = await axios.post('http://127.0.0.1:5000/api/find-id', formData);
+
+      if (response.status === 200) {
+        setResponseMessage(`이메일: ${response.data.email}`); // 성공 메시지 설정
+      }
+    } catch (error) {
+      if (error.response) {
+        setResponseMessage(error.response.data.error || '요청 처리 중 오류가 발생했습니다.');
+      } else {
+        setResponseMessage('서버와의 통신에 실패했습니다.');
+      }
+    }
   };
 
   const handleLogoClick = () => {
@@ -83,17 +86,17 @@ const FindID = () => {
             required
           />
           {phoneError && <span className="error-message">{phoneError}</span>}
-          <input
-            type="email"
-            name="email"
-            placeholder="이메일"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-          {emailError && <span className="error-message">{emailError}</span>}
           <button type="submit" className="findid-button">아이디 찾기</button>
+          <div className="login-footer">
+          <button className="text-button" onClick={() => navigate('/find-password')}>
+            비밀번호 찾기
+          </button>
+          <button className="text-button" onClick={() => navigate('/login')}>
+            로그인
+          </button>
+        </div>
         </form>
+        {responseMessage && <p className="response-message">{responseMessage}</p>} {/* 메시지 출력 */}
       </div>
     </div>
   );

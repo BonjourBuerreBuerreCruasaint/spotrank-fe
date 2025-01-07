@@ -16,6 +16,8 @@ const CeoMainPage = () => {
   // 로고 이미지 경로 수정
   const logo = `${process.env.PUBLIC_URL}/logo.png`;
 
+  const [userLocation, setUserLocation] = useState(null);
+  
   // 랜덤 추천 식당 업데이트
   useEffect(() => {
     if (places.restaurants.length > 0) {
@@ -97,6 +99,23 @@ const CeoMainPage = () => {
     }
   }, []);
 
+  // 사용자 위치 가져오기
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setUserLocation({ latitude, longitude });
+        },
+        (error) => {
+          console.error('위치 정보를 가져오는 중 오류 발생:', error);
+        }
+      );
+    } else {
+      console.warn('Geolocation이 지원되지 않습니다.');
+    }
+  }, []);
+
   // 간단한 충돌 감지 함수 (예시)
   const isOverlapping = (existingPolygon, newPath) => {
     // 여기서 기존 폴리곤과 새로운 폴리곤의 경계를 비교하여 겹치는지 확인하는 로직을 구현
@@ -164,17 +183,25 @@ const CeoMainPage = () => {
       });
       circle.setMap(map);
 
-      const mapTypeControl = new window.kakao.maps.MapTypeControl();
-      map.addControl(mapTypeControl, window.kakao.maps.ControlPosition.TOPRIGHT);
+      if (userLocation){
+        const userMarkerPosition = new window.kakao.maps.LatLng(
+          userLocation.latitude,
+          userLocation.longitude
+        );
 
-      const zoomControl = new window.kakao.maps.ZoomControl();
-      map.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT);
+        const userMarker = new window.kakao.maps.Marker({
+          position: userMarkerPosition,
+        });
 
-      const markerPosition = new window.kakao.maps.LatLng(37.556229, 126.937079);
-      const marker = new window.kakao.maps.Marker({
-        position: markerPosition
-      });
-      marker.setMap(map);
+        // 마커를 지도에 표시
+        userMarker.setMap(map);
+        map.setCenter(userMarkerPosition);
+
+        // 마커 클릭 이벤트 추가
+        window.kakao.maps.event.addListener(userMarker, 'click', () => {
+          navigate('/store-detail'); // StoreDetail 페이지로 이동
+        });
+      }
 
       const infoWindow = new window.kakao.maps.InfoWindow({
         content: `
@@ -192,19 +219,19 @@ const CeoMainPage = () => {
         removable: true
       });
 
-      window.kakao.maps.event.addListener(marker, 'mouseover', () => {
+      window.kakao.maps.event.addListener(userMarker, 'mouseover', () => {
         infoWindow.open(map, marker);
       });
 
-      window.kakao.maps.event.addListener(marker, 'mouseout', () => {
+      window.kakao.maps.event.addListener(userMarker, 'mouseout', () => {
         infoWindow.close();
       });
     };
 
-    if (window.kakao && window.kakao.maps) {
-      loadKakaoMap();
+    if (window.kakao && window.kakao.maps && userLocation) {
+      loadKakaoMap();ß
     }
-  }, []);
+  }, [navigate, userLocation]);
 
   return (
     <div className="ceo-main-container">

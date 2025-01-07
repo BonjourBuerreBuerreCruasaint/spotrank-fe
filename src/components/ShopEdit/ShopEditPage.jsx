@@ -37,7 +37,10 @@ const ShopEditPage = () => {
   return (
     <div className="shop-edit-container">
       <div className="shop-edit-box">
-        <h2 className="shop-edit-title" onClick={() => navigate("/ceo-main")} style={{ cursor: 'pointer' }}>SpotRank</h2>
+        <h2 className="shop-edit-title" onClick={() => navigate("/ceo-main")} style={{ cursor: 'pointer' }}>
+          <img src="/logo-one.png" alt="로고" className="logo" />
+          SpotRank
+        </h2>
         <form onSubmit={handleSubmit}>
           <input
             type="text"

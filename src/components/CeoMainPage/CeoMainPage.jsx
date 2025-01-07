@@ -11,6 +11,10 @@ const CeoMainPage = () => {
     cafes: [],
   });
   const [category, setCategory] = useState('restaurants'); // 카테고리 상태
+  let map; // map 변수를 여기서 정의
+
+  // 로고 이미지 경로 수정
+  const logo = `${process.env.PUBLIC_URL}/logo.png`;
 
   const [userLocation, setUserLocation] = useState(null);
   
@@ -28,13 +32,68 @@ const CeoMainPage = () => {
   // Flask API에서 데이터 가져오기
   const fetchPlacesFromAPI = useCallback(async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/api/ranking'); // Flask API URL
-      if (!response.ok) throw new Error('API 요청 실패');
-      const data = await response.json();
-      setPlaces({
-        restaurants: data.restaurant_ranking,
-        cafes: data.cafe_ranking,
+      const seoulDataResponse = await fetch('http://127.0.0.1:5000/api/seouldata');
+      if (!seoulDataResponse.ok) throw new Error('서울 데이터 요청 실패');
+      
+      let seoulData = await seoulDataResponse.json();
+      console.log('API 응답:', seoulData); // 응답 데이터 확인
+
+      if (!Array.isArray(seoulData)) {
+        if (seoulData) {
+          seoulData = [seoulData]; // 단일 객체일 경우 배열로 변환
+        } else {
+          throw new Error('API 응답 구조가 올바르지 않습니다.');
+        }
+      }
+
+      const areas = seoulData; // DATA 배열 사용
+      const polygons = []; // 이미 추가된 정사각형을 저장할 배열
+
+      areas.forEach(area => {
+        console.log('현재 데이터:', area); // 현재 데이터 확인
+        const latitude = area.latitude !== undefined ? parseFloat(area.latitude) : null; // "latitude" 값 사용
+        const longitude = area.longitude !== undefined ? parseFloat(area.longitude) : null; // "longitude" 값 사용
+
+        if (latitude === null || longitude === null || isNaN(latitude) || isNaN(longitude)) {
+          console.error(`위도 또는 경도가 유효하지 않음: 위도=${latitude}, 경도=${longitude}`);
+          return; // 유효하지 않은 경우 다음 반복으로 넘어감
+        }
+
+        const category = area.commercial_district; // "commercial_district" 값 사용
+        const color = getColorByCategory(category); // 색상 결정
+
+        // 정사각형 생성 (사이즈 0.00008)
+        const size = 0.0030; // 정사각형의 크기
+        const path = [
+          new window.kakao.maps.LatLng(latitude + size, longitude + size), // 오른쪽 위
+          new window.kakao.maps.LatLng(latitude + size, longitude - size), // 오른쪽 아래
+          new window.kakao.maps.LatLng(latitude - size, longitude - size), // 왼쪽 아래
+          new window.kakao.maps.LatLng(latitude - size, longitude + size)  // 왼쪽 위
+        ];
+
+        // 충돌 감지 로직
+        let overlap = false;
+        for (const existingPolygon of polygons) {
+          if (isOverlapping(existingPolygon, path)) {
+            overlap = true;
+            break;
+          }
+        }
+
+        if (!overlap) {
+          const polygon = new window.kakao.maps.Polygon({
+            path: path,
+            strokeWeight: 1,
+            strokeColor: color,
+            strokeOpacity: 1,
+            fillColor: color,
+            fillOpacity: 0.1
+          });
+          polygon.setMap(map); // map에 정사각형 추가
+          polygons.push(path); // 추가된 정사각형 경계를 저장
+        }
       });
+
     } catch (error) {
       console.error('데이터 가져오기 실패:', error);
     }
@@ -57,12 +116,31 @@ const CeoMainPage = () => {
     }
   }, []);
 
+  // 간단한 충돌 감지 함수 (예시)
+  const isOverlapping = (existingPolygon, newPath) => {
+    // 여기서 기존 폴리곤과 새로운 폴리곤의 경계를 비교하여 겹치는지 확인하는 로직을 구현
+    // 이 부분은 실제 구현에 따라 다를 수 있습니다.
+    return false; // 기본적으로 겹치지 않는다고 가정
+  };
+
+  // 색상 결정 함수
+  const getColorByCategory = (category) => {
+    switch (category) {
+      case '골목상권':
+        return '#559abc'; 
+      case '발달상권':
+        return '#90EE90'; // 연한 초록색
+      case '전통시장':
+        return '#FFC0CB'; // 연분홍색
+      case '관광특구':
+        return '#FFD700'; // 금색
+      default:
+        return '#D3D3D3'; // 기본 회색
+    }
+  };
+
   useEffect(() => {
-    fetchPlacesFromAPI();
-    const interval = setInterval(() => {
-      fetchPlacesFromAPI();
-    }, 60000); // 1분 간격
-    return () => clearInterval(interval);
+    fetchPlacesFromAPI(); // API를 한 번만 호출
   }, [fetchPlacesFromAPI]);
 
   useEffect(() => {
@@ -77,13 +155,11 @@ const CeoMainPage = () => {
   };
 
   const handleLogout = () => {
-    // 로그아웃 기능 구현
     console.log("로그아웃 버튼 클릭됨");
     navigate('/'); // MainPage로 이동
   };
 
   const handleOwner = () => {
-    // "나는 사장" 버튼 클릭 시 CeoDashBoard로 이동
     navigate('/detail-sales'); // DetailSales 페이지로 이동
   };
 
@@ -94,15 +170,14 @@ const CeoMainPage = () => {
         center: new window.kakao.maps.LatLng(37.556229, 126.937079),
         level: 3
       };
-      const map = new window.kakao.maps.Map(container, options);
+      map = new window.kakao.maps.Map(container, options);
 
-      // 500m 반경 원 추가
       const circle = new window.kakao.maps.Circle({
-        center: new window.kakao.maps.LatLng(37.556229, 126.937079), // 기준 좌표
-        radius: 500, // 반경 500m
+        center: new window.kakao.maps.LatLng(37.556229, 126.937079),
+        radius: 500,
         strokeWeight: 2,
         strokeColor: '#87CEEB',
-        strokeOpacity: 0.8,
+        strokeOpacity: 1,
         fillColor: '#87CEEB',
         fillOpacity: 0.3
       });
@@ -162,6 +237,7 @@ const CeoMainPage = () => {
     <div className="ceo-main-container">
       <header className="ceo-main-header">
         <div className="logo-container">
+          <img src={logo} alt="로고" className="logo-image" />
           <h1 className="logo">SpotRank</h1>
         </div>
         <div className="ceo-button-group">

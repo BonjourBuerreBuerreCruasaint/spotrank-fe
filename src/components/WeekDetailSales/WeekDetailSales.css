@@ -24,13 +24,14 @@ body {
     display: flex; /* Flexbox 사용 */
     justify-content: flex-start; /* 왼쪽 정렬 */
     align-items: center; /* 수직 중앙 정렬 */
+    height: 50px;
   }
   
   .week-detail-sales-header h1 {
     margin: 0;
     font-size: 32px; /* 글자 크기 조정 */
     color: white; /* 제목 색상 변경 */
-    margin-left: 20px; /* 오른쪽으로 이동시키기 위해 여백 추가 */
+    margin-left: -5px; /* 오른쪽으로 이동시키기 위해 여백 추가 */
   }
   
   
@@ -76,6 +77,8 @@ body {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
+    gap: 20px; /* 차트 간의 간격을 20px로 설정 */
+    padding: 20px 20px 0 0;
   }
   
   .week-line-chart,
@@ -102,7 +105,8 @@ body {
     border-radius: 19px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 100px;
-    margin-top: -10px;
+    width: 1140px;
+    height: 300px;
   }
   
   .week-table-section h2,
@@ -188,4 +192,10 @@ body {
   .week-detail-sales-sidebar li.active {
     background-color: #87CEEB; /* 활성화된 버튼의 배경색 */
     color: white; /* 활성화된 버튼의 글자색 */
+  }
+  
+  .week-detail-sales-header .logo {
+    width: 50px; /* 로고의 너비 설정 */
+    height: auto; /* 비율 유지 */
+    margin-right: 10px; /* 로고와 제목 간의 간격 */
   }

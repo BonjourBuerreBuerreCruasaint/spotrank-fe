@@ -59,6 +59,7 @@ const Login = () => {
     <div className="login-container">
       <div className="login-box">
         <h1 className="login-title" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+          <img src="/logo-one.png" alt="로고" className="logo" />
           SpotRank
         </h1>
 

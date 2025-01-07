@@ -44,7 +44,6 @@ const StoreDetail = () => {
     };
     const map = new window.kakao.maps.Map(container, options);
 
-
     const mapTypeControl = new window.kakao.maps.MapTypeControl();
     map.addControl(mapTypeControl, window.kakao.maps.ControlPosition.TOPRIGHT);
 
@@ -86,7 +85,10 @@ const StoreDetail = () => {
     <div>
       <nav className="navbar">
         <div className="navbar-left">
-            <button onClick={() => navigate('/')} className="logo">SpotRank</button>
+          <img src="/logo.png" alt="로고" className="logo" />
+        </div>
+        <div className="navbar-right">
+          <button onClick={() => navigate('/')} className="spotrank-button">SpotRank</button>
         </div>
       </nav>
       <div className="store-detail-container">

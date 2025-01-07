@@ -43,6 +43,7 @@ const WeekDetailSales = () => {
         className="week-detail-sales-header"
         onClick={() => navigate("/ceo-main")}
       >
+        <img src="/logo.png" alt="Logo" className="logo" />
         <h1>SpotRank</h1>
       </header>
 

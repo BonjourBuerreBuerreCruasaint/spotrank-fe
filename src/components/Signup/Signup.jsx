@@ -151,6 +151,7 @@ const Signup = () => {
   return (
     <div className="signup-container">
       <h1 className="signup-title" onClick={handleLogoClick}>
+      <img src="/logo-one.png" alt="로고" className="findid-logo" />
         SpotRank
       </h1>
       <div className="privacy-box">

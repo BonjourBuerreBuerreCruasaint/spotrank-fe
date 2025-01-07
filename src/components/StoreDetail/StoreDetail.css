@@ -3,42 +3,39 @@ body {
 }
 
 .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      height: 72px;
+      padding: 0 20px;
+      background-color: #87CEEB;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      z-index: 2;
+  }
+  
+  .navbar-left {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 2rem;
-    background-color: #87CEEB;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    height: 40px;
+  }
+  
+  .navbar-right {
+    display: flex;
+    align-items: center;
   }
   
   .navbar-left .logo {
-    color: white;
-    font-size: 1.5rem;
-    text-decoration: none;
-    font-weight: bold;
-    border: none;
-    background: none;
-  }
-  
-  .navbar-right .login-btn {
-    color: white;
-    text-decoration: none;
-    font-size: 1rem;
-    padding: 0.3rem 0.8rem;
-  }
+    width: 50px; /* 로고의 너비 설정 */
+    height: auto; /* 비율 유지 */
+    margin-right: 10px; /* 로고와 버튼 간의 간격 */
+    margin-top: -30px; /* 필요에 따라 조정 */
+}
   
   .store-detail-container {
     display: flex;
     padding: 20px;
     gap: 20px;
     max-width: 1300px;
-    margin: 0 auto;
-    margin-top: 60px;
     background-color: white;
   }
   
@@ -245,4 +242,20 @@ body {
   .info-section {
     display: flex;
     gap: 20px;
+  }
+  
+  .spotrank-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 32px; /* 글자 크기 조정 */
+    cursor: pointer;
+    font-weight: bold;
+    margin-right: 1250px;
+  }
+  
+  .navbar-left button {
+    margin-left: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
   } 

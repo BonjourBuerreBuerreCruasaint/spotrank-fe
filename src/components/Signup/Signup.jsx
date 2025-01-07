@@ -5,7 +5,6 @@ import './Signup.css';
 import axios from 'axios';
 import whitespotrank from '../../assets/whitespotrank.png';
 
-axios.defaults.baseURL = 'http://127.0.0.1:5000';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 
@@ -26,11 +25,22 @@ const Signup = () => {
   const [birthdateError, setBirthdateError] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false); // 제출 상태 관리
+  const [id, setId] = useState("");
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    const storedId = localStorage.getItem('id');
+    if (storedId) {
+      setId(storedId);
+    } else {
+      console.warn('로컬 스토리지에 id 값이 없습니다.');
+    }
+    }, []);
 
   // 입력값 변경 핸들러
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+
     setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value });
 
     if (name === 'email') {
@@ -135,7 +145,7 @@ const Signup = () => {
       });
 
       // 사업자 인증 페이지로 이동
-      navigate('/business-signup');
+      navigate(`/business-signup?id=${id}`);
     } catch (error) {
       alert('회원가입 중 오류가 발생했습니다.');
     } finally {

@@ -11,6 +11,8 @@ const ShopEditPage = () => {
   const [shopImages, setShopImages] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const [email, setEmail] = useState("");
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // 유효성 검사 및 제출 로직 추가
@@ -20,6 +22,7 @@ const ShopEditPage = () => {
     }
     // 가게 정보 수정 API 호출 로직 추가
     console.log("가게 정보 수정:", { shopName, shopPhone, shopAddress, shopDescription, shopImages });
+    navigate(`/ceo-main?email=${encodeURIComponent(email)}`);
     setErrorMessage(""); // 오류 메시지 초기화
 
     // 성공 메시지 표시

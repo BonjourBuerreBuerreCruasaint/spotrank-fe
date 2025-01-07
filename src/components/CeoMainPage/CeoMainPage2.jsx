@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CeoMainPage.css';
 
-const CeoMainPage = () => {
+const CeoMainPage2 = () => {
   const navigate = useNavigate();
   const [randomRestaurants, setRandomRestaurants] = useState('');
   const [currentTime, setCurrentTime] = useState('');
@@ -10,9 +10,20 @@ const CeoMainPage = () => {
     restaurants: [],
     cafes: [],
   });
-  const [category, setCategory] = useState('restaurants'); // 카테고리 상태
-
+  const [category, setCategory] = useState('restaurants');
   const [userLocation, setUserLocation] = useState(null);
+  const [zones, setZones] = useState([]);
+  const [email, setEmail] = useState("");
+
+  // 로컬 스토리지에서 email 가져오기
+  useEffect(() => {
+    const storedEmail = localStorage.getItem('email');
+    if (storedEmail) {
+      setEmail(storedEmail);
+    } else {
+      console.warn('로컬 스토리지에 email 정보가 없습니다.');
+    }
+  }, []);
   
   // 랜덤 추천 식당 업데이트
   useEffect(() => {
@@ -25,19 +36,19 @@ const CeoMainPage = () => {
     }
   }, [places.restaurants]);
 
-  // Flask API에서 데이터 가져오기
-  const fetchPlacesFromAPI = useCallback(async () => {
-    try {
-      const response = await fetch('http://127.0.0.1:5000/api/ranking'); // Flask API URL
-      if (!response.ok) throw new Error('API 요청 실패');
-      const data = await response.json();
-      setPlaces({
-        restaurants: data.restaurant_ranking,
-        cafes: data.cafe_ranking,
-      });
-    } catch (error) {
-      console.error('데이터 가져오기 실패:', error);
-    }
+  // 지도 데이터를 API에서 가져오기
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const response = await fetch('/api/colored-zones');
+        const data = await response.json();
+        console.log('Fetched zones data:', data);
+        setZones(data);
+      } catch (error) {
+        console.error('데이터 가져오기 실패:', error);
+      }
+    };
+    fetchLocations();
   }, []);
 
   // 사용자 위치 가져오기
@@ -58,14 +69,6 @@ const CeoMainPage = () => {
   }, []);
 
   useEffect(() => {
-    fetchPlacesFromAPI();
-    const interval = setInterval(() => {
-      fetchPlacesFromAPI();
-    }, 60000); // 1분 간격
-    return () => clearInterval(interval);
-  }, [fetchPlacesFromAPI]);
-
-  useEffect(() => {
     const now = new Date();
     const hours = now.getHours();
     const formattedHours = hours.toString().padStart(2, '0');
@@ -77,38 +80,66 @@ const CeoMainPage = () => {
   };
 
   const handleLogout = () => {
-    // 로그아웃 기능 구현
-    console.log("로그아웃 버튼 클릭됨");
+    console.log('로그아웃 버튼 클릭됨');
     navigate('/'); // MainPage로 이동
   };
 
   const handleOwner = () => {
-    // "나는 사장" 버튼 클릭 시 CeoDashBoard로 이동
-    navigate('/detail-sales'); // DetailSales 페이지로 이동
+    navigate(`/detail-sales?email=${email}`); // DetailSales 페이지로 이동
   };
 
   useEffect(() => {
     const loadKakaoMap = () => {
+      if (!window.kakao || !window.kakao.maps) {
+        console.error('Kakao Maps API가 로드되지 않았습니다.');
+        return;
+      }
+
       const container = document.getElementById('ceo-map');
       const options = {
         center: new window.kakao.maps.LatLng(37.556229, 126.937079),
-        level: 3
+        level: 3,
       };
       const map = new window.kakao.maps.Map(container, options);
+      
+      // zones 배열의 각 영역을 처리
+      zones.forEach((zone) => {
+        const { polygon, color } = zone;
+
+        // polygon이 유효한 배열인지 확인
+        if (Array.isArray(polygon)) {
+          const path = polygon.map(([lat, lng]) => {
+            return new window.kakao.maps.LatLng(parseFloat(lat), parseFloat(lng));
+          });
+          const polygonArea = new window.kakao.maps.Polygon({
+            path: path,
+            strokeWeight: 3,
+            strokeColor: color,
+            strokeOpacity: 0.3,
+            fillColor: color,
+            fillOpacity: 0.2,
+          });
+
+          polygonArea.setMap(map);
+        } else {
+          console.warn('Invalid polygon data:', polygon);
+        }
+      });
 
       // 500m 반경 원 추가
       const circle = new window.kakao.maps.Circle({
-        center: new window.kakao.maps.LatLng(37.556229, 126.937079), // 기준 좌표
+        center: new window.kakao.maps.LatLng(37.556229, 126.937079),
         radius: 500, // 반경 500m
         strokeWeight: 2,
         strokeColor: '#87CEEB',
-        strokeOpacity: 0.8,
+        strokeOpacity: 0.3,
         fillColor: '#87CEEB',
-        fillOpacity: 0.3
+        fillOpacity: 0.2,
       });
       circle.setMap(map);
 
-      if (userLocation){
+      // 사용자 위치 마커 추가
+      if (userLocation) {
         const userMarkerPosition = new window.kakao.maps.LatLng(
           userLocation.latitude,
           userLocation.longitude
@@ -118,45 +149,44 @@ const CeoMainPage = () => {
           position: userMarkerPosition,
         });
 
-        // 마커를 지도에 표시
         userMarker.setMap(map);
         map.setCenter(userMarkerPosition);
 
-        // 마커 클릭 이벤트 추가
+        // 사용자 마커 클릭 이벤트
         window.kakao.maps.event.addListener(userMarker, 'click', () => {
-          navigate('/store-detail'); // StoreDetail 페이지로 이동
+          navigate(`/store-detail?email=${email}`); // StoreDetail 페이지로 이동
+        });
+
+        const infoWindow = new window.kakao.maps.InfoWindow({
+          content: `
+            <div style="
+              padding: 10px;
+              border-radius: 8px;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+              background-color: white;
+              font-family: 'Pretendard', sans-serif;
+            ">
+              <h4 style="margin: 0; font-size: 16px; color: #333;">현재 위치</h4>
+              <p style="margin: 5px 0 0; font-size: 14px; color: #666;">여기를 클릭하세요!</p>
+            </div>
+          `,
+        });
+
+        window.kakao.maps.event.addListener(userMarker, 'mouseover', () => {
+          infoWindow.open(map, userMarker);
+        });
+
+        window.kakao.maps.event.addListener(userMarker, 'mouseout', () => {
+          infoWindow.close();
         });
       }
-
-      const infoWindow = new window.kakao.maps.InfoWindow({
-        content: `
-          <div style="
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            background-color: white;
-            font-family: 'Pretendard', sans-serif;
-          ">
-            <h4 style="margin: 0; font-size: 16px; color: #333;">커피빈 신촌점</h4>
-            <p style="margin: 5px 0 0; font-size: 14px; color: #666;">평점: 5.0</p>
-          </div>
-        `,
-        removable: true
-      });
-
-      window.kakao.maps.event.addListener(userMarker, 'mouseover', () => {
-        infoWindow.open(map, marker);
-      });
-
-      window.kakao.maps.event.addListener(userMarker, 'mouseout', () => {
-        infoWindow.close();
-      });
     };
 
-    if (window.kakao && window.kakao.maps && userLocation) {
-      loadKakaoMap();ß
+    // Kakao 지도 API가 로드된 후 처리
+    if (window.kakao && window.kakao.maps && userLocation && zones.length > 0) {
+      loadKakaoMap();
     }
-  }, [navigate, userLocation]);
+  }, [userLocation, navigate, zones]);
 
   return (
     <div className="ceo-main-container">
@@ -165,8 +195,12 @@ const CeoMainPage = () => {
           <h1 className="logo">SpotRank</h1>
         </div>
         <div className="ceo-button-group">
-          <button className="ceo-ceo-button" onClick={handleOwner}>나는 사장</button>
-          <button className="ceo-logout-button" onClick={handleLogout}>Logout</button>
+          <button className="ceo-ceo-button" onClick={handleOwner}>
+            나는 사장
+          </button>
+          <button className="ceo-logout-button" onClick={handleLogout}>
+            Logout
+          </button>
         </div>
       </header>
       <main className="ceo-main-content">
@@ -187,7 +221,9 @@ const CeoMainPage = () => {
             </button>
           </div>
           <div className="hot-places">
-            <h2>핫플레이스 <span>({currentTime} 판매량 기준)</span></h2>
+            <h2>
+              핫플레이스 <span>({currentTime} 판매량 기준)</span>
+            </h2>
             <ul>
               {(category === 'restaurants' ? places.restaurants : places.cafes).map((place) => (
                 <li key={place.shop_name} className="restaurant-item">
@@ -198,9 +234,7 @@ const CeoMainPage = () => {
           </div>
           <div className="recommendation">
             <h2>오늘 뭐 먹지?</h2>
-            <div className="random-restaurants">
-              {randomRestaurants || '로딩 중...'}
-            </div>
+            <div className="random-restaurants">{randomRestaurants || '로딩 중...'}</div>
           </div>
         </div>
         <div id="ceo-map" className="ceo-map-container" style={{ width: '100%', height: '100%' }}></div>
@@ -209,4 +243,4 @@ const CeoMainPage = () => {
   );
 };
 
-export default CeoMainPage;
+export default CeoMainPage2;

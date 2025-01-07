@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './BusinessSignup.css';
 
@@ -14,8 +14,19 @@ const BusinessSignup = () => {
     openingDate: '',
   });
 
+  const [id, setId] = useState("");
+
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const storedId = localStorage.getItem('id');
+    if (storedId) {
+      setId(storedId);
+    } else {
+      console.warn('로컬 스토리지에 id 값이 없습니다.');
+    }
+  }, []);
+  
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     setFormData({
@@ -23,10 +34,10 @@ const BusinessSignup = () => {
       [name]: files ? files[0] : value,
     });
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     const formDataToSend = new FormData();
     formDataToSend.append('businessNumber', formData.businessNumber);
     formDataToSend.append('storeName', formData.storeName);
@@ -95,7 +106,7 @@ const BusinessSignup = () => {
       const result = await response.json();
   
       if (response.ok) {
-        alert(`사업자 진위 여부 확인 성공: ${result.message}`);
+        alert(`사업자 진위 여부 확인: ${result.message}`);
       } else {
         alert(`확인 실패: ${result.message}`);
       }

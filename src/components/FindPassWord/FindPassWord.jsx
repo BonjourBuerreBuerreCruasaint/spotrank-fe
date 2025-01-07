@@ -72,6 +72,7 @@ const FindPassWord = () => {
     <div className="findpassword-container">
       <div className="findpassword-box">
         <h1 className="findpassword-title" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
+          <img src="/logo-one.png" alt="로고" className="logo" />
           SpotRank
         </h1>
         <form onSubmit={handleSubmit} className="findpassword-form">

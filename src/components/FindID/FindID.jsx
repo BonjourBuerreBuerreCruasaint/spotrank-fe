@@ -66,6 +66,7 @@ const FindID = () => {
     <div className="findid-container">
       <div className="findid-box">
         <h1 className="findid-title" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
+          <img src="/logo-one.png" alt="로고" className="findid-logo" />
           SpotRank
         </h1>
         <form onSubmit={handleSubmit} className="findid-form">

@@ -13,6 +13,9 @@ const CeoMainPage = () => {
   const [category, setCategory] = useState('restaurants'); // 카테고리 상태
   let map; // map 변수를 여기서 정의
 
+  // 로고 이미지 경로 수정
+  const logo = `${process.env.PUBLIC_URL}/logo.png`;
+
   // 랜덤 추천 식당 업데이트
   useEffect(() => {
     if (places.restaurants.length > 0) {
@@ -191,6 +194,7 @@ const CeoMainPage = () => {
     <div className="ceo-main-container">
       <header className="ceo-main-header">
         <div className="logo-container">
+          <img src={logo} alt="로고" className="logo-image" />
           <h1 className="logo">SpotRank</h1>
         </div>
         <div className="ceo-button-group">

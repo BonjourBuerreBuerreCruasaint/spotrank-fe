@@ -94,12 +94,10 @@ const DetailSales = () => {
 
   return (
     <div className="detail-sales-container">
-      <header
-        className="detail-sales-header"
-        onClick={() => navigate("/ceo-main")}
-      >
+      <div className="detail-sales-header">
+        <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Logo" className="logo" />
         <h1>SpotRank</h1>
-      </header>
+      </div>
 
       <div className="content-container">
         <nav className="detail-sales-sidebar">

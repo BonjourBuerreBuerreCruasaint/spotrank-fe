@@ -217,7 +217,8 @@ const MainPage = () => {
   return (
     <div className="app">
       <header className="header">
-        <div className="logo">
+        <div className="logo-container">
+          <img src="/logo.png" alt="로고" className="logo" /> {/* 로고 추가 */}
           <span className="logo-text" onClick={() => (window.location.href = '/')}>
             SpotRank
           </span>

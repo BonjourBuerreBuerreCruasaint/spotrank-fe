@@ -41,10 +41,13 @@ const DayDetailSales = () => {
     <div className="day-detail-sales-container">
       <header
         className="day-detail-sales-header"
-        onClick={() => navigate("/ceo-main")}
       >
         <img src="/logo.png" alt="Logo" className="logo" />
-        <h1>SpotRank</h1>
+        <h1 onClick={() => navigate("/")} style={{ cursor: 'pointer' }}>SpotRank</h1>
+        <div className="day-detail-button-group">
+          <button className="day-detail-sales-button" onClick={() => navigate('/detail-sales')}>나는 사장</button>
+          <button className="day-detail-sales-logout-button" onClick={() => navigate('/ceo-main')}>Logout</button>
+        </div>
       </header>
 
       <div className="day-content-container">
@@ -96,43 +99,6 @@ const DayDetailSales = () => {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-          </div>
-          <div className="day-table-section">
-            <h2>요일별 매출 현황표</h2>
-            <table>
-              <thead>
-                <tr>
-                  <th>매장 이름</th>
-                  <th>메뉴</th>
-                  <th>가격</th>
-                  <th>개수</th>
-                  <th>매출 합계</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>예시 매장 1</td>
-                  <td>카푸치노</td>
-                  <td>5,000원</td>
-                  <td>10개</td>
-                  <td>50,000원</td>
-                </tr>
-                <tr>
-                  <td>예시 매장 2</td>
-                  <td>아메리카노</td>
-                  <td>4,000원</td>
-                  <td>15개</td>
-                  <td>60,000원</td>
-                </tr>
-                <tr>
-                  <td>예시 매장 3</td>
-                  <td>바닐라라떼</td>
-                  <td>6,000원</td>
-                  <td>5개</td>
-                  <td>30,000원</td>
-                </tr>
-              </tbody>
-            </table>
           </div>
         </main>
       </div>

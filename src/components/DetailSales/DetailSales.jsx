@@ -105,12 +105,13 @@ const DetailSales = () => {
 
   return (
     <div className="detail-sales-container">
-      <header
-        className="detail-sales-header"
-        onClick={() => navigate("/ceo-main")}
-      >
-        <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Logo" className="logo" />
-        <h1>SpotRank</h1>
+      <header className="detail-sales-header">
+        <img src="/logo.png" alt="Logo" className="logo" />
+        <h1 onClick={() => navigate("/")} style={{ cursor: 'pointer' }}>SpotRank</h1>
+        <div className="detail-sales-button-group">
+          <button className="detail-sales-button" onClick={() => navigate('/detail-sales')}>나는 사장</button>
+          <button className="detail-sales-logout-button" onClick={() => navigate('/ceo-main')}>Logout</button>
+        </div>
       </header>
 
       <div className="content-container">

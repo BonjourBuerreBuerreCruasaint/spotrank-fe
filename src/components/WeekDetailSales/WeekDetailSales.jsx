@@ -41,10 +41,13 @@ const WeekDetailSales = () => {
     <div className="week-detail-sales-container">
       <header
         className="week-detail-sales-header"
-        onClick={() => navigate("/ceo-main")}
       >
         <img src="/logo.png" alt="Logo" className="logo" />
-        <h1>SpotRank</h1>
+        <h1 onClick={() => navigate("/")} style={{ cursor: 'pointer' }}>SpotRank</h1>
+        <div className="week-detail-sales-button-group">
+          <button className="week-detail-sales-button" onClick={() => navigate('/detail-sales')}>나는 사장</button>
+          <button className="week-detail-sales-logout-button" onClick={() => navigate('/ceo-main')}>Logout</button>
+        </div>
       </header>
 
       <div className="week-content-container">
@@ -96,40 +99,6 @@ const WeekDetailSales = () => {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-          </div>
-          <div className="week-table-section">
-            <h2>주간 매출 현황표</h2>
-            <table>
-              <thead>
-                <tr>
-                  <th>주차</th>
-                  <th>판매량</th>
-                  <th>매출 합계</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1주차</td>
-                  <td>100개</td>
-                  <td>5,000,000원</td>
-                </tr>
-                <tr>
-                  <td>2주차</td>
-                  <td>150개</td>
-                  <td>7,500,000원</td>
-                </tr>
-                <tr>
-                  <td>3주차</td>
-                  <td>200개</td>
-                  <td>10,000,000원</td>
-                </tr>
-                <tr>
-                  <td>4주차</td>
-                  <td>120개</td>
-                  <td>6,000,000원</td>
-                </tr>
-              </tbody>
-            </table>
           </div>
         </main>
       </div>

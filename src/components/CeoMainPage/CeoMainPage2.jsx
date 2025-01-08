@@ -85,7 +85,7 @@ const CeoMainPage2 = () => {
   };
 
   const handleOwner = () => {
-    navigate(`/detail-sales?email=${id}`); // DetailSales 페이지로 이동
+    navigate(`/detail-sales?id=${id}`); // DetailSales 페이지로 이동
   };
 
   useEffect(() => {
@@ -154,7 +154,7 @@ const CeoMainPage2 = () => {
 
         // 사용자 마커 클릭 이벤트
         window.kakao.maps.event.addListener(userMarker, 'click', () => {
-          navigate(`/store-detail?email=${id}`); // StoreDetail 페이지로 이동
+          navigate(`/store-detail?id=${id}`); // StoreDetail 페이지로 이동
         });
 
         const infoWindow = new window.kakao.maps.InfoWindow({

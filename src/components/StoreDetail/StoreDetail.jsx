@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const StoreDetail = () => {
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(null);
+  const [id, setId] = useState('');
   
   // 테스트용 더미 이미지
   const dummyImages = {
@@ -80,6 +81,15 @@ const StoreDetail = () => {
       infoWindow.close();
     });
   };
+
+  useEffect(() => {
+    const storedId = localStorage.getItem('id');
+    if (storedId) {
+      setId(storedId);
+    } else {
+      console.warn('로컬 스토리지에 id 값이 없습니다.');
+    }
+  }, []);
 
   return (
     <div>

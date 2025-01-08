@@ -11,13 +11,11 @@ const CeoMainPage = () => {
     cafes: [],
   });
   const [category, setCategory] = useState('restaurants'); // 카테고리 상태
+  const [viewMode, setViewMode] = useState('상권영역'); // 새로운 상태 추가
   let map; // map 변수를 여기서 정의
+  let polygons = []; // 폴리곤을 저장할 배열
+  let circles = []; // 서클을 저장할 배열
 
-  // 로고 이미지 경로 수정
-  const logo = `${process.env.PUBLIC_URL}/logo.png`;
-
-  const [userLocation, setUserLocation] = useState(null);
-  
   // 랜덤 추천 식당 업데이트
   useEffect(() => {
     if (places.restaurants.length > 0) {
@@ -32,6 +30,9 @@ const CeoMainPage = () => {
   // Flask API에서 데이터 가져오기
   const fetchPlacesFromAPI = useCallback(async () => {
     try {
+      polygons.forEach(polygon => polygon.setMap(null)); // 기존 폴리곤을 지도에서 제거
+      polygons = []; // 폴리곤 배열 초기화
+
       const seoulDataResponse = await fetch('http://127.0.0.1:5000/api/seouldata');
       if (!seoulDataResponse.ok) throw new Error('서울 데이터 요청 실패');
       
@@ -47,7 +48,6 @@ const CeoMainPage = () => {
       }
 
       const areas = seoulData; // DATA 배열 사용
-      const polygons = []; // 이미 추가된 정사각형을 저장할 배열
 
       areas.forEach(area => {
         console.log('현재 데이터:', area); // 현재 데이터 확인
@@ -89,30 +89,14 @@ const CeoMainPage = () => {
             fillColor: color,
             fillOpacity: 0.1
           });
-          polygon.setMap(map); // map에 정사각형 추가
-          polygons.push(path); // 추가된 정사각형 경계를 저장
+          polygons.push(polygon); // 폴리곤 객체 저장
         }
       });
 
+      showPolygons(); // 폴리곤을 지도에 추가
+
     } catch (error) {
       console.error('데이터 가져오기 실패:', error);
-    }
-  }, []);
-
-  // 사용자 위치 가져오기
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setUserLocation({ latitude, longitude });
-        },
-        (error) => {
-          console.error('위치 정보를 가져오는 중 오류 발생:', error);
-        }
-      );
-    } else {
-      console.warn('Geolocation이 지원되지 않습니다.');
     }
   }, []);
 
@@ -139,15 +123,88 @@ const CeoMainPage = () => {
     }
   };
 
-  useEffect(() => {
-    fetchPlacesFromAPI(); // API를 한 번만 호출
-  }, [fetchPlacesFromAPI]);
+  // 유동인구 데이터 가져오기 및 Circle 추가
+  const fetchPopulationData = useCallback(async () => {
+    try {
+      circles.forEach(circle => circle.setMap(null)); // 기존 서클을 지도에서 제거
+      circles = []; // 서클 배열 초기화
 
+      const response = await fetch('http://127.0.0.1:5000/api/jinfinalpeople');
+      if (!response.ok) throw new Error('유동인구 데이터 요청 실패');
+      
+      const rawData = await response.json();
+      console.log('유동인구 API 응답:', rawData);
+  
+      // 데이터 배열로 변환 (헤더 제외)
+      const dataLines = rawData.content.slice(1); // 첫 번째 줄은 헤더
+      const data = dataLines
+        .filter(line => line.trim() !== '') // 빈 줄 제거
+        .map(line => {
+          const [ , , , TotalPeople, latitude, longitude] = line.split(',');
+          return {
+            TotalPeople: isNaN(parseInt(TotalPeople, 10)) ? 0 : parseInt(TotalPeople, 10),
+            latitude: isNaN(parseFloat(latitude)) ? 0 : parseFloat(latitude),
+            longitude: isNaN(parseFloat(longitude)) ? 0 : parseFloat(longitude),
+          };
+        });
+  
+      // 각 데이터 항목 출력
+      data.forEach((item, index) => {
+        const { TotalPeople, latitude, longitude } = item;
+        console.log(`데이터 ${index + 1}: TotalPeople=${TotalPeople}, latitude=${latitude}, longitude=${longitude}`);
+      });
+  
+      // 지도에 Polyline 추가
+      data.forEach((item) => {
+        const { TotalPeople, latitude, longitude } = item;
+
+        if (latitude === 0 || longitude === 0) {
+          console.warn(`잘못된 좌표 데이터: ${item}`);
+          return;
+        }
+
+        const color = getColorByPopulation(TotalPeople);
+  
+        // Circle 객체 생성
+        const circle = new window.kakao.maps.Circle({
+          center: new window.kakao.maps.LatLng(latitude, longitude),
+          radius: 50, // 예시 반지름
+          strokeWeight: 2,
+          strokeColor: color,
+          strokeOpacity: 0.7,
+          fillColor: color,
+          fillOpacity: 0.3,
+        });
+        circles.push(circle); // 서클 객체 저장
+  
+        // Circle 지도에 추가
+        circle.setMap(map);
+      });
+    } catch (error) {
+      console.error('유동인구 데이터 가져오기 실패:', error);
+    }
+  }, []);
+  
+  // 유동인구 수에 따른 색상 결정 함수
+  const getColorByPopulation = (TotalPeople) => {
+    if (TotalPeople >= 10000000) {
+      return "#FF0000"; // 빨간색
+    } else if (TotalPeople >= 1000000) {
+      return "#FFA500"; // 주황색
+    } else {
+      return "#FFFF00"; // 노란색
+    }
+  };
+  
   useEffect(() => {
-    const now = new Date();
-    const hours = now.getHours();
-    const formattedHours = hours.toString().padStart(2, '0');
-    setCurrentTime(`${formattedHours}:00`);
+    // 초기 로딩 시 이터 가져오기
+    const loadData = async () => {
+      await fetchPlacesFromAPI(); // 상권역 데이터 가져오기
+      await fetchPopulationData(); // 유동인구 데이터 가져오기
+      showPolygons(); // 초기에는 리곤을 보여줌
+      hideCircles(); // 초기에는 서클을 숨김
+    };
+    loadData();
   }, []);
 
   const handleCategoryChange = (newCategory) => {
@@ -165,6 +222,11 @@ const CeoMainPage = () => {
 
   useEffect(() => {
     const loadKakaoMap = () => {
+      if (!window.kakao || !window.kakao.maps) {
+        console.error("카카오맵 API가 로드되지 않았습니다.");
+        return;
+      }
+
       const container = document.getElementById('ceo-map');
       const options = {
         center: new window.kakao.maps.LatLng(37.556229, 126.937079),
@@ -183,61 +245,86 @@ const CeoMainPage = () => {
       });
       circle.setMap(map);
 
-      if (userLocation){
-        const userMarkerPosition = new window.kakao.maps.LatLng(
-          userLocation.latitude,
-          userLocation.longitude
-        );
+      const mapTypeControl = new window.kakao.maps.MapTypeControl();
+      map.addControl(mapTypeControl, window.kakao.maps.ControlPosition.TOPRIGHT);
 
-        const userMarker = new window.kakao.maps.Marker({
-          position: userMarkerPosition,
-        });
+      const zoomControl = new window.kakao.maps.ZoomControl();
+      map.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT);
 
-        // 마커를 지도에 표시
-        userMarker.setMap(map);
-        map.setCenter(userMarkerPosition);
-
-        // 마커 클릭 이벤트 추가
-        window.kakao.maps.event.addListener(userMarker, 'click', () => {
-          navigate('/store-detail'); // StoreDetail 페이지로 이동
-        });
-      }
-
-      const infoWindow = new window.kakao.maps.InfoWindow({
-        content: `
-          <div style="
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            background-color: white;
-            font-family: 'Pretendard', sans-serif;
-          ">
-            <h4 style="margin: 0; font-size: 16px; color: #333;">커피빈 신촌점</h4>
-            <p style="margin: 5px 0 0; font-size: 14px; color: #666;">평점: 5.0</p>
-          </div>
-        `,
-        removable: true
-      });
-
-      window.kakao.maps.event.addListener(userMarker, 'mouseover', () => {
-        infoWindow.open(map, marker);
-      });
-
-      window.kakao.maps.event.addListener(userMarker, 'mouseout', () => {
-        infoWindow.close();
-      });
+      // 유동인구 데이터 가져오기 및 Polyline 추가
+      fetchPopulationData();
     };
 
-    if (window.kakao && window.kakao.maps && userLocation) {
-      loadKakaoMap();ß
+    loadKakaoMap();
+  }, []);
+
+  const handleViewModeChange = (mode) => {
+    console.log(`Changing view mode to: ${mode}`);
+    if (mode === '상권영역') {
+      console.log('Hiding circles and showing polygons');
+      hideCircles(); // 서클을 숨김
+      fetchPlacesFromAPI().then(() => {
+        showPolygons(); // 폴리곤을 보여줌
+      });
+    } else if (mode === '유동인구') {
+      console.log('Hiding polygons and showing circles');
+      hidePolygons(); // 폴리곤을 숨김
+      fetchPopulationData().then(() => {
+        showCircles(); // 서클을 보여줌
+      });
     }
-  }, [navigate, userLocation]);
+    setViewMode(mode); // 상태를 마지막에 설정하여 UI가 업데이트되도록 함
+  };
+
+  // 지도에 폴리곤 추가
+  const showPolygons = () => {
+    console.log('showPolygons called');
+    polygons.forEach(polygon => {
+      console.log('Adding polygon to map:', polygon);
+      polygon.setMap(map); // 폴리곤을 지도에 추가
+    });
+  };
+
+  // 지도에서 폴리곤 제거
+  const hidePolygons = () => {
+    console.log('hidePolygons called');
+    polygons.forEach(polygon => {
+      console.log('Removing polygon from map:', polygon);
+      polygon.setMap(null); // 폴리곤을 지도에서 제거
+    });
+    polygons = []; // 배열 초기화
+  };
+
+  // 지도에 서클 추가
+  const showCircles = () => {
+    console.log('showCircles called');
+    circles.forEach(circle => {
+      console.log('Adding circle to map:', circle);
+      circle.setMap(map); // 서클을 지도에 추가
+    });
+  };
+
+  // 지도에서 서클 제거
+  const hideCircles = () => {
+    console.log('hideCircles called');
+    circles.forEach(circle => {
+      console.log('Removing circle from map:', circle);
+      circle.setMap(null); // 서클을 지도에서 제거
+    });
+    circles = []; // 배열 초기화
+  };
+
+  
+
+  // useEffect(() => {
+  //   fetchPlacesFromAPI(); // 초기 접근 시 상권영역 데이터를 가져옴
+  //   showPolygons(); // 폴리곤을 지도에 추가
+  // }, []);
 
   return (
     <div className="ceo-main-container">
       <header className="ceo-main-header">
         <div className="logo-container">
-          <img src={logo} alt="로고" className="logo-image" />
           <h1 className="logo">SpotRank</h1>
         </div>
         <div className="ceo-button-group">
@@ -280,6 +367,20 @@ const CeoMainPage = () => {
           </div>
         </div>
         <div id="ceo-map" className="ceo-map-container" style={{ width: '100%', height: '100%' }}></div>
+        <div className="vertical-toggle">
+          <button
+            className={`small-toggle-button ${viewMode === '상권영역' ? 'active' : ''}`}
+            onClick={() => handleViewModeChange('상권영역')}
+          >
+            상권영역
+          </button>
+          <button
+            className={`small-toggle-button ${viewMode === '유동인구' ? 'active' : ''}`}
+            onClick={() => handleViewModeChange('유동인구')}
+          >
+            유동인구
+          </button>
+        </div>
       </main>
     </div>
   );

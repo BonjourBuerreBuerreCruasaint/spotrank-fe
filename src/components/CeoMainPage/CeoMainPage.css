@@ -198,3 +198,25 @@ html, body {
   margin-right: 10px; /* 텍스트와의 간격 설정 */
   margin-left: -8px;
 }
+
+.vertical-toggle {
+  position: absolute;
+  top: 50px;
+  right: 50px;
+  display: flex;
+  flex-direction: column;
+}
+
+.small-toggle-button {
+  margin: 2px 0;
+  padding: 5px;
+  font-size: 12px;
+  background-color: #f0f0f0;
+  border: none;
+  cursor: pointer;
+}
+
+.small-toggle-button.active {
+  background-color: #87CEEB;
+  color: white;
+}

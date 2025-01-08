@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Signup.css';
 /*import spotranklogo from '../../assets/spotranklogo.png';*/
@@ -28,14 +28,14 @@ const Signup = () => {
   const [id, setId] = useState("");
   const navigate = useNavigate();
   
-  // useEffect(() => {
-  //   const storedId = localStorage.getItem('id');
-  //   if (storedId) {
-  //     setId(storedId);
-  //   } else {
-  //     console.warn('로컬 스토리지에 id 값이 없습니다.');
-  //   }
-  //   }, []);
+  useEffect(() => {
+    const storedId = localStorage.getItem('id');
+    if (storedId) {
+      setId(storedId);
+    } else {
+      console.warn('로컬 스토리지에 id 값이 없습니다.');
+    }
+    }, []);
 
   // 입력값 변경 핸들러
   const handleChange = (e) => {

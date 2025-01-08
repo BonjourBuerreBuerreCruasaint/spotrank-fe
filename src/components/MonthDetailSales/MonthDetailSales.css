@@ -7,7 +7,6 @@ body {
   .month-detail-sales-container {
     padding: 0px;
     background-color: #f5f5f5;
-    max-width: 1600px; /* 최대 너비 설정 */
     width: 100%; /* 너비를 100%로 설정하여 화면에 꽉 차게 */
     margin: 0 auto; /* 중앙 정렬 */
     box-sizing: border-box; /* 패딩을 포함한 너비 계산 */
@@ -15,7 +14,6 @@ body {
   
   .month-detail-sales-header {
     width: 100%; /* 너비를 100%로 설정 */
-    max-width: 1600px; /* detail-sales-container와 동일한 최대 너비 설정 */
     margin: 0 auto; /* 중앙 정렬 */
     padding: 10px; /* 패딩 추가 */
     background-color: #87CEEB; /* 배경 색상 */
@@ -43,7 +41,6 @@ body {
   
   .month-detail-sales-sidebar {
     width: 100px;
-    background-color: #f5f5f5;
     padding: 10px;
   }
   
@@ -78,7 +75,7 @@ body {
     justify-content: space-between;
     margin-bottom: 20px;
     gap: 20px; /* 차트 간의 간격을 20px로 설정 */
-    padding: 20px 20px 0 0;
+    padding: 20px 20px 10px 0px;
   }
   
   .month-line-chart,
@@ -105,7 +102,7 @@ body {
     border-radius: 19px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 100px;
-    width: 1140px;
+    width: 100%;
     height: 300px;
     overflow-x: auto; /* 수평 스크롤 추가 */
     max-height: 400px; /* 최대 높이 설정 */

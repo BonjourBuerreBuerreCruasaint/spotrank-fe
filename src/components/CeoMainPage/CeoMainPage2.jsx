@@ -13,15 +13,15 @@ const CeoMainPage2 = () => {
   const [category, setCategory] = useState('restaurants');
   const [userLocation, setUserLocation] = useState(null);
   const [zones, setZones] = useState([]);
-  const [email, setEmail] = useState("");
+  const [id, setId] = useState('');
 
   // 로컬 스토리지에서 email 가져오기
   useEffect(() => {
-    const storedEmail = localStorage.getItem('email');
-    if (storedEmail) {
-      setEmail(storedEmail);
+    const storedId = localStorage.getItem('id');
+    if (storedId) {
+      setId(storedId);
     } else {
-      console.warn('로컬 스토리지에 email 정보가 없습니다.');
+      console.warn('로컬 스토리지에 id 값이 없습니다.');
     }
   }, []);
   
@@ -85,7 +85,7 @@ const CeoMainPage2 = () => {
   };
 
   const handleOwner = () => {
-    navigate(`/detail-sales?email=${email}`); // DetailSales 페이지로 이동
+    navigate(`/detail-sales?email=${id}`); // DetailSales 페이지로 이동
   };
 
   useEffect(() => {
@@ -154,7 +154,7 @@ const CeoMainPage2 = () => {
 
         // 사용자 마커 클릭 이벤트
         window.kakao.maps.event.addListener(userMarker, 'click', () => {
-          navigate(`/store-detail?email=${email}`); // StoreDetail 페이지로 이동
+          navigate(`/store-detail?email=${id}`); // StoreDetail 페이지로 이동
         });
 
         const infoWindow = new window.kakao.maps.InfoWindow({

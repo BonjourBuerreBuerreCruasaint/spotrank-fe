@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
@@ -6,6 +6,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
+  const [id, setId] = useState('');
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
@@ -22,6 +23,15 @@ const Login = () => {
       setEmailError('');
     }
   };
+  
+  useEffect(() => {
+    const storedId = localStorage.getItem('id');
+    if (storedId) {
+      setId(storedId);
+    } else {
+      console.warn('로컬 스토리지에 id 값이 없습니다.');
+    }
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -30,7 +40,7 @@ const Login = () => {
       setEmailError('이메일 형식으로 입력해주세요');
       return;
     }
-
+    
     try {
       const response = await fetch('/api/login', {
         method: 'POST',
@@ -44,9 +54,7 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('email', data.email); // 저장된 이메일
-        navigate(`/ceo-main?email=${data.email}`); // 이메일 포함된 URL로 이동
+        navigate(`/ceo-main?id=${id}`); // 이메일 포함된 URL로 이동
       } else {
         alert(data.error || '로그인 실패');
       }

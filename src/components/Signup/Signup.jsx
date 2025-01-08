@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Signup.css';
 /*import spotranklogo from '../../assets/spotranklogo.png';*/
@@ -25,17 +25,8 @@ const Signup = () => {
   const [birthdateError, setBirthdateError] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false); // 제출 상태 관리
-  const [id, setId] = useState("");
   const navigate = useNavigate();
   
-  useEffect(() => {
-    const storedId = localStorage.getItem('id');
-    if (storedId) {
-      setId(storedId);
-    } else {
-      console.warn('로컬 스토리지에 id 값이 없습니다.');
-    }
-    }, []);
 
   // 입력값 변경 핸들러
   const handleChange = (e) => {
@@ -133,6 +124,8 @@ const Signup = () => {
       const response = await axios.post('/api/signup', formData);
       alert(response.data.message);
       console.log(response.data.messsage);
+      const userId = response.data.id;
+      localStorage.setItem('id',userId);
       // 성공 시 폼 초기화
       setFormData({
         email: '',
@@ -145,7 +138,7 @@ const Signup = () => {
       });
 
       // 사업자 인증 페이지로 이동
-      navigate(`/business-signup?id=${id}`);
+      navigate(`/business-signup?id=${userId}`);
     } catch (error) {
       alert('회원가입 중 오류가 발생했습니다.');
     } finally {

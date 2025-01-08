@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./WeekDetailSales.css";
 import { Chart, registerables } from "chart.js";
@@ -12,6 +12,7 @@ const WeekDetailSales = () => {
   const location = useLocation();
   const pieChartRef = React.useRef(null);
   const lineChartRef = React.useRef(null);
+  const [id, setId] = useState('');
 
   const lineData = [
     { week: "1주차", sales: 500 },
@@ -36,6 +37,14 @@ const WeekDetailSales = () => {
   const getButtonClass = (path) => {
     return location.pathname === path ? "active" : "";
   };
+  useEffect(() => {
+    const storedId = localStorage.getItem('id');
+    if (storedId) {
+      setId(storedId);
+    } else {
+      console.warn('로컬 스토리지에 id 값이 없습니다.');
+    }
+  }, []);
 
   return (
     <div className="week-detail-sales-container">
@@ -50,11 +59,11 @@ const WeekDetailSales = () => {
       <div className="week-content-container">
         <nav className="week-detail-sales-sidebar">
           <ul>
-            <li className={getButtonClass("/detail-sales")} onClick={() => navigate("/detail-sales")}>실시간</li>
-            <li className={getButtonClass("/day-detail-sales")} onClick={() => navigate("/day-detail-sales")}>일간</li>
-            <li className={getButtonClass("/week-detail-sales")} onClick={() => navigate("/week-detail-sales")}>주간</li>
-            <li className={getButtonClass("/month-detail-sales")} onClick={() => navigate("/month-detail-sales")}>월간</li>
-            <li className={getButtonClass("/shop-edit")} onClick={() => navigate("/shop-edit")}>정보 수정</li>
+            <li className={getButtonClass("/detail-sales")} onClick={() => navigate(`/detail-sales?id=${id}`)}>실시간</li>
+            <li className={getButtonClass("/day-detail-sales")} onClick={() => navigate(`/day-detail-sales?id=${id}`)}>일간</li>
+            <li className={getButtonClass("/week-detail-sales")} onClick={() => navigate(`/week-detail-sales?id=${id}`)}>주간</li>
+            <li className={getButtonClass("/month-detail-sales")} onClick={() => navigate(`/month-detail-sales?id=${id}`)}>월간</li>
+            <li className={getButtonClass("/shop-edit")} onClick={() => navigate(`/shop-edit?id=${id}`)}>정보 수정</li>
           </ul>
         </nav>
 

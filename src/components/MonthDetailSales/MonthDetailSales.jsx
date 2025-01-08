@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./MonthDetailSales.css";
 import { Chart, registerables } from "chart.js";
@@ -30,6 +30,7 @@ const MonthDetailSales = () => {
   const pieChartRef = React.useRef(null);
   const lineChartInstance = React.useRef(null);
   const pieChartInstance = React.useRef(null);
+  const [id,setId] = useState('');
 
   // 월간 매출 데이터
   const lineData = [
@@ -159,6 +160,14 @@ const MonthDetailSales = () => {
           },
         },
       });
+    }
+  }, []);
+  useEffect(() => {
+    const storedId = localStorage.getItem('id');
+    if (storedId) {
+      setId(storedId);
+    } else {
+      console.warn('로컬 스토리지에 id 값이 없습니다.');
     }
   }, []);
 

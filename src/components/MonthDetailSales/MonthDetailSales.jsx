@@ -180,10 +180,13 @@ const MonthDetailSales = () => {
     <div className="month-detail-sales-container">
       <header
         className="month-detail-sales-header"
-        onClick={() => navigate("/ceo-main")}
       >
         <img src="/logo.png" alt="Logo" className="logo" />
-        <h1>SpotRank</h1>
+        <h1 onClick={() => navigate("/")} style={{ cursor: 'pointer' }}>SpotRank</h1>
+        <div className="month-detail-sales-button-group">
+          <button className="month-detail-sales-button" onClick={() => navigate('/detail-sales')}>나는 사장</button>
+          <button className="month-detail-sales-logout-button" onClick={() => navigate('/ceo-main')}>Logout</button>
+        </div>
       </header>
 
       <div className="month-content-container">
@@ -247,82 +250,6 @@ const MonthDetailSales = () => {
                   </Pie>
                 </PieChart>
               </ResponsiveContainer>
-            </div>
-          </div>
-          <div className="month-table-section">
-            <h2>월간 매출 현황표</h2>
-            <div style={{ overflowX: 'auto' }}>
-              <table>
-                <thead>
-                  <tr>
-                    <th>월</th>
-                    <th>총 판매량</th>
-                    <th>총 매출</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1월</td>
-                    <td>1,000개</td>
-                    <td>15,000,000원</td>
-                  </tr>
-                  <tr>
-                    <td>2월</td>
-                    <td>1,500개</td>
-                    <td>18,000,000원</td>
-                  </tr>
-                  <tr>
-                    <td>3월</td>
-                    <td>1,800개</td>
-                    <td>20,000,000원</td>
-                  </tr>
-                  <tr>
-                    <td>4월</td>
-                    <td>1,500개</td>
-                    <td>17,000,000원</td>
-                  </tr>
-                  <tr>
-                    <td>5월</td>
-                    <td>1,800개</td>
-                    <td>19,000,000원</td>
-                  </tr>
-                  <tr>
-                    <td>6월</td>
-                    <td>2,000개</td>
-                    <td>21,000,000원</td>
-                  </tr>
-                  <tr>
-                    <td>7월</td>
-                    <td>2,200개</td>
-                    <td>23,000,000원</td>
-                  </tr>
-                  <tr>
-                    <td>8월</td>
-                    <td>2,400개</td>
-                    <td>25,000,000원</td>
-                  </tr>
-                  <tr>
-                    <td>9월</td>
-                    <td>2,600개</td>
-                    <td>27,000,000원</td>
-                  </tr>
-                  <tr>
-                    <td>10월</td>
-                    <td>2,800개</td>
-                    <td>29,000,000원</td>
-                  </tr>
-                  <tr>
-                    <td>11월</td>
-                    <td>3,000개</td>
-                    <td>31,000,000원</td>
-                  </tr>
-                  <tr>
-                    <td>12월</td>
-                    <td>3,200개</td>
-                    <td>33,000,000원</td>
-                  </tr>
-                </tbody>
-              </table>
             </div>
           </div>
         </main>

@@ -20,6 +20,7 @@ import {
   Legend as RechartsLegend,
   ResponsiveContainer as RechartsResponsiveContainer,
 } from "recharts";
+import { BarChart, Bar } from 'recharts';
 
 Chart.register(...registerables);
 
@@ -48,20 +49,20 @@ const MonthDetailSales = () => {
     { month: "12월", sales: 3300 },
   ];
 
-  // PieChart 데이터
-  const pieData = [
-    { name: "1월", value: 1000 },
-    { name: "2월", value: 1500 },
-    { name: "3월", value: 1800 },
-    { name: "4월", value: 1500 },
-    { name: "5월", value: 1800 },
-    { name: "6월", value: 2000 },
-    { name: "7월", value: 2200 },
-    { name: "8월", value: 2400 },
-    { name: "9월", value: 2600 },
-    { name: "10월", value: 2800 },
-    { name: "11월", value: 3000 },
-    { name: "12월", value: 3200 },
+  // BarChart 데이터
+  const barData = [
+    { month: "1월", value: 1000 },
+    { month: "2월", value: 1500 },
+    { month: "3월", value: 1800 },
+    { month: "4월", value: 1500 },
+    { month: "5월", value: 1800 },
+    { month: "6월", value: 2000 },
+    { month: "7월", value: 2200 },
+    { month: "8월", value: 2400 },
+    { month: "9월", value: 2600 },
+    { month: "10월", value: 2800 },
+    { month: "11월", value: 3000 },
+    { month: "12월", value: 3200 },
   ];
 
   const COLORS = ["#87CEEB", "#CEDFCD", "#C2C2CA", "#FFDBA4"];
@@ -127,19 +128,19 @@ const MonthDetailSales = () => {
       });
     }
 
-    // Pie Chart
+    // Bar Chart
     if (pieChartInstance.current) {
       pieChartInstance.current.destroy(); // 기존 차트를 파괴
     }
     if (pieChartRef.current) {
       pieChartInstance.current = new Chart(pieChartRef.current, {
-        type: "pie",
+        type: "bar",
         data: {
-          labels: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
+          labels: barData.map(data => data.month),
           datasets: [
             {
               label: "월간 메뉴 판매량",
-              data: [1000, 1500, 1800, 1500, 1800, 2000, 2200, 2400, 2600, 2800, 3000, 3200],
+              data: barData.map(data => data.value),
               backgroundColor: COLORS,
             },
           ],
@@ -221,27 +222,17 @@ const MonthDetailSales = () => {
                 </LineChart>
               </ResponsiveContainer>
             </div>
-            <div className="month-pie-chart">
+            <div className="month-bar-chart">
               <h3 style={{ textAlign: 'center', fontSize: '16px', marginTop: '-12px', color: '#559abc' }}>월별 총 매출</h3>
               <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
+                <BarChart data={barData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
                   <RechartsTooltip />
                   <RechartsLegend />
-                  <Pie
-                    data={pieData}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    fill="#8884d8"
-                    label
-                  >
-                    {pieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                </PieChart>
+                  <Bar dataKey="value" fill="#87CEEB" />
+                </BarChart>
               </ResponsiveContainer>
             </div>
           </div>

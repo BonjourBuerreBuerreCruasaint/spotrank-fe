@@ -47,7 +47,7 @@ const DayDetailSales = () => {
         <h1 onClick={() => navigate(`/ceo-main?id=${storedId}`)} style={{ cursor: 'pointer' }}>SpotRank</h1>
         <div className="day-detail-button-group">
           <button className="day-detail-sales-button" onClick={() => navigate('/detail-sales')}>나는 사장</button>
-          <button className="day-detail-sales-logout-button" onClick={() => navigate('/ceo-main')}>Logout</button>
+          <button className="day-detail-sales-logout-button" onClick={() => navigate('/')}>Logout</button>
         </div>
       </header>
 

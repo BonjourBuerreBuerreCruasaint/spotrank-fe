@@ -8,7 +8,6 @@ import CeoMainPage from './components/CeoMainPage/CeoMainPage';
 import DetailSales from './components/DetailSales/DetailSales';
 import Signup from './components/Signup/Signup';
 import BusinessSignup from './components/BusinessSignup/BusinessSignup';
-import './App.css';
 import DayDetailSales from './components/DayDetailSales/DayDetailSales';    
 import WeekDetailSales from './components/WeekDetailSales/WeekDetailSales';
 import MonthDetailSales from './components/MonthDetailSales/MonthDetailSales';

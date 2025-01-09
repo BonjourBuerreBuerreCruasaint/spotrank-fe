@@ -48,6 +48,26 @@ const DayDetailSales = () => {
                 </div>
             </header>
 
+<<<<<<< HEAD
+  useEffect(() => {
+    const storedId = localStorage.getItem('id');
+    if (storedId) {
+      setId(storedId);
+    } else {
+      console.warn('로컬 스토리지에 id 값이 없습니다.');
+    }
+  }, []);
+  return (
+    <div className="day-detail-sales-container">
+      <header
+        className="day-detail-sales-header"
+      >
+        <img src="/logo.png" alt="Logo" className="logo" />
+        <h1 onClick={() => navigate("/ceo-main")} style={{ cursor: 'pointer' }}>SpotRank</h1>
+        <div className="day-detail-button-group">
+          <button className="day-detail-sales-button" onClick={() => navigate('/detail-sales')}>나는 사장</button>
+          <button className="day-detail-sales-logout-button" onClick={() => navigate('/')}>Logout</button>
+=======
             <div className="day-content-container">
                 <nav className="day-detail-sales-sidebar">
                     <ul>
@@ -94,6 +114,7 @@ const DayDetailSales = () => {
                     </div>
                 </main>
             </div>
+>>>>>>> c87e897059d9921af994ada5658f802f811852ac
         </div>
     );
 };

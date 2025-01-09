@@ -15,6 +15,7 @@ const CeoMainPage = () => {
   let map; // map 변수를 여기서 정의
   let polygons = []; // 폴리곤을 저장할 배열
   let circles = []; // 서클을 저장할 배열
+  let zones = []; // 새로운 폴리곤을 저장할 배열
 
   // 랜덤 추천 식당 업데이트
   useEffect(() => {
@@ -63,7 +64,7 @@ const CeoMainPage = () => {
         const color = getColorByCategory(category); // 색상 결정
 
         // 정사각형 생성 (사이즈 0.00008)
-        const size = 0.0030; // 정사각형의 크기
+        const size = 0.0020; // 정사각형의 크기
         const path = [
           new window.kakao.maps.LatLng(latitude + size, longitude + size), // 오른쪽 위
           new window.kakao.maps.LatLng(latitude + size, longitude - size), // 오른쪽 아래
@@ -87,7 +88,7 @@ const CeoMainPage = () => {
             strokeColor: color,
             strokeOpacity: 1,
             fillColor: color,
-            fillOpacity: 0.1
+            fillOpacity: 0.2
           });
           polygons.push(polygon); // 폴리곤 객체 저장
         }
@@ -111,13 +112,13 @@ const CeoMainPage = () => {
   const getColorByCategory = (category) => {
     switch (category) {
       case '골목상권':
-        return '#559abc'; 
+        return '#82c3ec'; //연한파란색
       case '발달상권':
-        return '#90EE90'; // 연한 초록색
+        return '#009eff'; // 진한파란색
       case '전통시장':
-        return '#FFC0CB'; // 연분홍색
+        return '#ffbbcc'; // 연분홍색
       case '관광특구':
-        return '#FFD700'; // 금색
+        return '#0014ff'; // 금색
       default:
         return '#D3D3D3'; // 기본 회색
     }
@@ -168,10 +169,10 @@ const CeoMainPage = () => {
         // Circle 객체 생성
         const circle = new window.kakao.maps.Circle({
           center: new window.kakao.maps.LatLng(latitude, longitude),
-          radius: 50, // 예시 반지름
+          radius: 170, // 예시 반지름
           strokeWeight: 2,
           strokeColor: color,
-          strokeOpacity: 0.7,
+          strokeOpacity: 0.3,
           fillColor: color,
           fillOpacity: 0.3,
         });
@@ -192,17 +193,83 @@ const CeoMainPage = () => {
     } else if (TotalPeople >= 1000000) {
       return "#FFA500"; // 주황색
     } else {
-      return "#FFFF00"; // 노란색
+      return "#FFF323"; // 노란색
     }
   };
   
+  const showNewPolygons = (newPolygons) => {
+    console.log('showNewPolygons called');
+    newPolygons.forEach(Newpolygon => {
+      console.log('Adding new polygon to map:', Newpolygon);
+      Newpolygon.setMap(map); // 폴리곤을 지도에 추가
+    });
+  };
+
+  const getColorBySalesRank = (rank, total_count) => {
+    const percent = (rank / total_count) * 100;
+
+    if (percent <= 10) return '#FF0000'; // 빨간색
+    if (percent <= 35) return '#88d66c'; // 녹색
+    if (percent <= 60) return '#ffdb5c'; // 노란색
+    if (percent <= 80) return '#dba979'; // 갈색
+    return '#666666'; // 회색
+  };
+
+  const fetchNewPolygonData = useCallback(async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/api/colored-zones');
+      if (!response.ok) throw new Error('새로운 폴리곤 데이터 요청 실패');
+
+      const newData = await response.json();
+      console.log('새로운 폴리곤 API 응답:', newData);
+
+      const newPolygons = []; // 새로운 폴리곤을 저장할 배열
+      const total_count = newData.length; // 전체 데이터 개수
+
+      // total_sales 기준으로 데이터 정렬
+      const sortedData = [...newData].sort((a, b) => b.total_sales - a.total_sales);
+
+      sortedData.forEach((store, index) => {
+        const { latitude, longitude, total_sales } = store;
+
+        // 색상 결정
+        const color = getColorBySalesRank(index + 1, total_count);
+
+        // 정사각형 폴리곤 생성
+        const size = 0.00010; // 정사각형의 크기
+        const path = [
+          new window.kakao.maps.LatLng(latitude + size, longitude + size),
+          new window.kakao.maps.LatLng(latitude + size, longitude - size),
+          new window.kakao.maps.LatLng(latitude - size, longitude - size),
+          new window.kakao.maps.LatLng(latitude - size, longitude + size)
+        ];
+
+        const Newpolygon = new window.kakao.maps.Polygon({
+          path: path,
+          strokeWeight: 1,
+          strokeColor: color,
+          strokeOpacity: 0.5,
+          fillColor: color,
+          fillOpacity: 0.25
+        });
+        newPolygons.push(Newpolygon); // 새로운 폴리곤 객체 저장
+        Newpolygon.setMap(map); // 폴리곤을 지도에 추가
+      });
+
+    } catch (error) {
+      console.error('새로운 폴리곤 데이터 가져오기 실패:', error);
+    }
+  }, []);
+
   useEffect(() => {
-    // 초기 로딩 시 이터 가져오기
+    // 초기 로딩 시 데이터 가져오기
     const loadData = async () => {
-      await fetchPlacesFromAPI(); // 상권역 데이터 가져오기
-      await fetchPopulationData(); // 유동인구 데이터 가져오기
-      showPolygons(); // 초기에는 리곤을 보여줌
-      hideCircles(); // 초기에는 서클을 숨김
+      await fetchPlacesFromAPI(); // 기존 상권역 데이터 가져오기
+      await fetchPopulationData(); // 기존 유동인구 데이터 가져오기
+      await fetchNewPolygonData(); // 새로운 폴리곤 데이터 가져오기
+      showPolygons(); // 초기에는 폴리곤을 보여줌
+      showCircles(); // 초기에는 서클을 보여줌
+      showNewPolygons(zones); // 새로운 폴리곤을 지도에 추가
     };
     loadData();
   }, []);
@@ -234,17 +301,6 @@ const CeoMainPage = () => {
       };
       map = new window.kakao.maps.Map(container, options);
 
-      const circle = new window.kakao.maps.Circle({
-        center: new window.kakao.maps.LatLng(37.556229, 126.937079),
-        radius: 500,
-        strokeWeight: 2,
-        strokeColor: '#87CEEB',
-        strokeOpacity: 1,
-        fillColor: '#87CEEB',
-        fillOpacity: 0.3
-      });
-      circle.setMap(map);
-
       const mapTypeControl = new window.kakao.maps.MapTypeControl();
       map.addControl(mapTypeControl, window.kakao.maps.ControlPosition.TOPRIGHT);
 
@@ -265,12 +321,14 @@ const CeoMainPage = () => {
       hideCircles(); // 서클을 숨김
       fetchPlacesFromAPI().then(() => {
         showPolygons(); // 폴리곤을 보여줌
+        showNewPolygons(zones); // 새로운 폴리곤을 보여줌
       });
     } else if (mode === '유동인구') {
       console.log('Hiding polygons and showing circles');
       hidePolygons(); // 폴리곤을 숨김
       fetchPopulationData().then(() => {
         showCircles(); // 서클을 보여줌
+        showNewPolygons(zones); // 새로운 폴리곤을 보여줌
       });
     }
     setViewMode(mode); // 상태를 마지막에 설정하여 UI가 업데이트되도록 함
@@ -367,18 +425,6 @@ const CeoMainPage = () => {
         </div>
         <div id="ceo-map" className="ceo-map-container" style={{ width: '100%', height: '100%' }}></div>
         <div className="vertical-toggle">
-          <button
-            className={`small-toggle-button ${viewMode === '상권영역' ? 'active' : ''}`}
-            onClick={() => handleViewModeChange('상권영역')}
-          >
-            상권영역
-          </button>
-          <button
-            className={`small-toggle-button ${viewMode === '유동인구' ? 'active' : ''}`}
-            onClick={() => handleViewModeChange('유동인구')}
-          >
-            유동인구
-          </button>
         </div>
       </main>
     </div>

@@ -124,8 +124,6 @@ const Signup = () => {
       const response = await axios.post('/api/signup', formData);
       alert(response.data.message);
       console.log(response.data.messsage);
-      const userId = response.data.id;
-      localStorage.setItem('id',userId);
       // 성공 시 폼 초기화
       setFormData({
         email: '',
@@ -138,7 +136,7 @@ const Signup = () => {
       });
 
       // 사업자 인증 페이지로 이동
-      navigate(`/business-signup?id=${userId}`);
+      navigate(`/business-signup`);
     } catch (error) {
       alert('회원가입 중 오류가 발생했습니다.');
     } finally {

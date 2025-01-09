@@ -81,7 +81,7 @@ const CeoMainPage2 = () => {
 
   const handleLogout = () => {
     console.log('로그아웃 버튼 클릭됨');
-    navigate('/'); // MainPage로 이동
+    navigate('/logout'); // MainPage로 이동
   };
 
   const handleOwner = () => {

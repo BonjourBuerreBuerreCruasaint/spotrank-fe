@@ -16,6 +16,7 @@ import MonthDetailSales from './components/MonthDetailSales/MonthDetailSales';
 import StoreDetail from './components/StoreDetail/StoreDetail';
 import ResetPassWord from './components/ResetPassWord/ResetPassWord'; 
 import ShopEditPage from './components/ShopEdit/ShopEditPage';
+import Logout from './components/Logout/logout'
 function App() {
   return (
     <Router>
@@ -34,6 +35,7 @@ function App() {
         <Route path="/store-detail" element={<StoreDetail />} />
         <Route path="/reset-password" element={<ResetPassWord />} />
         <Route path="/shop-edit" element={<ShopEditPage />} />
+        <Route path="/logout" element={<Logout />} />
       </Routes>
     </Router>
   );

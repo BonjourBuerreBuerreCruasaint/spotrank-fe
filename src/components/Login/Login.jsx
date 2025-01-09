@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
@@ -6,7 +6,6 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
-  const [id, setId] = useState('');
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
@@ -23,15 +22,6 @@ const Login = () => {
       setEmailError('');
     }
   };
-  
-  useEffect(() => {
-    const storedId = localStorage.getItem('id');
-    if (storedId) {
-      setId(storedId);
-    } else {
-      console.warn('로컬 스토리지에 id 값이 없습니다.');
-    }
-  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -40,7 +30,7 @@ const Login = () => {
       setEmailError('이메일 형식으로 입력해주세요');
       return;
     }
-    
+
     try {
       const response = await fetch('/api/login', {
         method: 'POST',
@@ -48,18 +38,24 @@ const Login = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
-        credentials: 'include',
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        navigate(`/ceo-main?id=${id}`); // 이메일 포함된 URL로 이동
+        const { id } = data;
+
+        // 사용자 ID를 로컬 스토리지에 저장
+        localStorage.setItem('id', id);
+
+        // CEO 메인 페이지로 이동
+        navigate(`/ceo-main?id=${id}`);
       } else {
         alert(data.error || '로그인 실패');
       }
     } catch (error) {
       console.error('로그인 중 오류 발생:', error);
+      alert('서버와 통신 중 오류가 발생했습니다.');
     }
   };
 

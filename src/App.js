@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login/Login';
 import FindID from './components/FindID/FindID';
 import FindPassWord from './components/FindPassWord/FindPassWord';
-import CeoMainPage from './components/CeoMainPage/CeoMainPage2';
+import CeoMainPage from './components/CeoMainPage/CeoMainPage';
 import DetailSales from './components/DetailSales/DetailSales';
 import './App.css';
 import Signup from './components/Signup/Signup';
@@ -16,6 +16,7 @@ import MonthDetailSales from './components/MonthDetailSales/MonthDetailSales';
 import StoreDetail from './components/StoreDetail/StoreDetail';
 import ResetPassWord from './components/ResetPassWord/ResetPassWord'; 
 import ShopEditPage from './components/ShopEdit/ShopEditPage';
+import Logout from './components/Logout/logout'
 function App() {
   return (
     <Router>
@@ -34,6 +35,7 @@ function App() {
         <Route path="/store-detail" element={<StoreDetail />} />
         <Route path="/reset-password" element={<ResetPassWord />} />
         <Route path="/shop-edit" element={<ShopEditPage />} />
+        <Route path="/logout" element={<Logout />} />
       </Routes>
     </Router>
   );

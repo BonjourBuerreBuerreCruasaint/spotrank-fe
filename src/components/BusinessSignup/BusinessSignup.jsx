@@ -118,7 +118,10 @@ const BusinessSignup = () => {
 
   return (
     <div className="business-signup-container">
-      <h1 className="business-signup-title" onClick={handleLogoClick}>SpotRank</h1>
+      <h1 className="business-signup-title" onClick={handleLogoClick}>
+        <img src="/logo-one.png" alt="Logo" className="logo" />
+        SpotRank
+      </h1>
       <form onSubmit={handleSubmit} className="business-signup-form">
         <div className="form-group">
           <label>사업자등록번호</label>

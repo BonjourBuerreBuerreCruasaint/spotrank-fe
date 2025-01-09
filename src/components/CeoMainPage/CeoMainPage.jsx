@@ -324,9 +324,8 @@ const CeoMainPage = () => {
   return (
     <div className="ceo-main-container">
       <header className="ceo-main-header">
-        <div className="logo-container">
-          <h1 className="logo">SpotRank</h1>
-        </div>
+        <img src="/logo.png" alt="Logo" className="logo" />
+        <h1 onClick={() => navigate("/")} style={{ cursor: 'pointer' }}>SpotRank</h1>
         <div className="ceo-button-group">
           <button className="ceo-ceo-button" onClick={handleOwner}>나는 사장</button>
           <button className="ceo-logout-button" onClick={handleLogout}>Logout</button>

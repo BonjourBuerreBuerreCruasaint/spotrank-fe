@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login/Login';
 import FindID from './components/FindID/FindID';
 import FindPassWord from './components/FindPassWord/FindPassWord';
-import CeoMainPage from './components/CeoMainPage/CeoMainPage';
+import CeoMainPage from './components/CeoMainPage/CeoMainPage2';
 import DetailSales from './components/DetailSales/DetailSales';
 import Signup from './components/Signup/Signup';
 import BusinessSignup from './components/BusinessSignup/BusinessSignup';

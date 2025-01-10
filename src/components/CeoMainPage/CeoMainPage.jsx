@@ -428,12 +428,19 @@ const CeoMainPage = () => {
     circles = []; // 배열 초기화
   };
 
-  
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_API_KEY}&autoload=false`;
+    document.head.appendChild(script);
 
-  // useEffect(() => {
-  //   fetchPlacesFromAPI(); // 초기 접근 시 상권영역 데이터를 가져옴
-  //   showPolygons(); // 폴리곤을 지도에 추가
-  // }, []);
+    script.onload = () => {
+      console.log('Kakao Maps API loaded');
+    };
+
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
 
   return (
     <div className="ceo-main-container">

@@ -15,18 +15,9 @@ const BusinessSignup = () => {
     isVerified: false,
   });
 
-  const [id, setId] = useState("");
-
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const storedId = localStorage.getItem('id');
-    if (storedId) {
-      setId(storedId);
-    } else {
-      console.warn('로컬 스토리지에 id 값이 없습니다.');
-    }
-  }, []);
+  const storedId = sessionStorage.getItem('id');
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;

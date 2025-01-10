@@ -12,7 +12,7 @@ const WeekDetailSales = () => {
   const location = useLocation();
   const pieChartRef = React.useRef(null);
   const lineChartRef = React.useRef(null);
-  const [id, setId] = useState('');
+  const storedId = sessionStorage.getItem('id');
 
   const lineData = [
     { week: "1주차", sales: 500 },
@@ -37,14 +37,6 @@ const WeekDetailSales = () => {
   const getButtonClass = (path) => {
     return location.pathname === path ? "active" : "";
   };
-  useEffect(() => {
-    const storedId = localStorage.getItem('id');
-    if (storedId) {
-      setId(storedId);
-    } else {
-      console.warn('로컬 스토리지에 id 값이 없습니다.');
-    }
-  }, []);
 
   return (
     <div className="week-detail-sales-container">
@@ -52,7 +44,7 @@ const WeekDetailSales = () => {
         className="week-detail-sales-header"
       >
         <img src="/logo.png" alt="Logo" className="logo" />
-        <h1 onClick={() => navigate("/")} style={{ cursor: 'pointer' }}>SpotRank</h1>
+        <h1 onClick={() => navigate(`/ceo-main?id=${storedId}`)} style={{ cursor: 'pointer' }}>SpotRank</h1>
         <div className="week-detail-sales-button-group">
           <button className="week-detail-sales-button" onClick={() => navigate('/detail-sales')}>나는 사장</button>
           <button className="week-detail-sales-logout-button" onClick={() => navigate('/ceo-main')}>Logout</button>
@@ -62,11 +54,11 @@ const WeekDetailSales = () => {
       <div className="week-content-container">
         <nav className="week-detail-sales-sidebar">
           <ul>
-            <li className={getButtonClass("/detail-sales")} onClick={() => navigate(`/detail-sales?id=${id}`)}>실시간</li>
-            <li className={getButtonClass("/day-detail-sales")} onClick={() => navigate(`/day-detail-sales?id=${id}`)}>일간</li>
-            <li className={getButtonClass("/week-detail-sales")} onClick={() => navigate(`/week-detail-sales?id=${id}`)}>주간</li>
-            <li className={getButtonClass("/month-detail-sales")} onClick={() => navigate(`/month-detail-sales?id=${id}`)}>월간</li>
-            <li className={getButtonClass("/shop-edit")} onClick={() => navigate(`/shop-edit?id=${id}`)}>정보 수정</li>
+            <li className={getButtonClass("/detail-sales")} onClick={() => navigate(`/detail-sales?id=${storedId}`)}>실시간</li>
+            <li className={getButtonClass("/day-detail-sales")} onClick={() => navigate(`/day-detail-sales?id=${storedId}`)}>일간</li>
+            <li className={getButtonClass("/week-detail-sales")} onClick={() => navigate(`/week-detail-sales?id=${storedId}`)}>주간</li>
+            <li className={getButtonClass("/month-detail-sales")} onClick={() => navigate(`/month-detail-sales?id=${storedId}`)}>월간</li>
+            <li className={getButtonClass("/shop-edit")} onClick={() => navigate(`/shop-edit?id=${storedId}`)}>정보 수정</li>
           </ul>
         </nav>
 

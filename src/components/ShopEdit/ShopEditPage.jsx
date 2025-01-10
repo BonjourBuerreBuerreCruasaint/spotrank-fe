@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ShopEditPage.css";
 
@@ -10,8 +10,7 @@ const ShopEditPage = () => {
   const [shopDescription, setShopDescription] = useState("");
   const [shopImages, setShopImages] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
-
-  const [email, setEmail] = useState("");
+  const storedId = sessionStorage.getItem('id');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,12 +21,13 @@ const ShopEditPage = () => {
     }
     // 가게 정보 수정 API 호출 로직 추가
     console.log("가게 정보 수정:", { shopName, shopPhone, shopAddress, shopDescription, shopImages });
-    navigate(`/ceo-main?email=${encodeURIComponent(email)}`);
+    navigate(`/ceo-main?id=${storedId}`);
     setErrorMessage(""); // 오류 메시지 초기화
 
     // 성공 메시지 표시
     alert("가게 정보가 수정되었습니다."); // 팝업 메시지
   };
+
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
@@ -37,7 +37,7 @@ const ShopEditPage = () => {
   return (
     <div className="shop-edit-container">
       <div className="shop-edit-box">
-        <h2 className="shop-edit-title" onClick={() => navigate("/ceo-main")} style={{ cursor: 'pointer' }}>
+        <h2 className="shop-edit-title" onClick={() => navigate(`/ceo-main?id=${storedId}`)} style={{ cursor: 'pointer' }}>
           <img src="/logo-one.png" alt="로고" className="logo" />
           SpotRank
         </h2>

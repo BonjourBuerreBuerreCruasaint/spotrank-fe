@@ -13,17 +13,7 @@ const CeoMainPage2 = () => {
   const [category, setCategory] = useState('restaurants');
   const [userLocation, setUserLocation] = useState(null);
   const [zones, setZones] = useState([]);
-  const [id, setId] = useState('');
-
-  // 로컬 스토리지에서 email 가져오기
-  useEffect(() => {
-    const storedId = localStorage.getItem('id');
-    if (storedId) {
-      setId(storedId);
-    } else {
-      console.warn('로컬 스토리지에 id 값이 없습니다.');
-    }
-  }, []);
+  const storedId = sessionStorage.getItem('id');
   
   // 랜덤 추천 식당 업데이트
   useEffect(() => {
@@ -85,7 +75,7 @@ const CeoMainPage2 = () => {
   };
 
   const handleOwner = () => {
-    navigate(`/detail-sales?id=${id}`); // DetailSales 페이지로 이동
+    navigate(`/detail-sales?id=${storedId}`); // DetailSales 페이지로 이동
   };
 
   useEffect(() => {
@@ -154,7 +144,7 @@ const CeoMainPage2 = () => {
 
         // 사용자 마커 클릭 이벤트
         window.kakao.maps.event.addListener(userMarker, 'click', () => {
-          navigate(`/store-detail?id=${id}`); // StoreDetail 페이지로 이동
+          navigate(`/store-detail?id=${storedId}`); // StoreDetail 페이지로 이동
         });
 
         const infoWindow = new window.kakao.maps.InfoWindow({

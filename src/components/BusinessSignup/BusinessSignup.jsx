@@ -13,20 +13,12 @@ const BusinessSignup = () => {
     image: null,
     openingDate: '',
     isVerified: false,
+    isVerified: false,
   });
-
-  const [id, setId] = useState("");
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const storedId = localStorage.getItem('id');
-    if (storedId) {
-      setId(storedId);
-    } else {
-      console.warn('로컬 스토리지에 id 값이 없습니다.');
-    }
-  }, []);
+  const storedId = sessionStorage.getItem('id');
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -79,6 +71,8 @@ const BusinessSignup = () => {
       formData.category &&
       formData.openingDate &&
       formData.isVerified
+      formData.openingDate &&
+      formData.isVerified
     );
   };
 
@@ -113,8 +107,16 @@ const BusinessSignup = () => {
           ...prevFormData,
           isVerified: true, // 사업자 등록 확인 성공 시 업데이트
         }));
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          isVerified: true, // 사업자 등록 확인 성공 시 업데이트
+        }));
       } else {
         alert(`확인 실패: ${result.message}`);
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          isVerified: false, // 실패 시 비활성화
+        }));
         setFormData((prevFormData) => ({
           ...prevFormData,
           isVerified: false, // 실패 시 비활성화
@@ -123,6 +125,10 @@ const BusinessSignup = () => {
     } catch (error) {
       console.error('서버 오류:', error);
       alert('서버와 통신 중 오류가 발생했습니다.');
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        isVerified: false,
+      }));
       setFormData((prevFormData) => ({
         ...prevFormData,
         isVerified: false,

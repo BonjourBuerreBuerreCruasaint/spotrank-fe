@@ -46,10 +46,11 @@ const Login = () => {
         const { id } = data;
 
         // 사용자 ID를 로컬 스토리지에 저장
-        localStorage.setItem('id', id);
+        sessionStorage.setItem('id',id);
+        const storedId = sessionStorage.getItem('id');
 
         // CEO 메인 페이지로 이동
-        navigate(`/ceo-main?id=${id}`);
+        navigate(`/ceo-main?id=${storedId}`);
       } else {
         alert(data.error || '로그인 실패');
       }

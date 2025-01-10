@@ -144,7 +144,7 @@ const CeoMainPage = () => {
             strokeColor: color,
             strokeOpacity: 1,
             fillColor: color,
-            fillOpacity: 0.1
+            fillOpacity: 0.2
           });
           polygons.push(polygon); // 폴리곤 객체 저장
         }

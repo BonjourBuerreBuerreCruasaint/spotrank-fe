@@ -26,7 +26,7 @@ const Signup = () => {
   const [phoneError, setPhoneError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false); // 제출 상태 관리
   const navigate = useNavigate();
-  
+  const storedId = sessionStorage.getItem('id');
 
   // 입력값 변경 핸들러
   const handleChange = (e) => {
@@ -136,7 +136,7 @@ const Signup = () => {
       });
 
       // 사업자 인증 페이지로 이동
-      navigate(`/business-signup`);
+      navigate(`/business-signup?id=${storedId}`);
     } catch (error) {
       alert('회원가입 중 오류가 발생했습니다.');
     } finally {

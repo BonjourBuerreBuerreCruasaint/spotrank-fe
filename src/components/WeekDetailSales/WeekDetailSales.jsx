@@ -1,18 +1,17 @@
-import React, {useState, useEffect} from "react";
+
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./WeekDetailSales.css";
 import { Chart, registerables } from "chart.js";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend as RechartsLegend, ResponsiveContainer } from 'recharts';
-import { PieChart, Pie, Cell, Tooltip as RechartsTooltipPie, Legend as RechartsLegendPie } from 'recharts';
+import { BarChart, Bar, Cell, Tooltip as RechartsTooltipBar, Legend as RechartsLegendBar } from 'recharts';
 
 Chart.register(...registerables);
 
 const WeekDetailSales = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const pieChartRef = React.useRef(null);
-  const lineChartRef = React.useRef(null);
-  const storedId = sessionStorage.getItem('id');
+  const [id, setId] = useState('');
 
   const lineData = [
     { week: "1주차", sales: 500 },
@@ -21,7 +20,7 @@ const WeekDetailSales = () => {
     { week: "4주차", sales: 600 },
   ];
 
-  const pieData = [
+  const barData = [
     { name: "1주차", value: 100 },
     { name: "2주차", value: 150 },
     { name: "3주차", value: 200 },
@@ -30,24 +29,23 @@ const WeekDetailSales = () => {
 
   const COLORS = ["#cedfcd", "#c2c2ca", "#ffdba4", "#559abc"];
 
-  React.useEffect(() => {
-    // Pie Chart 관련 코드
+  useEffect(() => {
+    const storedId = localStorage.getItem('id');
+    if (storedId) {
+      setId(storedId);
+    } else {
+      console.warn('로컬 스토리지에 id 값이 없습니다.');
+    }
   }, []);
-
-  const getButtonClass = (path) => {
-    return location.pathname === path ? "active" : "";
-  };
 
   return (
     <div className="week-detail-sales-container">
-      <header
-        className="week-detail-sales-header"
-      >
+      <header className="week-detail-sales-header">
         <img src="/logo.png" alt="Logo" className="logo" />
-        <h1 onClick={() => navigate(`/ceo-main?id=${storedId}`)} style={{ cursor: 'pointer' }}>SpotRank</h1>
+        <h1 onClick={() => navigate("/ceo-main")} style={{ cursor: 'pointer' }}>SpotRank</h1>
         <div className="week-detail-sales-button-group">
           <button className="week-detail-sales-button" onClick={() => navigate('/detail-sales')}>나는 사장</button>
-          <button className="week-detail-sales-logout-button" onClick={() => navigate('/ceo-main')}>Logout</button>
+          <button className="week-detail-sales-logout-button" onClick={() => navigate('/')}>Logout</button>
         </div>
       </header>
 
@@ -65,7 +63,7 @@ const WeekDetailSales = () => {
         <main className="week-main-content">
           <div className="week-chart-container">
             <div className="week-line-chart">
-              <h3 style={{ textAlign: 'center', fontSize: '16px', marginTop:'-5px', color: '#559abc' }}>주간 매출 분석</h3>
+              <h3 style={{ textAlign: 'center', fontSize: '16px', marginTop: '-5px', color: '#559abc' }}>주간 매출 분석</h3>
               <ResponsiveContainer width="100%" height={280}>
                 <LineChart data={lineData}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -77,27 +75,21 @@ const WeekDetailSales = () => {
                 </LineChart>
               </ResponsiveContainer>
             </div>
-            <div className="week-pie-chart">
+            <div className="week-bar-chart">
               <h3 style={{ textAlign: 'center', fontSize: '16px', marginTop: '-2px', color: '#559abc' }}>주간 메뉴 판매량</h3>
               <ResponsiveContainer width="100%" height={280}>
-                <PieChart>
-                  <RechartsTooltipPie />
-                  <RechartsLegendPie />
-                  <Pie
-                    data={pieData}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    fill="#8884d8"
-                    label
-                  >
-                    {pieData.map((entry, index) => (
+                <BarChart data={barData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <RechartsTooltipBar />
+                  <RechartsLegendBar />
+                  <Bar dataKey="value" fill="#87CEEB">
+                    {barData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
-                  </Pie>
-                </PieChart>
+                  </Bar>
+                </BarChart>
               </ResponsiveContainer>
             </div>
           </div>

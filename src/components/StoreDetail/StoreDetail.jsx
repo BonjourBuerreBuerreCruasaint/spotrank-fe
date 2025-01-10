@@ -82,15 +82,6 @@ const StoreDetail = () => {
     });
   };
 
-  useEffect(() => {
-    const storedId = localStorage.getItem('id');
-    if (storedId) {
-      setId(storedId);
-    } else {
-      console.warn('로컬 스토리지에 id 값이 없습니다.');
-    }
-  }, []);
-
   return (
     <div>
       <nav className="navbar">

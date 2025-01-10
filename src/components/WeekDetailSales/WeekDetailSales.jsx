@@ -10,7 +10,7 @@ Chart.register(...registerables);
 const WeekDetailSales = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [id, setId] = useState('');
+  const storedId = sessionStorage.getItem('id');
 
   const lineData = [
     { week: "1주차", sales: 500 },
@@ -28,14 +28,6 @@ const WeekDetailSales = () => {
 
   const COLORS = ["#cedfcd", "#c2c2ca", "#ffdba4", "#559abc"];
 
-  useEffect(() => {
-    const storedId = localStorage.getItem('id');
-    if (storedId) {
-      setId(storedId);
-    } else {
-      console.warn('로컬 스토리지에 id 값이 없습니다.');
-    }
-  }, []);
 
   return (
     <div className="week-detail-sales-container">
@@ -50,12 +42,12 @@ const WeekDetailSales = () => {
 
       <div className="week-content-container">
         <nav className="week-detail-sales-sidebar">
-          <ul>
-            <li onClick={() => navigate(`/detail-sales?id=${id}`)}>실시간</li>
-            <li onClick={() => navigate(`/day-detail-sales?id=${id}`)}>일간</li>
-            <li onClick={() => navigate(`/week-detail-sales?id=${id}`)}>주간</li>
-            <li onClick={() => navigate(`/month-detail-sales?id=${id}`)}>월간</li>
-            <li onClick={() => navigate(`/shop-edit?id=${id}`)}>정보 수정</li>
+        <ul>
+            <li className={getButtonClass("/detail-sales")} onClick={() => navigate(`/detail-sales?id=${storedId}`)}>실시간</li>
+            <li className={getButtonClass("/day-detail-sales")} onClick={() => navigate(`/day-detail-sales?id=${storedId}`)}>일간</li>
+            <li className={getButtonClass("/week-detail-sales")} onClick={() => navigate(`/week-detail-sales?id=${storedId}`)}>주간</li>
+            <li className={getButtonClass("/month-detail-sales")} onClick={() => navigate(`/month-detail-sales?id=${storedId}`)}>월간</li>
+            <li className={getButtonClass("/shop-edit")} onClick={() => navigate(`/shop-edit?id=${storedId}`)}>정보 수정</li>
           </ul>
         </nav>
 

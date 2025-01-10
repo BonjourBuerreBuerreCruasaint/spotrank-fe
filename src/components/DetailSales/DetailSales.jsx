@@ -3,14 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import "./DetailSales.css";
 import { Chart, registerables } from "chart.js";
 import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-import {
   LineChart,
   Line,
   XAxis,

@@ -10,11 +10,6 @@ const DayDetailSales = () => {
   const lineChartRef = React.useRef(null);
   const pieChartRef = React.useRef(null);
   const storedId = sessionStorage.getItem('id');
-  const navigate = useNavigate();
-  const location = useLocation();
-  const lineChartRef = React.useRef(null);
-  const pieChartRef = React.useRef(null);
-  const storedId = sessionStorage.getItem('id');
 
   const data = [
     { day: '월', sales: 300 },
@@ -34,18 +29,10 @@ const DayDetailSales = () => {
   ];
 
   const COLORS = ["#cedfcd", "#c2c2ca", "#ffdba4", "#559abc"];
-  const COLORS = ["#cedfcd", "#c2c2ca", "#ffdba4", "#559abc"];
 
-  React.useEffect(() => {
-    // Line Chart 관련 코드
   React.useEffect(() => {
     // Line Chart 관련 코드
   }, []);
-
-  const getButtonClass = (path) => {
-    return location.pathname === path ? "active" : "";
-  };
-
 
   const getButtonClass = (path) => {
     return location.pathname === path ? "active" : "";
@@ -57,7 +44,6 @@ const DayDetailSales = () => {
         className="day-detail-sales-header"
       >
         <img src="/logo.png" alt="Logo" className="logo" />
-        <h1 onClick={() => navigate(`/ceo-main?id=${storedId}`)} style={{ cursor: 'pointer' }}>SpotRank</h1>
         <h1 onClick={() => navigate(`/ceo-main?id=${storedId}`)} style={{ cursor: 'pointer' }}>SpotRank</h1>
         <div className="day-detail-button-group">
           <button className="day-detail-sales-button" onClick={() => navigate('/detail-sales')}>나는 사장</button>

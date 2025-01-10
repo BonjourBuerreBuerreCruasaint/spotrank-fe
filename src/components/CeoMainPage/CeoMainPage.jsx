@@ -2,6 +2,62 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CeoMainPage.css';
 
+const Legend = () => {
+  return (
+    <div className="legend-container">
+      <div className="legend-texts">
+        <span className="legend-text">골목상권</span>
+        <span className="legend-text">발달상권</span>
+        <span className="legend-text">전통시장</span>
+        <span className="legend-text">관광특구</span>
+      </div>
+      <div className="legend-bar">
+        <span className="legend-color" style={{ backgroundColor: '#82c3ec' }}></span>
+        <span className="legend-color" style={{ backgroundColor: '#009eff' }}></span>
+        <span className="legend-color" style={{ backgroundColor: '#ffbbcc' }}></span>
+        <span className="legend-color" style={{ backgroundColor: '#0014ff' }}></span>
+      </div>
+      <div className="legend-label">상권영역 분류</div>
+    </div>
+  );
+};
+
+const NewLegend = () => {
+  return (
+    <div className="new-legend-container">
+      <div className="new-legend-texts">
+        <span className="new-legend-text">적음</span>
+        <span className="new-legend-text">많음</span>
+      </div>
+      <div className="new-legend-bar">
+        <span className="new-legend-color" style={{ backgroundColor: '#ffff00' }}></span>
+        <span className="new-legend-color" style={{ backgroundColor: '#ffa500' }}></span>
+        <span className="new-legend-color" style={{ backgroundColor: '#ff0000' }}></span>
+      </div>
+      <div className="new-legend-label">유동인구(2024년 2분기)</div>
+    </div>
+  );
+};
+
+const AnotherLegend = () => {
+  return (
+    <div className="another-legend-container">
+      <div className="another-legend-texts">
+        <span className="another-legend-text">적음</span>
+        <span className="another-legend-text">많음</span>
+      </div>
+      <div className="another-legend-bar">
+        <span className="another-legend-color" style={{ backgroundColor: '#666666' }}></span>
+        <span className="another-legend-color" style={{ backgroundColor: '#dba979' }}></span>
+        <span className="another-legend-color" style={{ backgroundColor: '#ffdb5c' }}></span>
+        <span className="another-legend-color" style={{ backgroundColor: '#88d66c' }}></span>
+        <span className="another-legend-color" style={{ backgroundColor: '#ffff00' }}></span>
+      </div>
+      <div className="another-legend-label">매출액</div>
+    </div>
+  );
+};
+
 const CeoMainPage = () => {
   const navigate = useNavigate();
   const [randomRestaurants, setRandomRestaurants] = useState('');
@@ -174,7 +230,7 @@ const CeoMainPage = () => {
           strokeColor: color,
           strokeOpacity: 0.3,
           fillColor: color,
-          fillOpacity: 0.3,
+          fillOpacity: 0.2,
         });
         circles.push(circle); // 서클 객체 저장
   
@@ -427,6 +483,9 @@ const CeoMainPage = () => {
         <div className="vertical-toggle">
         </div>
       </main>
+      <Legend />
+      <NewLegend />
+      <AnotherLegend />
     </div>
   );
 };

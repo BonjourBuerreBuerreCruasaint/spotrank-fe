@@ -154,7 +154,6 @@ body {
 .recommendation {
   padding: 10px;
   flex: 0.3;
-  border-top: 1px solid #eee;
   margin-bottom: 10px;
 }
 
@@ -320,7 +319,7 @@ body {
 }
 
 /* 카테고리 토글 */
-.category-toggle {
+.main-category-toggle {
   position: absolute;
   top: 8px;
   right: 10px;

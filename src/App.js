@@ -14,7 +14,8 @@ import MonthDetailSales from './components/MonthDetailSales/MonthDetailSales';
 import ResetPassWord from './components/ResetPassWord/ResetPassWord'; 
 import ShopEditPage from './components/ShopEdit/ShopEditPage';
 import Logout from './components/Logout/logout'
-import StoreDetail from './components/StoreDetail/StoreDetail';
+import StoreDetail from './components/StoreDetail/StoreDetail'
+
 function App() {
   return (
     <Router>

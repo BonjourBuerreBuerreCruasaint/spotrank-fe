@@ -174,28 +174,9 @@ const MainPage = () => {
       // 원을 지도에 표시
       circle.setMap(map);
 
-      // 새로운 마커 생성 (신촌 현백)
-      // const markerPosition2 = new window.kakao.maps.LatLng(37.556042, 126.935807);
-      // const marker2 = new window.kakao.maps.Marker({
-      //   position: markerPosition2
-      // });
-      // marker2.setMap(map);
-
-      // // 새로운 마커 생성 (추가된 위치)//스타벅스
-      // const markerPosition3 = new window.kakao.maps.LatLng(37.556467, 126.937160);
-      // const marker3 = new window.kakao.maps.Marker({
-      //   position: markerPosition3
-      // });
-      // marker3.setMap(map);
-
       }
 
-      
-      // 마커 생성
-      // const markerPosition = new window.kakao.maps.LatLng(37.556229, 126.937079);
-      // const marker = new window.kakao.maps.Marker({
-      //   position: markerPosition
-      // });
+    
     };
 
     // 카카오맵 SDK가 로드된 후 실행

@@ -14,9 +14,10 @@ const Logout = () => {
 
         if (response.ok) {
           const data = await response.json();
-          alert(data.message || '로그아웃 성공');
           localStorage.removeItem('id');
           localStorage.clear();
+          sessionStorage.removeItem('id')
+          sessionStorage.clear();
           navigate('/'); // 메인 페이지로 리디렉션
         } else {
           const errorData = await response.json();

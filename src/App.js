@@ -6,7 +6,6 @@ import FindID from './components/FindID/FindID';
 import FindPassWord from './components/FindPassWord/FindPassWord';
 import CeoMainPage from './components/CeoMainPage/CeoMainPage';
 import DetailSales from './components/DetailSales/DetailSales';
-import './App.css';
 import Signup from './components/Signup/Signup';
 import BusinessSignup from './components/BusinessSignup/BusinessSignup';
 import DayDetailSales from './components/DayDetailSales/DayDetailSales';    
@@ -16,6 +15,7 @@ import ResetPassWord from './components/ResetPassWord/ResetPassWord';
 import ShopEditPage from './components/ShopEdit/ShopEditPage';
 import Logout from './components/Logout/logout'
 import StoreDetail from './components/StoreDetail/StoreDetail'
+
 function App() {
   return (
     <Router>

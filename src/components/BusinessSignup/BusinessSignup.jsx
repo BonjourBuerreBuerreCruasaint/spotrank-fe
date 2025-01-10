@@ -71,8 +71,6 @@ const BusinessSignup = () => {
       formData.category &&
       formData.openingDate &&
       formData.isVerified
-      formData.openingDate &&
-      formData.isVerified
     );
   };
 
@@ -103,10 +101,6 @@ const BusinessSignup = () => {
   
       if (response.ok) {
         alert(`사업자 진위 여부 확인: ${result.message}`);
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          isVerified: true, // 사업자 등록 확인 성공 시 업데이트
-        }));
         setFormData((prevFormData) => ({
           ...prevFormData,
           isVerified: true, // 사업자 등록 확인 성공 시 업데이트

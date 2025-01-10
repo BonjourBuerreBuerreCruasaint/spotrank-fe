@@ -233,7 +233,7 @@ const MainPage = () => {
       <div className="main-content">
         <div className="left-panels">
           <div className="panel hot-places-panel">
-            <div className="category-toggle">
+            <div className="main-category-toggle">
               <button
                 className={`toggle-button ${category === 'restaurants' ? 'active' : ''}`}
                 onClick={() => handleCategoryChange('restaurants')}

@@ -1,5 +1,5 @@
 # Node.js 기반 이미지에서 시작
-FROM node:16 AS build
+FROM node:18 AS build
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ COPY . .
 RUN npm run build
 
 # Nginx 설정을 위한 단계
-FROM nginx:alpine
+FROM nginx:1.24
 
 # Nginx 설정 파일 복사
 COPY default.conf /etc/nginx/conf.d/default.conf
@@ -23,7 +23,7 @@ COPY default.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/build /usr/share/nginx/html
 
 # 환경 변수 설정
-ENV REACT_APP_KAKAO_API_KEY=<your-api-key>
+ENV REACT_APP_KAKAO_API_KEY=33f41b22037c7bb6ada97e6f7c625e0d
 
 # Nginx 포트 노출
 EXPOSE 80

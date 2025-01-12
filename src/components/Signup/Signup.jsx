@@ -123,7 +123,13 @@ const Signup = () => {
       // 서버에 데이터 전송
       const response = await axios.post('/api/signup', formData);
       alert(response.data.message);
-      console.log(response.data.messsage);
+      const data = await response.json();
+      const { name } = data;
+
+      // 사용자 ID를 세션 스토리지에 저장
+      localStorage.setItem('name',name);
+      const checkName = localStorage.getItem('name');
+      
       // 성공 시 폼 초기화
       setFormData({
         email: '',

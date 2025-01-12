@@ -13,32 +13,57 @@ const BusinessSignup = () => {
     image: null,
     openingDate: '',
     isVerified: false,
-    isVerified: false,
+    storePhoneNumber: '',
   });
+
+  const [localBusinessName, setLocalBusinessName] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const navigate = useNavigate();
 
-  const storedId = sessionStorage.getItem('id');
+  // 로컬 스토리지에서 데이터 가져오기
+  useEffect(() => {
+    const storedName = localStorage.getItem('name');
+    if (storedName) {
+      setLocalBusinessName(storedName);
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
+
+    // businessName 검증
+    if (name === 'businessName') {
+      if (value !== localBusinessName) {
+        setErrorMessage('입력한 사업자 이름이 저장된 이름과 다릅니다.');
+      } else {
+        setErrorMessage('');
+      }
+    }
+
     setFormData({
       ...formData,
       [name]: files ? files[0] : value,
     });
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
+    if (errorMessage) {
+      alert('사업자 이름이 올바르지 않습니다.');
+      return;
+    }
+
     const formDataToSend = new FormData();
     formDataToSend.append('businessNumber', formData.businessNumber);
     formDataToSend.append('storeName', formData.storeName);
     formDataToSend.append('address', formData.address);
     formDataToSend.append('category', formData.category);
     formDataToSend.append('description', formData.description);
-    formDataToSend.append('openingDate',formData.openingDate);
-    
+    formDataToSend.append('openingDate', formData.openingDate);
+    formDataToSend.append('storePhoneNumber', formData.storePhoneNumber);
+
     if (formData.image) {
       formDataToSend.append('image', formData.image);
     }
@@ -70,7 +95,9 @@ const BusinessSignup = () => {
       formData.address &&
       formData.category &&
       formData.openingDate &&
-      formData.isVerified
+      formData.isVerified &&
+      formData.storePhoneNumber &&
+      !errorMessage // 오류 메시지가 없을 때만 유효
     );
   };
 
@@ -83,7 +110,7 @@ const BusinessSignup = () => {
       alert('사업자등록번호, 개업일, 대표자 성명을 모두 입력하세요.');
       return;
     }
-  
+
     try {
       const response = await fetch('/api/verify-business', {
         method: 'POST',
@@ -96,33 +123,25 @@ const BusinessSignup = () => {
           businessName: formData.businessName,
         }),
       });
-  
+
       const result = await response.json();
-  
+
       if (response.ok) {
         alert(`사업자 진위 여부 확인: ${result.message}`);
         setFormData((prevFormData) => ({
           ...prevFormData,
-          isVerified: true, // 사업자 등록 확인 성공 시 업데이트
+          isVerified: true,
         }));
       } else {
         alert(`확인 실패: ${result.message}`);
         setFormData((prevFormData) => ({
           ...prevFormData,
-          isVerified: false, // 실패 시 비활성화
-        }));
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          isVerified: false, // 실패 시 비활성화
+          isVerified: false,
         }));
       }
     } catch (error) {
       console.error('서버 오류:', error);
       alert('서버와 통신 중 오류가 발생했습니다.');
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        isVerified: false,
-      }));
       setFormData((prevFormData) => ({
         ...prevFormData,
         isVerified: false,
@@ -157,6 +176,7 @@ const BusinessSignup = () => {
             onChange={handleChange}
             required
           />
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
         </div>
         <div className="form-group">
           <label>개업일</label>
@@ -174,6 +194,16 @@ const BusinessSignup = () => {
             type="text"
             name="storeName"
             value={formData.storeName}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>가게 전화번호</label>
+          <input
+            type="text"
+            name="storePhoneNumber"
+            value={formData.storePhoneNumber}
             onChange={handleChange}
             required
           />

@@ -45,7 +45,7 @@ const Login = () => {
       if (response.ok) {
         const { id } = data;
 
-        // 사용자 ID를 로컬 스토리지에 저장
+        // 사용자 ID를 세션 스토리지에 저장
         sessionStorage.setItem('id',id);
         const storedId = sessionStorage.getItem('id');
 

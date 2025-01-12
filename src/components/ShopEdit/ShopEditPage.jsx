@@ -12,12 +12,32 @@ const ShopEditPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const storedId = sessionStorage.getItem('id');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
     // 유효성 검사 및 제출 로직 추가
     if (!shopName || !shopPhone || !shopAddress || !shopDescription || shopImages.length === 0) {
       setErrorMessage("모든 필드를 입력해야 합니다.");
       return;
+    }
+    try {
+      const response = await fetch('/api/update-store', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+  
+      if (!response.ok) throw new Error('서버 업데이트 실패');
+  
+      const result = await response.json();
+      console.log(result); // 서버에서 반환하는 데이터 처리
+  
+    } catch (error) {
+      console.error('데이터 업데이트 실패:', error);
     }
     // 가게 정보 수정 API 호출 로직 추가
     console.log("가게 정보 수정:", { shopName, shopPhone, shopAddress, shopDescription, shopImages });

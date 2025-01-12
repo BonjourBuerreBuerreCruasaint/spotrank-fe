@@ -47,5 +47,5 @@
     "cross-env": "^7.0.3",
     "react-app-rewired": "^2.2.1"
   },
-  "proxy": "https://127.0.0.1:5000"
+  "proxy": "http://127.0.0.1:5000"
 }

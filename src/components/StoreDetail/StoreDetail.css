@@ -53,6 +53,8 @@ body {
     align-items: center;
     justify-content: center;
     border: 1px solid #ddd;
+    top: 130px;
+    left: 188px;
   }
   
   .content-section {
@@ -70,7 +72,8 @@ body {
   
   .main-image {
     position: relative;
-    left: 10px;
+    left: 198px;
+    top: 131px;
   }
   
   .main-image img {
@@ -100,8 +103,8 @@ body {
     height: 115px;
     object-fit: cover;
     position: relative;
-    left: 275px;
-    top: -274px;
+    left: 458px;
+    top: -143px;
   }
   
   .sub-image-2 {
@@ -109,8 +112,8 @@ body {
     height: 115px;
     object-fit: cover;
     position: relative;
-    left: 75px;
-    top: -274px;
+    left: 252px;
+    top: -143px;
   }
   
   .sub-image-3 {
@@ -118,8 +121,8 @@ body {
     height: 115px;
     object-fit: cover;
     position: relative;
-    left: -125px;
-    top: -274px;
+    left: 45px;
+    top: -143px;
   }
   
   .sub-image-4 {
@@ -127,8 +130,8 @@ body {
     height: 115px;
     object-fit: cover;
     position: relative;
-    left: 275px;
-    top: -269px;
+    left: 458px;
+    top: -137px;
   }
   
   .sub-image-5 {
@@ -136,8 +139,8 @@ body {
     height: 115px;
     object-fit: cover;
     position: relative;
-    left: 75px;
-    top: -269px;
+    left: 252px;
+    top: -137px;
   }
   
   .sub-image-6 {
@@ -145,8 +148,8 @@ body {
     height: 115px;
     object-fit: cover;
     position: relative;
-    left: -125px;
-    top: -269px;
+    left: 45px;
+    top: -137px;
   }
   
   .store-info {
@@ -155,10 +158,8 @@ body {
     background-color: #f5f5f5;
     border-radius: 4px;
     position: relative;
-    left: 10px;
-    top: -255px;
-    width: 307px;
-    height: 250px;
+    left: 184px;
+    top: -123px;
   }
   
   .store-info h2 {
@@ -193,10 +194,10 @@ body {
     border: 1px solid #d9d9d9;
     border-radius: 4px;
     position: relative;
-    left: -320px;
-    top: -250px;
+    left: -160px;
+    top: -118px;
     width: 220px;
-    height: 240px;
+    height: 237px;
   }
   
   .ranking h3 {

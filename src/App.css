@@ -297,6 +297,8 @@ body {
   flex-direction: column;
   margin-top: 10px;
   margin-left: 10px;
+  height: 430px;
+  width: 240px;
 }
 
 /* 추천 패널 */
@@ -321,7 +323,7 @@ body {
 /* 카테고리 토글 */
 .main-category-toggle {
   position: absolute;
-  top: 8px;
+  top: 15px;
   right: 10px;
   display: flex;
   align-items: center;

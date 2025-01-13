@@ -50,9 +50,14 @@ const BusinessSignup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!formData.isVerified) {
+        alert('사업자여부 확인해주세요');
+        return;
+    }
+
     if (errorMessage) {
-      alert('사업자 이름이 올바르지 않습니다.');
-      return;
+        alert('사업자 이름이 올바르지 않습니다.');
+        return;
     }
 
     const formDataToSend = new FormData();
@@ -88,16 +93,19 @@ const BusinessSignup = () => {
   };
 
   const isFormValid = () => {
+    if (!formData.isVerified) {
+        return false; // 사업자 확인이 되지 않은 경우
+    }
+    
     return (
-      formData.businessNumber &&
-      formData.businessName &&
-      formData.storeName &&
-      formData.address &&
-      formData.category &&
-      formData.openingDate &&
-      formData.isVerified &&
-      formData.storePhoneNumber &&
-      !errorMessage // 오류 메시지가 없을 때만 유효
+        formData.businessNumber &&
+        formData.businessName &&
+        formData.storeName &&
+        formData.address &&
+        formData.category &&
+        formData.openingDate &&
+        formData.storePhoneNumber &&
+        !errorMessage // 오류 메시지가 없을 때만 유효
     );
   };
 

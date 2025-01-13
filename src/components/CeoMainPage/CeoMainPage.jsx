@@ -58,7 +58,6 @@ const AnotherLegend = () => {
   );
 };
 
-
 const CeoMainPage = () => {
   const navigate = useNavigate();
   const [randomRestaurants, setRandomRestaurants] = useState('');
@@ -69,28 +68,10 @@ const CeoMainPage = () => {
   });
   const [category, setCategory] = useState('restaurants'); // 카테고리 상태
   const [viewMode, setViewMode] = useState('상권영역'); // 새로운 상태 추가
-  const [userLocation, setUserLocation] = useState(null);
   let map; // map 변수를 여기서 정의
   let polygons = []; // 폴리곤을 저장할 배열
   let circles = []; // 서클을 저장할 배열
   let zones = []; // 새로운 폴리곤을 저장할 배열
-
-  // 사용자 위치 가져오기
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setUserLocation({ latitude, longitude });
-        },
-        (error) => {
-          console.error('위치 정보를 가져오는 중 오류 발생:', error);
-        }
-      );
-    } else {
-      console.warn('Geolocation이 지원되지 않습니다.');
-    }
-  }, []);
 
   // 랜덤 추천 식당 업데이트
   useEffect(() => {
@@ -98,11 +79,10 @@ const CeoMainPage = () => {
       const interval = setInterval(() => {
         const randomIndex = Math.floor(Math.random() * places.restaurants.length);
         setRandomRestaurants(places.restaurants[randomIndex].shop_name);
-      }, 3000);
+      }, 3000); // 3초마다 변경
       return () => clearInterval(interval);
     }
-  }, [places.restaurants]); // places.restaurants 추가
-  
+  }, [places.restaurants]);
 
   // Flask API에서 데이터 가져오기
   const fetchPlacesFromAPI = useCallback(async () => {
@@ -114,6 +94,7 @@ const CeoMainPage = () => {
       if (!seoulDataResponse.ok) throw new Error('서울 데이터 요청 실패');
       
       let seoulData = await seoulDataResponse.json();
+      console.log('API 응답:', seoulData); // 응답 데이터 확인
 
       if (!Array.isArray(seoulData)) {
         if (seoulData) {
@@ -126,11 +107,12 @@ const CeoMainPage = () => {
       const areas = seoulData; // DATA 배열 사용
 
       areas.forEach(area => {
-        const lat = area.lat !== undefined ? parseFloat(area.lat) : null; // "lat" 값 사용
-        const lng = area.lng !== undefined ? parseFloat(area.lng) : null; // "lng" 값 사용
+        console.log('현재 데이터:', area); // 현재 데이터 확인
+        const latitude = area.latitude !== undefined ? parseFloat(area.latitude) : null; // "latitude" 값 사용
+        const longitude = area.longitude !== undefined ? parseFloat(area.longitude) : null; // "longitude" 값 사용
 
-        if (lat === null || lng === null || isNaN(lat) || isNaN(lng)) {
-          console.error(`위도 또는 경도가 유효하지 않음: 위도=${lat}, 경도=${lng}`);
+        if (latitude === null || longitude === null || isNaN(latitude) || isNaN(longitude)) {
+          console.error(`위도 또는 경도가 유효하지 않음: 위도=${latitude}, 경도=${longitude}`);
           return; // 유효하지 않은 경우 다음 반복으로 넘어감
         }
 
@@ -140,10 +122,10 @@ const CeoMainPage = () => {
         // 정사각형 생성 (사이즈 0.00008)
         const size = 0.0020; // 정사각형의 크기
         const path = [
-          new window.kakao.maps.LatLng(lat + size, lng + size), // 오른쪽 위
-          new window.kakao.maps.LatLng(lat + size, lng - size), // 오른쪽 아래
-          new window.kakao.maps.LatLng(lat - size, lng - size), // 왼쪽 아래
-          new window.kakao.maps.LatLng(lat - size, lng + size)  // 왼쪽 위
+          new window.kakao.maps.LatLng(latitude + size, longitude + size), // 오른쪽 위
+          new window.kakao.maps.LatLng(latitude + size, longitude - size), // 오른쪽 아래
+          new window.kakao.maps.LatLng(latitude - size, longitude - size), // 왼쪽 아래
+          new window.kakao.maps.LatLng(latitude - size, longitude + size)  // 왼쪽 위
         ];
 
         // 충돌 감지 로직
@@ -208,31 +190,32 @@ const CeoMainPage = () => {
       if (!response.ok) throw new Error('유동인구 데이터 요청 실패');
       
       const rawData = await response.json();
-      console.log(rawData);
+      console.log('유동인구 API 응답:', rawData);
   
       // 데이터 배열로 변환 (헤더 제외)
       const dataLines = rawData.content.slice(1); // 첫 번째 줄은 헤더
       const data = dataLines
         .filter(line => line.trim() !== '') // 빈 줄 제거
         .map(line => {
-          const [ , , , TotalPeople, lat, lng] = line.split(',');
+          const [ , , , TotalPeople, latitude, longitude] = line.split(',');
           return {
             TotalPeople: isNaN(parseInt(TotalPeople, 10)) ? 0 : parseInt(TotalPeople, 10),
-            lat: isNaN(parseFloat(lat)) ? 0 : parseFloat(lat),
-            lng: isNaN(parseFloat(lng)) ? 0 : parseFloat(lng),
+            latitude: isNaN(parseFloat(latitude)) ? 0 : parseFloat(latitude),
+            longitude: isNaN(parseFloat(longitude)) ? 0 : parseFloat(longitude),
           };
         });
   
       // 각 데이터 항목 출력
       data.forEach((item, index) => {
-        const { TotalPeople, lat, lng } = item;
+        const { TotalPeople, latitude, longitude } = item;
+        console.log(`데이터 ${index + 1}: TotalPeople=${TotalPeople}, latitude=${latitude}, longitude=${longitude}`);
       });
   
       // 지도에 Polyline 추가
       data.forEach((item) => {
-        const { TotalPeople, lat, lng } = item;
+        const { TotalPeople, latitude, longitude } = item;
 
-        if (lat === 0 || lng === 0) {
+        if (latitude === 0 || longitude === 0) {
           console.warn(`잘못된 좌표 데이터: ${item}`);
           return;
         }
@@ -241,7 +224,7 @@ const CeoMainPage = () => {
   
         // Circle 객체 생성
         const circle = new window.kakao.maps.Circle({
-          center: new window.kakao.maps.LatLng(lat, lng),
+          center: new window.kakao.maps.LatLng(latitude, longitude),
           radius: 170, // 예시 반지름
           strokeWeight: 2,
           strokeColor: color,
@@ -273,6 +256,7 @@ const CeoMainPage = () => {
   const showNewPolygons = (newPolygons) => {
     console.log('showNewPolygons called');
     newPolygons.forEach(Newpolygon => {
+      console.log('Adding new polygon to map:', Newpolygon);
       Newpolygon.setMap(map); // 폴리곤을 지도에 추가
     });
   };
@@ -293,6 +277,7 @@ const CeoMainPage = () => {
       if (!response.ok) throw new Error('새로운 폴리곤 데이터 요청 실패');
 
       const newData = await response.json();
+      console.log('새로운 폴리곤 API 응답:', newData);
 
       const newPolygons = []; // 새로운 폴리곤을 저장할 배열
       const total_count = newData.length; // 전체 데이터 개수
@@ -301,7 +286,7 @@ const CeoMainPage = () => {
       const sortedData = [...newData].sort((a, b) => b.total_sales - a.total_sales);
 
       sortedData.forEach((store, index) => {
-        const { lat, lng, total_sales } = store;
+        const { latitude, longitude, total_sales } = store;
 
         // 색상 결정
         const color = getColorBySalesRank(index + 1, total_count);
@@ -309,10 +294,10 @@ const CeoMainPage = () => {
         // 정사각형 폴리곤 생성
         const size = 0.00010; // 정사각형의 크기
         const path = [
-          new window.kakao.maps.LatLng(lat + size, lng + size),
-          new window.kakao.maps.LatLng(lat + size, lng - size),
-          new window.kakao.maps.LatLng(lat - size, lng - size),
-          new window.kakao.maps.LatLng(lat - size, lng + size)
+          new window.kakao.maps.LatLng(latitude + size, longitude + size),
+          new window.kakao.maps.LatLng(latitude + size, longitude - size),
+          new window.kakao.maps.LatLng(latitude - size, longitude - size),
+          new window.kakao.maps.LatLng(latitude - size, longitude + size)
         ];
 
         const Newpolygon = new window.kakao.maps.Polygon({
@@ -364,105 +349,118 @@ const CeoMainPage = () => {
         console.error("카카오맵 API가 로드되지 않았습니다.");
         return;
       }
-  
+
       const container = document.getElementById('ceo-map');
       const options = {
         center: new window.kakao.maps.LatLng(37.556229, 126.937079),
-        level: 3,
+        level: 3
       };
       map = new window.kakao.maps.Map(container, options);
-  
+
       const mapTypeControl = new window.kakao.maps.MapTypeControl();
       map.addControl(mapTypeControl, window.kakao.maps.ControlPosition.TOPRIGHT);
-  
+
       const zoomControl = new window.kakao.maps.ZoomControl();
       map.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT);
-  
-      if (userLocation) {
-        const userMarkerPosition = new window.kakao.maps.LatLng(
-          userLocation.latitude,
-          userLocation.longitude
-        );
-  
-        const userMarker = new window.kakao.maps.Marker({
-          position: userMarkerPosition,
+
+      // 사용자 위치를 가져와서 지도를 이동하는 함수
+      const moveToUserLocation = () => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition((position) => {
+            const userLatitude = position.coords.latitude;
+            const userLongitude = position.coords.longitude;
+            
+            // 사용자 위치로 지도를 이동
+            const userPosition = new window.kakao.maps.LatLng(userLatitude, userLongitude);
+            map.setCenter(userPosition); // 지도 중심을 사용자 위치로 설정
+
+            // 사용자 위치에 마커 추가
+            createMarker(userLatitude, userLongitude); // 사용자 위치에 마커 생성
+          }, (error) => {
+            console.error('사용자 위치를 가져오는 데 실패했습니다:', error);
+          });
+        } else {
+          console.error('이 브라우저는 Geolocation을 지원하지 않습니다.');
+        }
+      };
+
+      // 사용자 위치로 이동
+      moveToUserLocation();
+
+      // 마커 생성 함수
+      const createMarker = (latitude, longitude) => {
+        const markerPosition = new window.kakao.maps.LatLng(latitude, longitude);
+        const marker = new window.kakao.maps.Marker({
+          position: markerPosition
         });
-  
-        // 마커를 지도에 표시
-        userMarker.setMap(map);
-        map.setCenter(userMarkerPosition);
-  
-        // 마커 클릭 이벤트 추가
-        window.kakao.maps.event.addListener(userMarker, 'click', () => {
-          navigate('/store-detail'); // StoreDetail 페이지로 이동
-        });
-  
-        // InfoWindow 생성
-        const userInfoWindow = new window.kakao.maps.InfoWindow({
-          content: `
-            <div style="
-              padding: 10px;
-              border-radius: 8px;
-              box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-              background-color: white;
-              font-family: 'Pretendard', sans-serif;
-            ">
-              <h4 style="margin: 0; font-size: 16px; color: #333;">커피빈 신촌점</h4>
-              <p style="margin: 5px 0 0; font-size: 14px; color: #666;">평점: 5.0</p>
-            </div>
-          `,
-          removable: true,
-        });
-  
-        // 마커에 마우스 오버 이벤트 등록
-        window.kakao.maps.event.addListener(userMarker, 'mouseover', () => {
-          userInfoWindow.open(map, userMarker);
-        });
-  
-        // 마커에 마우스 아웃 이벤트 등록
-        window.kakao.maps.event.addListener(userMarker, 'mouseout', () => {
-          userInfoWindow.close();
-        });
-  
-        // 500m 범위 원 생성
-        const circle = new window.kakao.maps.Circle({
-          center: userMarkerPosition, // 원의 중심좌표
-          radius: 500, // 미터 단위의 반지름
-          strokeWeight: 2, // 선의 두께
-          strokeColor: '#87CEEB', // 선의 색깔
-          strokeOpacity: 0.8, // 선의 불투명도
-          strokeStyle: 'solid', // 선의 스타일
-          fillColor: '#87CEEB', // 채우기 색깔
-          fillOpacity: 0.2, // 채우기 불투명도
-        });
-  
-        // 원을 지도에 표시
-        circle.setMap(map);
-  
-        // 유동인구 데이터 가져오기 및 Polyline 추가
-        fetchPopulationData();
-      }
+        marker.setMap(map); // 마커를 지도에 추가
+      };
+
+
+      // 유동인구 데이터 가져오기 및 Polyline 추가
+      fetchPopulationData();
     };
-    console.log(userLocation);
-    if (window.kakao && window.kakao.maps && userLocation) {
-      loadKakaoMap();
+
+    loadKakaoMap();
+  }, []);
+
+  const handleViewModeChange = (mode) => {
+    console.log(`Changing view mode to: ${mode}`);
+    if (mode === '상권영역') {
+      console.log('Hiding circles and showing polygons');
+      hideCircles(); // 서클을 숨김
+      fetchPlacesFromAPI().then(() => {
+        showPolygons(); // 폴리곤을 보여줌
+        showNewPolygons(zones); // 새로운 폴리곤을 보여줌
+      });
+    } else if (mode === '유동인구') {
+      console.log('Hiding polygons and showing circles');
+      hidePolygons(); // 폴리곤을 숨김
+      fetchPopulationData().then(() => {
+        showCircles(); // 서클을 보여줌
+        showNewPolygons(zones); // 새로운 폴리곤을 보여줌
+      });
     }
-  }, [navigate, userLocation]);
+    setViewMode(mode); // 상태를 마지막에 설정하여 UI가 업데이트되도록 함
+  };
 
   // 지도에 폴리곤 추가
   const showPolygons = () => {
+    console.log('showPolygons called');
     polygons.forEach(polygon => {
+      console.log('Adding polygon to map:', polygon);
       polygon.setMap(map); // 폴리곤을 지도에 추가
     });
   };
 
+  // 지도에서 폴리곤 제거
+  const hidePolygons = () => {
+    console.log('hidePolygons called');
+    polygons.forEach(polygon => {
+      console.log('Removing polygon from map:', polygon);
+      polygon.setMap(null); // 폴리곤을 지도에서 제거
+    });
+    polygons = []; // 배열 초기화
+  };
+
   // 지도에 서클 추가
   const showCircles = () => {
+    console.log('showCircles called');
     circles.forEach(circle => {
+      console.log('Adding circle to map:', circle);
       circle.setMap(map); // 서클을 지도에 추가
     });
   };
 
+  // 지도에서 서클 제거
+  const hideCircles = () => {
+    console.log('hideCircles called');
+    circles.forEach(circle => {
+      console.log('Removing circle from map:', circle);
+      circle.setMap(null); // 서클을 지도에서 제거
+    });
+    circles = []; // 배열 초기화
+  };
 
   useEffect(() => {
     const script = document.createElement('script');

@@ -54,6 +54,7 @@ const BusinessSignup = () => {
     if (!formData.isVerified) {
         alert('사업자여부 확인 버튼을 눌러주세요');
         return;
+
     }
 
     const formDataToSend = new FormData();

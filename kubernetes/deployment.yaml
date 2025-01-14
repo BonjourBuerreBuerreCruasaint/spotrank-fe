@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spotrank-fe-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: spotrank-fe
+  template:
+    metadata:
+      labels:
+        app: spotrank-fe
+    spec:
+      containers:
+        - name: spotrank-fe
+          image: <your_ecr_repo>/spotrank-fe:latest  # ECR에서 이미지를 가져옴
+          ports:
+            - containerPort: 80
+          env:
+            - name: REACT_APP_KAKAO_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: spotrank-fe-secret
+                  key: REACT_APP_KAKAO_API_KEY

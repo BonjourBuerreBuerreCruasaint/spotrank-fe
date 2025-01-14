@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: spotrank-fe
-          image: <your_ecr_repo>/spotrank-fe:latest  # ECR에서 이미지를 가져옴
+          image: 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/bbc/spotrank-fe:latest  # ECR에서 이미지를 가져옴
           ports:
             - containerPort: 80
           env:

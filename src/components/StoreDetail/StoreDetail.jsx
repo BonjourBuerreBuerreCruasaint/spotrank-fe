@@ -9,8 +9,8 @@ const StoreDetail = () => {
 
   // 테스트용 더미 이미지
   const dummyImages = {
-    main: 'https://via.placeholder.com/500x500',
-    sub: Array(6).fill('https://via.placeholder.com/500x500')
+    main: '/plus.png',
+    sub: Array(6).fill('/plus.png')
   };
 
   const handleImageClick = (imageSrc) => {
@@ -105,6 +105,11 @@ const StoreDetail = () => {
                 src={dummyImages.main}
                 alt="매장 메인" 
                 onClick={() => handleImageClick(dummyImages.main)}
+                style={{ 
+                  width: '250px',
+                  height: '250px',
+                  objectFit: 'contain'
+                }}
               />
             </div>
             <div className="sub-images">
@@ -115,6 +120,11 @@ const StoreDetail = () => {
                     alt={`매장 사진 ${index + 1}`}
                     className={`sub-image-${index + 1}`}
                     onClick={() => handleImageClick(src)}
+                    style={{ 
+                      width: '115px',
+                      height: '115px',
+                      objectFit: 'contain'
+                    }}
                   />
                 </div>
               ))}

@@ -54,9 +54,17 @@
     width: 100%;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: background 0.3s, transform 0.3s;
+    margin-top: 10px;
   }
   
   .submit-button:hover {
     background: linear-gradient(135deg, #00BFFF, #87CEEB);
     transform: translateY(-2px);
+  }
+  
+  .logo {
+    width: 50px;
+    height: auto;
+    margin-right: 10px;
+    vertical-align: middle;
   }

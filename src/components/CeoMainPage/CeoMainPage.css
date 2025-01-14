@@ -1,4 +1,4 @@
-/*여백 제거 및 스크롤바 숨김*/
+/* 여백 제거 및 스크롤바 숨김 */
 html, body {
   margin: 0;          
   padding: 0;
@@ -19,7 +19,7 @@ html, body {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 50px;
+  height: 72px;
   padding: 0 20px;
   background-color: #87CEEB;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -28,42 +28,27 @@ html, body {
 
 .ceo-button-group {
   display: flex;
-  gap: 5px;
-  margin-left: -30px;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-right: 2%;
 }
 
-.ceo-ceo-button {
-  color: white;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  padding: 8px 16px;
-  transition: all 0.2s;
-  margin-left: 30px;
-}
-
-.ceo-ceo-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  margin-left: 30px;
-}
-
+.ceo-ceo-button,
 .ceo-logout-button {
-  color: white;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
+  padding: 10px 20px;
   font-size: 16px;
-  padding: 8px 16px;
-  transition: all 0.2s;
-  margin-left: 30px;
+  background-color: transparent;
+  color: #f5f5f5;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  font-weight: bold;
 }
 
+.ceo-ceo-button:hover,
 .ceo-logout-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  margin-left: 0px;
+  background-color: transparent;
+  color: #f5f5f5;
 }
 
 .ceo-main-content {
@@ -85,17 +70,264 @@ html, body {
 .ceo-main-header h1 {
   color: #fff;
   margin: 0;
-  font-size: 24px;
-  margin-left: -10px;
+  font-size: 32px;
+  margin-left: -1450px;
 }
 
 .logo-container {
   display: flex;
   align-items: center;
 }
+.overlay {
+  position: absolute;
+  top: -5px;
+  left: 20px;
+  width: 300px;
+  z-index: 1;
+  padding: 0;
+  background-color: transparent;
+  border-radius: 0;
+}
 
-.logo {
-  font-size: 50px;
-  color: #fff;
-  margin: 0;
+.hot-places {
+  margin-bottom: 10px;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  height: 400px;
+  overflow-y: auto;
+}
+
+.hot-places h2,
+.recommendation h2 {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 19px;
+  font-weight: 600;
+  padding-left: 5px;
+  line-height: 1;
+}
+
+.hot-places ul {
+  margin-top: 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.restaurant-item {
+  padding: 6px 5px;
+  font-size: 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s;
+}
+
+.restaurant-item:last-child {
+  border-bottom: none;
+}
+
+.restaurant-item:hover {
+  background-color: #f8f9fa;
+}
+
+.recommendation {
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  height: 100px
+}
+
+.random-restaurants {
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.random-restaurants:hover {
+  background-color: #e5e5e5;
+}
+
+/* 카테고리 토글 */
+.custom-category-toggle {
+  position: absolute; /* 위치를 고정 */
+  top: 8px; /* 상단 간격 */
+  right: 10px; /* 우측 간격 */
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5; /* 배경색 */
+  border-radius: 4px; /* 모서리 둥글게 */
+  padding: 1px; /* 내부 여백 */
+}
+
+.custom-category-toggle button {
+  font-family: 'Pretendard', sans-serif; /* 폰트 설정 */
+  font-size: 13px; /* 글자 크기 */
+  border: none; /* 테두리 제거 */
+  background: none; /* 배경 제거 */
+  padding: 3px 8px; /* 패딩 설정 */
+  cursor: pointer; /* 포인터 커서 */
+  color: #666; /* 기본 텍스트 색상 */
+  transition: all 0.2s; /* 부드러운 전환 효과 */
+}
+
+.custom-category-toggle button.active {
+  color: #87CEEB; /* 활성화 상태의 텍스트 색상 */
+  font-weight: bold; /* 굵은 글씨체 */
+}
+
+.custom-category-toggle button:hover:not(.active) {
+  color: #87CEEB; /* 호버 시 색상 변경 */
+}
+
+.custom-category-toggle .divider {
+  color: #ccc; /* 구분선 색상 */
+  margin: 0 1px; /* 좌우 간격 */
+}
+
+.category-toggle {
+  margin-top: 30px; /* 원하는 만큼 아래로 내리기 위해 여백 추가 */
+  display: flex; /* 플렉스 박스 사용 */
+  justify-content: center; /* 중앙 정렬 */
+}
+
+.logo-image {
+  width: 50px; /* 로고 이미지의 너비 설정 */
+  height: auto; /* 비율 유지 */
+  margin-right: 10px; /* 텍스트와의 간격 설정 */
+  margin-left: -8px;
+}
+
+.vertical-toggle {
+  position: absolute;
+  top: 50px;
+  right: 50px;
+  display: flex;
+  flex-direction: column;
+}
+
+.small-toggle-button {
+  margin: 2px 0;
+  padding: 5px;
+  font-size: 12px;
+  background-color: #f0f0f0;
+  border: none;
+  cursor: pointer;
+}
+
+.small-toggle-button.active {
+  background-color: #87CEEB;
+  color: white;
+}
+.legend-container {
+  position: absolute;
+  bottom: 200px;
+  left: 20px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  font-size: 12px;
+  z-index: 10;
+  width: 280px;
+  text-align: center;
+}
+
+.legend-texts {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.legend-bar {
+  height: 10px;
+  background: linear-gradient(to right, #82c3ec, #009eff, #ffbbcc, #0014ff);
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.legend-color {
+  display: none;
+}
+
+.legend-text {
+  font-size: 12px;
+}
+
+.legend-label {
+  margin-top: 5px;
+}
+
+.new-legend-container {
+  position: absolute;
+  bottom: 120px;
+  left: 20px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  font-size: 12px;
+  z-index: 10;
+  width: 280px;
+  text-align: center;
+}
+
+.new-legend-texts {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.new-legend-bar {
+  height: 10px;
+  background: linear-gradient(to right, #ffff00, #ffa500, #ff0000);
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.new-legend-text {
+  font-size: 12px;
+}
+
+.new-legend-label {
+  margin-top: 5px;
+}
+
+.another-legend-container {
+  position: absolute;
+  bottom: 40px;
+  left: 20px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  font-size: 12px;
+  z-index: 10;
+  width: 280px;
+  text-align: center;
+}
+
+.another-legend-texts {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.another-legend-bar {
+  height: 10px;
+  background: linear-gradient(to right, #666666, #dba979, #ffdb5c, #88d66c, #ff0000);
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.another-legend-color {
+  display: none;
+}
+
+.another-legend-text {
+  font-size: 12px;
+}
+
+.another-legend-label {
+  margin-top: 5px;
 }

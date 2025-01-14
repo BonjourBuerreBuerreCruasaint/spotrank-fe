@@ -1,39 +1,110 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './BusinessSignup.css';
 
 const BusinessSignup = () => {
   const [formData, setFormData] = useState({
     businessNumber: '',
+    businessName: '',
     storeName: '',
     address: '',
     category: 'restaurants',
     description: '',
     image: null,
+    openingDate: '',
+    isVerified: false,
+    storePhoneNumber: '',
   });
+
+  const [localBusinessName, setLocalBusinessName] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const navigate = useNavigate();
 
+  // 로컬 스토리지에서 데이터 가져오기
+  useEffect(() => {
+    const storedName = localStorage.getItem('name');
+    if (storedName) {
+      setLocalBusinessName(storedName);
+    }
+  }, []);
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
+
+    // businessName 검증
+    if (name === 'businessName') {
+      if (value !== localBusinessName) {
+        setErrorMessage('입력한 사업자 이름이 저장된 이름과 다릅니다.');
+      } else {
+        setErrorMessage('');
+      }
+    }
+
     setFormData({
       ...formData,
       [name]: files ? files[0] : value,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('사업자 정보:', formData);
-    navigate('/login');
+
+    // 사업자여부 확인 체크
+    if (!formData.isVerified) {
+        alert('사업자여부 확인 버튼을 눌러주세요');
+        return;
+    }
+
+    const formDataToSend = new FormData();
+    formDataToSend.append('businessNumber', formData.businessNumber);
+    formDataToSend.append('businessName', formData.businessName);
+    formDataToSend.append('storeName', formData.storeName);
+    formDataToSend.append('address', formData.address);
+    formDataToSend.append('category', formData.category);
+    formDataToSend.append('description', formData.description);
+    formDataToSend.append('openingDate', formData.openingDate);
+    formDataToSend.append('storePhoneNumber', formData.storePhoneNumber);
+
+    if (formData.image) {
+        formDataToSend.append('image', formData.image);
+    }
+
+    try {
+        const response = await fetch('/api/business-signup', {
+            method: 'POST',
+            body: formDataToSend,
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            console.log('회원가입 성공:', result.message);
+            navigate('/login');
+        } else {
+            console.error('회원가입 실패:', result.error);
+            alert(result.error || '회원가입에 실패했습니다.');
+        }
+    } catch (error) {
+        console.error('서버 오류:', error);
+        alert('서버와의 통신 중 오류가 발생했습니다.');
+    }
   };
 
   const isFormValid = () => {
+    // 사업자 확인이 되지 않은 경우 버튼 비활성화
+    if (!formData.isVerified) {
+        return false;
+    }
+    
+    // 모든 필수 필드가 채워져 있는 경우에만 true 반환
     return (
-      formData.businessNumber &&
-      formData.storeName &&
-      formData.address &&
-      formData.category
+        formData.businessNumber &&
+        formData.businessName &&
+        formData.storeName &&
+        formData.address &&
+        formData.category &&
+        formData.openingDate &&
+        formData.storePhoneNumber
     );
   };
 
@@ -41,9 +112,58 @@ const BusinessSignup = () => {
     navigate('/');
   };
 
+  const handleCheckClick = async () => {
+    if (!formData.businessNumber || !formData.openingDate || !formData.businessName) {
+        alert('사업자등록번호, 개업일, 대표자 성명을 모두 입력하세요.');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/verify-business', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                businessNumber: formData.businessNumber,
+                openingDate: formData.openingDate,
+                businessName: formData.businessName,
+            }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert(`사업자 진위 여부 확인: ${result.message}`);
+            setFormData(prev => ({
+                ...prev,
+                isVerified: true,
+            }));
+        } else {
+            alert(`확인 실패: ${result.message}`);
+            setFormData(prev => ({
+                ...prev,
+                isVerified: false,
+            }));
+        }
+    } catch (error) {
+        console.error('서버 오류:', error);
+        alert('서버와 통신 중 오류가 발생했습니다.');
+        setFormData(prev => ({
+            ...prev,
+            isVerified: false,
+        }));
+    }
+  };
+
+  console.log('사업자 확인 상태:', formData.isVerified);
+
   return (
     <div className="business-signup-container">
-      <h1 className="business-signup-title" onClick={handleLogoClick}>SpotRank</h1>
+      <h1 className="business-signup-title" onClick={handleLogoClick}>
+        <img src="/logo-one.png" alt="Logo" className="logo" />
+        SpotRank
+      </h1>
       <form onSubmit={handleSubmit} className="business-signup-form">
         <div className="form-group">
           <label>사업자등록번호</label>
@@ -54,7 +174,28 @@ const BusinessSignup = () => {
             onChange={handleChange}
             required
           />
-          <button type="button">확인</button>
+          <button type="button" onClick={handleCheckClick}>확인</button>
+        </div>
+        <div className="form-group">
+          <label>사업자 이름</label>
+          <input
+            type="text"
+            name="businessName"
+            value={formData.businessName}
+            onChange={handleChange}
+            required
+          />
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
+        </div>
+        <div className="form-group">
+          <label>개업일</label>
+          <input
+            type="date"
+            name="openingDate"
+            value={formData.openingDate}
+            onChange={handleChange}
+            required
+          />
         </div>
         <div className="form-group">
           <label>가게 상호명</label>
@@ -62,6 +203,16 @@ const BusinessSignup = () => {
             type="text"
             name="storeName"
             value={formData.storeName}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>가게 전화번호</label>
+          <input
+            type="text"
+            name="storePhoneNumber"
+            value={formData.storePhoneNumber}
             onChange={handleChange}
             required
           />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './FindPassWord.css';
 
@@ -13,6 +13,7 @@ const FindPassWord = () => {
   const [phoneError, setPhoneError] = useState('');
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const navigate = useNavigate();
+  const [id,setId] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -68,10 +69,20 @@ const FindPassWord = () => {
     navigate('/');
   };
 
+  useEffect(() => {
+    const storedId = localStorage.getItem('id');
+    if (storedId) {
+      setId(storedId);
+    } else {
+      console.warn('로컬 스토리지에 id 값이 없습니다.');
+    }
+  }, []);
+
   return (
     <div className="findpassword-container">
       <div className="findpassword-box">
         <h1 className="findpassword-title" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
+          <img src="/logo-one.png" alt="로고" className="logo" />
           SpotRank
         </h1>
         <form onSubmit={handleSubmit} className="findpassword-form">

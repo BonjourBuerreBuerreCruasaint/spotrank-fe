@@ -1,14 +1,10 @@
 version: 0.2
 
-env:
-  variables:
-    REACT_APP_KAKAO_API_KEY: "33f41b22037c7bb6ada97e6f7c625e0d"  # 환경 변수를 설정합니다.
-
 phases:
   install:
     commands:
       - echo Logging in to Amazon ECR...
-      - $(aws ecr get-login --no-include-email --region $AWS_REGION)
+      - $(aws ecr get-login --no-include-email --region ap-northeast-2)
 
   pre_build:
     commands:
@@ -24,9 +20,9 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
-      - docker build -t spotrank-fe:latest .  # 빌드 후 이미지 태깅
-      - docker tag spotrank-fe:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/spotrank-fe:latest  # ECR로 푸시할 태그 지정
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/spotrank-fe:latest  # ECR에 푸시
+      - docker build -t spotrank-fe:latest .  # .env 파일 포함된 상태로 빌드
+      - docker tag spotrank-fe:latest 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/spotrank-fe:latest
+      - docker push 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/spotrank-fe:latest
 
 artifacts:
   files:

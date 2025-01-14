@@ -56,8 +56,8 @@ const BusinessSignup = () => {
     }
 
     if (errorMessage) {
-        alert('사업자 이름이 올바르지 않습니다.');
-        return;
+      alert('사업자 이름이 올바르지 않습니다.');
+      return;
     }
 
     const formDataToSend = new FormData();

@@ -10,6 +10,9 @@ RUN npm install
 # 애플리케이션 코드 복사
 COPY . .
 
+# .env 파일 복사 (spotrank-fe 디렉토리 안의 .env 파일을 컨테이너에 복사)
+COPY .env .env
+
 # React 애플리케이션 빌드
 RUN npm run build
 
@@ -21,9 +24,6 @@ COPY default.conf /etc/nginx/conf.d/default.conf
 
 # 빌드된 React 애플리케이션을 Nginx에 복사
 COPY --from=build /app/build /usr/share/nginx/html
-
-# 환경 변수 설정
-ENV REACT_APP_KAKAO_API_KEY=33f41b22037c7bb6ada97e6f7c625e0d
 
 # Nginx 포트 노출
 EXPOSE 80

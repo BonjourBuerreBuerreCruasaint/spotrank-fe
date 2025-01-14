@@ -18,12 +18,11 @@ const BusinessSignup = () => {
 
   const [localBusinessName, setLocalBusinessName] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
   const navigate = useNavigate();
 
   // 로컬 스토리지에서 데이터 가져오기
   useEffect(() => {
-    const storedName = localStorage.getItem('name');
+    const storedName = localStorage.getItem('username') || localStorage.getItem('name');
     if (storedName) {
       setLocalBusinessName(storedName);
     }
@@ -50,28 +49,29 @@ const BusinessSignup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!formData.businessNumber || !formData.openingDate || !formData.businessName) {
+      alert('필수 정보를 모두 입력해주세요.');
+      return;
+    }
+
     if (!formData.isVerified) {
-        alert('사업자여부 확인해주세요');
-        return;
+      alert('사업자여부 확인 버튼을 눌러주세요');
+      return;
     }
 
     if (errorMessage) {
-        alert('사업자 이름이 올바르지 않습니다.');
-        return;
+      alert('사업자 이름이 올바르지 않습니다.');
+      return;
     }
 
     const formDataToSend = new FormData();
-    formDataToSend.append('businessNumber', formData.businessNumber);
-    formDataToSend.append('storeName', formData.storeName);
-    formDataToSend.append('address', formData.address);
-    formDataToSend.append('category', formData.category);
-    formDataToSend.append('description', formData.description);
-    formDataToSend.append('openingDate', formData.openingDate);
-    formDataToSend.append('storePhoneNumber', formData.storePhoneNumber);
-
-    if (formData.image) {
-      formDataToSend.append('image', formData.image);
-    }
+    Object.keys(formData).forEach((key) => {
+      if (key === 'image' && formData[key]) {
+        formDataToSend.append(key, formData[key]);
+      } else if (key !== 'isVerified') {
+        formDataToSend.append(key, formData[key]);
+      }
+    });
 
     try {
       const response = await fetch('/api/business-signup', {
@@ -86,27 +86,12 @@ const BusinessSignup = () => {
         navigate('/login');
       } else {
         console.error('회원가입 실패:', result.error);
+        alert(result.error || '회원가입에 실패했습니다.');
       }
     } catch (error) {
       console.error('서버 오류:', error);
+      alert('서버와의 통신 중 오류가 발생했습니다.');
     }
-  };
-
-  const isFormValid = () => {
-    if (!formData.isVerified) {
-        return false; // 사업자 확인이 되지 않은 경우
-    }
-    
-    return (
-        formData.businessNumber &&
-        formData.businessName &&
-        formData.storeName &&
-        formData.address &&
-        formData.category &&
-        formData.openingDate &&
-        formData.storePhoneNumber &&
-        !errorMessage // 오류 메시지가 없을 때만 유효
-    );
   };
 
   const handleLogoClick = () => {
@@ -155,6 +140,20 @@ const BusinessSignup = () => {
         isVerified: false,
       }));
     }
+  };
+
+  const isFormValid = () => {
+    return (
+      formData.businessNumber &&
+      formData.businessName &&
+      formData.storeName &&
+      formData.address &&
+      formData.category &&
+      formData.openingDate &&
+      formData.storePhoneNumber &&
+      formData.isVerified && // 사업자 확인이 된 경우
+      !errorMessage // 오류 메시지가 없을 때만 유효
+    );
   };
 
   return (

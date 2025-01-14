@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Signup.css';
-/*import spotranklogo from '../../assets/spotranklogo.png';*/
 import axios from 'axios';
 import whitespotrank from '../../assets/whitespotrank.png';
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
-
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -24,115 +22,82 @@ const Signup = () => {
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
   const [birthdateError, setBirthdateError] = useState('');
   const [phoneError, setPhoneError] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false); // 제출 상태 관리
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-  const storedId = sessionStorage.getItem('id');
 
   // 입력값 변경 핸들러
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-
     setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value });
 
-    if (name === 'email') {
-      validateEmail(value);
-    } else if (name === 'password') {
+    if (name === 'email') validateEmail(value);
+    if (name === 'password') {
       validatePassword(value);
       validateConfirmPassword(formData.confirmPassword, value);
-    } else if (name === 'confirmPassword') {
-      validateConfirmPassword(value, formData.password);
-    } else if (name === 'birthdate') {
-      validateBirthdate(value);
-    } else if (name === 'phone') {
-      validatePhone(value);
     }
+    if (name === 'confirmPassword') validateConfirmPassword(value, formData.password);
+    if (name === 'birthdate') validateBirthdate(value);
+    if (name === 'phone') validatePhone(value);
   };
 
   // 이메일 형식 검사
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!regex.test(email)) {
-      setEmailError('이메일 형식으로 입력해주세요');
-    } else {
-      setEmailError('');
-    }
+    setEmailError(regex.test(email) ? '' : '이메일 형식으로 입력해주세요');
   };
 
-  // 비밀번호 강도 체크 (8~15자리, 숫자와 특수문자 포함)
+  // 비밀번호 강도 체크
   const validatePassword = (password) => {
     const regex = /^(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/;
-    if (!regex.test(password)) {
-      setPasswordError('비밀번호는 8~15자리, 숫자 및 특수문자를 포함해야 합니다.');
-    } else {
-      setPasswordError('');
-    }
+    setPasswordError(regex.test(password) ? '' : '비밀번호는 8~15자리, 숫자 및 특수문자를 포함해야 합니다.');
   };
 
   // 비밀번호 확인 체크
   const validateConfirmPassword = (confirmPassword, password) => {
-    if (confirmPassword !== password) {
-      setConfirmPasswordError('비밀번호가 일치하지 않습니다.');
-    } else {
-      setConfirmPasswordError('');
-    }
+    setConfirmPasswordError(confirmPassword === password ? '' : '비밀번호가 일치하지 않습니다.');
   };
 
   // 생년월일 형식 검사
   const validateBirthdate = (birthdate) => {
-    if (birthdate.length !== 8) {
-      setBirthdateError('생년월일은 8자리여야 합니다.');
-    } else {
-      setBirthdateError('');
-    }
+    setBirthdateError(birthdate.length === 8 ? '' : '생년월일은 8자리여야 합니다.');
   };
 
   // 전화번호 길이 검사
   const validatePhone = (phone) => {
-    if (phone.length !== 11) {
-      setPhoneError('휴대전화번호는 11자리여야 합니다.');
-    } else {
-      setPhoneError('');
-    }
+    setPhoneError(phone.length === 11 ? '' : '휴대전화번호는 11자리여야 합니다.');
   };
 
   // 회원가입 처리 함수
   const handleBusinessSignup = async (e) => {
     e.preventDefault();
-    
-    // 개인정보 동의 체크
+
     if (!formData.agree) {
       alert('개인정보 수집 및 이용에 동의해야 합니다.');
       return;
     }
 
-    // 입력 오류 체크
     if (emailError || passwordError || confirmPasswordError || birthdateError || phoneError) {
       alert('입력한 정보가 올바르지 않습니다.');
       return;
     }
 
-    // 빈값 체크
-    if (Object.values(formData).some(value => value === '' || value === false)) {
+    if (Object.values(formData).some((value) => value === '' || value === false)) {
       alert('모든 필드를 입력해야 합니다.');
       return;
     }
 
-    setIsSubmitting(true);  // 제출 중일 때 버튼 비활성화
-    console.log(formData);
+    setIsSubmitting(true);
+
     try {
-      // 서버에 데이터 전송
       const response = await axios.post('/api/signup', formData);
       alert(response.data.message);
-      
-      // 추가한 부분
-      const data = await response.json();
-      const { name } = data;
 
-      // 사용자 이름을 로컬 스토리지에 저장 (추가한 부분)
-      localStorage.setItem('name',name);
-      const checkName = localStorage.getItem('name');
-      
-      // 성공 시 폼 초기화
+      // 로컬 스토리지에 username 저장
+      localStorage.setItem('username', formData.username);
+
+      // URL에 username 포함하여 이동
+      navigate(`/business-signup?username=${encodeURIComponent(formData.username)}`);
+
       setFormData({
         email: '',
         password: '',
@@ -142,13 +107,10 @@ const Signup = () => {
         phone: '',
         agree: false,
       });
-
-      // 사업자 인증 페이지로 이동
-      navigate(`/business-signup?id=${storedId}`);
     } catch (error) {
       alert('회원가입 중 오류가 발생했습니다.');
     } finally {
-      setIsSubmitting(false);  // 버튼 활성화
+      setIsSubmitting(false);
     }
   };
 
@@ -160,7 +122,7 @@ const Signup = () => {
   return (
     <div className="signup-container">
       <h1 className="signup-title" onClick={handleLogoClick}>
-      <img src="/logo-one.png" alt="로고" className="findid-logo" />
+        <img src="/logo-one.png" alt="로고" className="findid-logo" />
         SpotRank
       </h1>
       <div className="privacy-box">
@@ -213,7 +175,7 @@ const Signup = () => {
           type="text"
           name="username"
           placeholder="이름"
-          value={formData.name}
+          value={formData.username}
           onChange={handleChange}
           required
         />

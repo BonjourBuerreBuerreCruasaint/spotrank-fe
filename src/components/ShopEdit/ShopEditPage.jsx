@@ -9,49 +9,55 @@ const ShopEditPage = () => {
   const [shopAddress, setShopAddress] = useState("");
   const [shopDescription, setShopDescription] = useState("");
   const [shopImages, setShopImages] = useState([]);
-  const storedId = sessionStorage.getItem('id');
+  const storedId = sessionStorage.getItem('session_id');  // Redis 세션을 통해 id 가져오기
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
+    if (!storedId) {
+      alert("세션에 문제가 있습니다 다시 로그인해주세요.");
+      navigate('/login');
+      return;
+    }
+    
     const formData = new FormData();
-    formData.append('shopName', shopName);
-    formData.append('shopPhone', shopPhone);
-    formData.append('shopAddress', shopAddress);
-    formData.append('shopDescription', shopDescription);
-
+    formData.append('shopName', shopName || "");  // 기본값 설정
+    formData.append('shopPhone', shopPhone || "");  // 기본값 설정
+    formData.append('shopAddress', shopAddress || "");  // 기본값 설정
+    formData.append('shopDescription', shopDescription || "");  // 기본값 설정
+  
     shopImages.forEach((image) => {
-        formData.append('shopImages', image); // Flask에서 'shopImages'로 처리
+      formData.append('shopImages', image);
     });
-
+  
     try {
       const response = await fetch("http://127.0.0.1:5000/api/update-store", {
-          method: "POST",
-          body: formData, // FormData 사용
+        headers: { Authorization: storedId }, 
+        method: "POST",
+        credentials: "include",
+        body: formData,
       });
-
+  
       if (!response.ok) {
-          const errorData = await response.json();
-          console.error("서버 오류:", errorData);
-          alert(errorData.error || "업데이트 실패");
+        const errorData = await response.json();
+        console.error("서버 오류:", errorData);
+        alert(errorData.error || "업데이트 실패");
       } else {
-          const result = await response.json();
-          console.log("응답 데이터:", result);
-          alert("업데이트 성공!");
+        const result = await response.json();
+        console.log("응답 데이터:", result);
+        alert("업데이트 성공!");
       }
     } catch (error) {
-        console.error("요청 실패:", error);
-        alert("요청 실패");
+      console.error("요청 실패:", error);
+      alert("요청 실패");
     }
-
-    // 성공 메시지 표시
-    alert("가게 정보가 수정되었습니다."); // 팝업 메시지
+  
     navigate(`/ceo-main?id=${storedId}`);
   };
-
+  
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    setShopImages(files); // 선택한 파일들을 상태에 저장
+    setShopImages(files);
   };
 
   return (

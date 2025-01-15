@@ -7,7 +7,7 @@ import { BarChart, Bar, Cell, Tooltip as RechartsTooltip, Legend as RechartsLege
 const DayDetailSales = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const [id, setId] = useState('');
+    const storedId = sessionStorage.getItem('session_id');
 
     const data = [
         { day: '월', sales: 300 },
@@ -28,34 +28,25 @@ const DayDetailSales = () => {
 
     const COLORS = ["#cedfcd", "#c2c2ca", "#ffdba4", "#559abc"];
 
-    useEffect(() => {
-        const storedId = localStorage.getItem('id');
-        if (storedId) {
-            setId(storedId);
-        } else {
-            console.warn('로컬 스토리지에 id 값이 없습니다.');
-        }
-    }, []);
-
     return (
         <div className="day-detail-sales-container">
             <header className="day-detail-sales-header">
                 <img src="/logo.png" alt="Logo" className="logo" />
-                <h1 onClick={() => navigate("/")} style={{ cursor: 'pointer' }}>SpotRank</h1>
+                <h1 onClick={() => navigate(`/ceo-main?id=${storedId}`)} style={{ cursor: 'pointer' }}>SpotRank</h1>
                 <div className="day-detail-button-group">
                     <button className="day-detail-sales-button" onClick={() => navigate('/detail-sales')}>나는 사장</button>
-                    <button className="day-detail-sales-logout-button" onClick={() => navigate('/ceo-main')}>Logout</button>
+                    <button className="day-detail-sales-logout-button" onClick={() => navigate('/logout')}>Logout</button>
                 </div>
             </header>
 
             <div className="day-content-container">
                 <nav className="day-detail-sales-sidebar">
                     <ul>
-                        <li onClick={() => navigate(`/detail-sales?id=${id}`)}>실시간</li>
-                        <li onClick={() => navigate(`/day-detail-sales?id=${id}`)}>일간</li>
-                        <li onClick={() => navigate(`/week-detail-sales?id=${id}`)}>주간</li>
-                        <li onClick={() => navigate(`/month-detail-sales?id=${id}`)}>월간</li>
-                        <li onClick={() => navigate(`/shop-edit?id=${id}`)}>정보 수정</li>
+                        <li onClick={() => navigate(`/detail-sales?id=${storedId}`)}>실시간</li>
+                        <li onClick={() => navigate(`/day-detail-sales?id=${storedId}`)}>일간</li>
+                        <li onClick={() => navigate(`/week-detail-sales?id=${storedId}`)}>주간</li>
+                        <li onClick={() => navigate(`/month-detail-sales?id=${storedId}`)}>월간</li>
+                        <li onClick={() => navigate(`/shop-edit?id=${storedId}`)}>정보 수정</li>
                     </ul>
                 </nav>
 

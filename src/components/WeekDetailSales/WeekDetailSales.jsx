@@ -10,7 +10,7 @@ Chart.register(...registerables);
 const WeekDetailSales = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const storedId = sessionStorage.getItem('id');
+  const storedId = localStorage.getItem('user_id');
 
   const lineData = [
     { week: "1주차", sales: 500 },
@@ -35,8 +35,8 @@ const WeekDetailSales = () => {
         <img src="/logo.png" alt="Logo" className="logo" />
         <h1 onClick={() => navigate("/ceo-main")} style={{ cursor: 'pointer' }}>SpotRank</h1>
         <div className="week-detail-sales-button-group">
-          <button className="week-detail-sales-button" onClick={() => navigate('/detail-sales')}>나는 사장</button>
-          <button className="week-detail-sales-logout-button" onClick={() => navigate('/')}>Logout</button>
+          <button className="week-detail-sales-button" onClick={() => navigate(`/detail-sales?id=${storedId}`)}>나는 사장</button>
+          <button className="week-detail-sales-logout-button" onClick={() => navigate('/logout')}>Logout</button>
         </div>
       </header>
 

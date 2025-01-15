@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const StoreDetail = () => {
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(null);
-  const storedId = sessionStorage.getItem('id')
+  const storedId = localStorage.getItem('user_id');
 
   // 테스트용 더미 이미지
   const dummyImages = {
@@ -89,7 +89,7 @@ const StoreDetail = () => {
           <img src="/logo.png" alt="로고" className="logo" />
         </div>
         <div className="navbar-right">
-          <button onClick={() => navigate('/')} className="spotrank-button">SpotRank</button>
+          <button onClick={() => navigate(`/ceo-main?id=${storedId}`)} className="spotrank-button">SpotRank</button>
         </div>
       </nav>
       <div className="store-detail-container">

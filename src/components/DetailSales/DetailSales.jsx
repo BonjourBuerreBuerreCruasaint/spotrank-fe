@@ -25,8 +25,8 @@ const DetailSales = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 세션 ID 가져오기 (Redis 사용)
-  const storedSessionId = sessionStorage.getItem("session_id");
+  // 로컬 스토리지에서 사용자 ID 가져오기
+  const storedUserId = localStorage.getItem("user_id");
 
   // 차트 데이터
   const pieData = [
@@ -51,8 +51,8 @@ const DetailSales = () => {
 
   // 메뉴 데이터 가져오기
   useEffect(() => {
-    if (!storedSessionId) {
-      console.error("세션 ID가 없습니다. 로그인을 다시 시도하세요.");
+    if (!storedUserId) {
+      console.error("사용자 ID가 없습니다. 로그인을 다시 시도하세요.");
       navigate("/login");
       return;
     }
@@ -60,7 +60,7 @@ const DetailSales = () => {
     // API 호출로 메뉴 데이터 가져오기
     axios
       .get("http://127.0.0.1:5000/api/get-menu-data", {
-        headers: { Authorization: storedSessionId }, // 세션 ID를 Authorization 헤더에 포함
+        headers: { Authorization: storedUserId }, // 사용자 ID를 Authorization 헤더에 포함
         withCredentials: true,
       })
       .then((response) => {
@@ -78,11 +78,11 @@ const DetailSales = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [storedSessionId, navigate]);
+  }, [storedUserId, navigate]);
 
   // 로그아웃
   const handleLogout = () => {
-    sessionStorage.removeItem("session_id"); // 세션 ID 삭제
+    localStorage.removeItem("user_id"); // 로컬 스토리지에서 사용자 ID 삭제
     navigate("/login");
   };
 
@@ -95,13 +95,13 @@ const DetailSales = () => {
     <div className="detail-sales-container">
       <header className="detail-sales-header">
         <img src="/logo.png" alt="Logo" className="logo" />
-        <h1 onClick={() => navigate(`/ceo-main?id=${storedSessionId}`)} style={{ cursor: "pointer" }}>
+        <h1 onClick={() => navigate(`/ceo-main?id=${storedUserId}`)} style={{ cursor: "pointer" }}>
           SpotRank
         </h1>
         <div className="detail-sales-button-group">
           <button
             className="detail-sales-button"
-            onClick={() => navigate(`/detail-sales?id=${storedSessionId}`)}
+            onClick={() => navigate(`/detail-sales?id=${storedUserId}`)}
           >
             나는 사장
           </button>
@@ -116,31 +116,31 @@ const DetailSales = () => {
           <ul>
             <li
               className={getButtonClass("/detail-sales")}
-              onClick={() => navigate(`/detail-sales?id=${storedSessionId}`)}
+              onClick={() => navigate(`/detail-sales?id=${storedUserId}`)}
             >
               실시간
             </li>
             <li
               className={getButtonClass("/day-detail-sales")}
-              onClick={() => navigate(`/day-detail-sales?id=${storedSessionId}`)}
+              onClick={() => navigate(`/day-detail-sales?id=${storedUserId}`)}
             >
               일간
             </li>
             <li
               className={getButtonClass("/week-detail-sales")}
-              onClick={() => navigate(`/week-detail-sales?id=${storedSessionId}`)}
+              onClick={() => navigate(`/week-detail-sales?id=${storedUserId}`)}
             >
               주간
             </li>
             <li
               className={getButtonClass("/month-detail-sales")}
-              onClick={() => navigate(`/month-detail-sales?id=${storedSessionId}`)}
+              onClick={() => navigate(`/month-detail-sales?id=${storedUserId}`)}
             >
               월간
             </li>
             <li
               className={getButtonClass("/shop-edit")}
-              onClick={() => navigate(`/shop-edit?id=${storedSessionId}`)}
+              onClick={() => navigate(`/shop-edit?id=${storedUserId}`)}
             >
               정보 수정
             </li>

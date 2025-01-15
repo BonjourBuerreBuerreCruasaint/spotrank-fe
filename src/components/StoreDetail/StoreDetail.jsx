@@ -89,7 +89,7 @@ const StoreDetail = () => {
           <img src="/logo.png" alt="로고" className="logo" />
         </div>
         <div className="navbar-right">
-          <button onClick={() => navigate('/')} className="spotrank-button">SpotRank</button>
+          <button onClick={() => navigate(`/ceo-main?id=${storedId}`)} className="spotrank-button">SpotRank</button>
         </div>
       </nav>
       <div className="store-detail-container">

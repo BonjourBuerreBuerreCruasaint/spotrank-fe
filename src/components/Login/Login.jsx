@@ -32,25 +32,26 @@ const Login = () => {
     }
 
     try {
-      const response = await fetch('/api/login', {
+      const response = await fetch('http://127.0.0.1:5000/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // 세션 쿠키를 포함하여 요청
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        const { id } = data;
-
-        // 사용자 ID를 세션 스토리지에 저장
-        sessionStorage.setItem('id',id);
-        const storedId = sessionStorage.getItem('id');
-
-        // CEO 메인 페이지로 이동
-        navigate(`/ceo-main?id=${storedId}`);
+        const { session_id } = data; // Redis 세션 ID 반환
+        if (session_id) {
+          sessionStorage.setItem('session_id', session_id); // 세션 ID를 로컬 스토리지에 저장
+          console.log('로그인 성공, 세션 ID:', session_id);
+          navigate('/ceo-main'); // 메인 페이지로 이동
+        } else {
+          alert('세션 ID를 받지 못했습니다. 다시 시도하세요.');
+        }
       } else {
         alert(data.error || '로그인 실패');
       }

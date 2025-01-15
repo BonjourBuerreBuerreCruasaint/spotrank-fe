@@ -31,7 +31,7 @@ const MonthDetailSales = () => {
   const pieChartRef = React.useRef(null);
   const lineChartInstance = React.useRef(null);
   const pieChartInstance = React.useRef(null);
-  const storedId = sessionStorage.getItem('id');
+  const storedId = sessionStorage.getItem('session_id');
   
 
   // 월간 매출 데이터
@@ -179,7 +179,7 @@ const MonthDetailSales = () => {
         <h1 onClick={() => navigate("/ceo-main")} style={{ cursor: 'pointer' }}>SpotRank</h1>
         <div className="month-detail-sales-button-group">
           <button className="month-detail-sales-button" onClick={() => navigate(`/detail-sales?id=${storedId}`)}>나는 사장</button>
-          <button className="month-detail-sales-logout-button" onClick={() => navigate('/')}>Logout</button>
+          <button className="month-detail-sales-logout-button" onClick={() => navigate('/logout')}>Logout</button>
         </div>
       </header>
 

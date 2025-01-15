@@ -10,7 +10,7 @@ Chart.register(...registerables);
 const WeekDetailSales = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const storedId = sessionStorage.getItem('session_id');
+  const storedId = localStorage.getItem('user_id');
 
   const lineData = [
     { week: "1주차", sales: 500 },

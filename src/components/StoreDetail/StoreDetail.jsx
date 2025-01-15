@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const StoreDetail = () => {
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(null);
-  const storedId = sessionStorage.getItem('id')
+  const storedId = localStorage.getItem('user_id');
 
   // 테스트용 더미 이미지
   const dummyImages = {

@@ -4,7 +4,8 @@ phases:
   install:
     commands:
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com
+      - aws ecr get-login-password --region ap-northeast-2 || echo "Failed to get ECR login password"
+      - docker login --username AWS --password-stdin 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com || echo "Docker login failed"
 
   pre_build:
     commands:

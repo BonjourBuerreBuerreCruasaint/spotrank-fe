@@ -1,11 +1,18 @@
 version: 0.2
 
+env:
+  variables:
+    AWS_DEFAULT_REGION: ap-northeast-2
+    AWS_ACCOUNT_ID: 440744225243
+    IMAGE_REPO_NAME: bbc  # ECR 리포지토리 이름
+    IMAGE_TAG: latest
+
 phases:
   install:
     commands:
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region ap-northeast-2 || echo "Failed to get ECR login password"
-      - docker login --username AWS --password-stdin 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com || echo "Docker login failed"
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com || echo "Failed to get ECR login password"
+      - docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com || echo "Docker login failed"
 
   pre_build:
     commands:
@@ -16,17 +23,18 @@ phases:
   build:
     commands:
       - echo Building React App...
-      - npm run build
+      - npm run build  # React 앱 빌드
 
   post_build:
     commands:
       - echo Build completed on `date`
-      - docker build -t spotrank-fe:latest .  # .env 파일 포함된 상태로 빌드
-      - docker tag spotrank-fe:latest 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/spotrank-fe:latest
-      - docker push 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/spotrank-fe:latest  # 최신 태그로 푸시
+      - echo Building Docker image...
+      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .  # React 앱이 포함된 Docker 이미지 빌드
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG  # ECR로 태그
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG  # ECR로 푸시
 
 artifacts:
   files:
     - '**/*'
   discard-paths: yes
-  base-directory: 'build'
+  base-directory: 'build'  # 빌드된 React 앱이 위치한 디렉토리

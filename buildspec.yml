@@ -53,6 +53,5 @@ phases:
 
 artifacts:
   files:
-    - '**/*'
-  discard-paths: yes
-  base-directory: 'build'  # 빌드된 React 앱이 위치한 디렉토리
+    - EKS/deployment.yaml
+    - EKS/service.yaml

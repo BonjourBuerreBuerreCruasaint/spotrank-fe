@@ -10,28 +10,50 @@ env:
 phases:
   install:
     commands:
-      - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com || echo "Failed to get ECR login password"
-      - docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com || echo "Docker login failed"
+      - echo Installing kubectl...
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+      - AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID
+      - AWS_REGION=$AWS_DEFAULT_REGION
+      - curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.27.6/2023-10-17/bin/linux/amd64/kubectl
+      - chmod +x ./kubectl
+      - mv ./kubectl /usr/local/bin/kubectl
+      - mkdir -p ~/.kube
+      - echo Setting up kubeconfig for EKS...
+      - aws eks --region ap-northeast-2 update-kubeconfig --name backend-cluster
+      - echo Verifying Kubernetes access...
+      - kubectl version --client
 
   pre_build:
     commands:
-      - echo Build started on `date`
-      - echo Installing dependencies...
-      - npm install
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com
+      - echo Pre-build step completed.
 
   build:
     commands:
       - echo Building React App...
+      - npm install  # 의존성 설치
       - npm run build  # React 앱 빌드
+
+      - echo Building Docker image for React App...
+      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .  # React 앱을 포함한 Docker 이미지 빌드
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG  # ECR로 태그
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG  # ECR로 푸시
 
   post_build:
     commands:
-      - echo Build completed on `date`
-      - echo Building Docker image...
-      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .  # React 앱이 포함된 Docker 이미지 빌드
-      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG  # ECR로 태그
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG  # ECR로 푸시
+      - echo Deploying to EKS...
+
+      - echo Deploying React App to EKS...
+      - AWS_ECR_URI=$AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - DATE=$(date)
+      - sed -i.bak 's#AWS_ECR_URI#'"$AWS_ECR_URI"'#' ./EKS/deployment.yaml
+      - sed -i.bak 's#DATE_STRING#'"$DATE"'#' ./EKS/deployment.yaml
+      - kubectl apply -f ./EKS/deployment.yaml
+      - kubectl apply -f ./EKS/service.yaml
+
+      - echo Deployment completed on $(date).
 
 artifacts:
   files:

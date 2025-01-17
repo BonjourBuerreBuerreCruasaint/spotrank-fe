@@ -15,14 +15,17 @@ phases:
       - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
       - AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID
       - AWS_REGION=$AWS_DEFAULT_REGION
-      - curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.27.6/2023-10-17/bin/linux/amd64/kubectl
+      - echo Downloading kubectl for EKS 1.30...
+      - curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.30.0/2023-12-14/bin/linux/amd64/kubectl || { echo 'kubectl download failed'; exit 1; }
       - chmod +x ./kubectl
       - mv ./kubectl /usr/local/bin/kubectl
       - mkdir -p ~/.kube
+      - echo Verifying AWS credentials...
+      - aws sts get-caller-identity
       - echo Setting up kubeconfig for EKS...
-      - aws eks --region ap-northeast-2 update-kubeconfig --name bbcEKS
+      - aws eks --region ap-northeast-2 update-kubeconfig --name backend-cluster || { echo 'Failed to update kubeconfig'; exit 1; }
       - echo Verifying Kubernetes access...
-      - kubectl version --client
+      - kubectl version --client || { echo 'kubectl version failed'; exit 1; }
 
   pre_build:
     commands:

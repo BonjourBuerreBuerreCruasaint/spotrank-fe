@@ -4,7 +4,7 @@ metadata:
   name: spotrank-fe-service
 spec:
   selector:
-    app: spotrank-fe
+    app: spotrank-fe1
   ports:
     - protocol: TCP
       port: 80

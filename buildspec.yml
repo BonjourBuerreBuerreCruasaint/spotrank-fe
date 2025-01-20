@@ -1,75 +1,43 @@
 version: 0.2
 
-env:
-  variables:
-<<<<<<< HEAD
-    AWS_DEFAULT_REGION: ap-northeast-1
-    AWS_ACCOUNT_ID: 440744225243
-    IMAGE_REPO_NAME: bbc
-    IMAGE_TAG: latest
-
-phases:
-  build:
-    commands:
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-      - docker build --platform=linux/amd64 -t $IMAGE_REPO_NAME:$IMAGE_TAG .
-      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
-=======
-    AWS_DEFAULT_REGION: ap-northeast-2
-    AWS_ACCOUNT_ID: 440744225243
-    IMAGE_REPO_NAME: bbc  # ECR 리포지토리 이름
-    IMAGE_TAG: latest
-
 phases:
   install:
     commands:
-      - echo Installing kubectl...
+      - echo Installing prerequisites...
       - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
       - AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID
       - AWS_REGION=$AWS_DEFAULT_REGION
-      - echo Downloading kubectl for EKS 1.30...
-      - curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.30.0/2023-12-14/bin/linux/amd64/kubectl || { echo 'kubectl download failed'; exit 1; }
+      - curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.27.6/2023-10-17/bin/linux/amd64/kubectl
       - chmod +x ./kubectl
       - mv ./kubectl /usr/local/bin/kubectl
       - mkdir -p ~/.kube
-      - echo Verifying AWS credentials...
-      - aws sts get-caller-identity
       - echo Setting up kubeconfig for EKS...
-      - aws eks --region ap-northeast-2 update-kubeconfig --name bbcEKS || { echo 'Failed to update kubeconfig'; exit 1; }
+      - aws eks --region ap-northeast-2 update-kubeconfig --name bbcEKS
       - echo Verifying Kubernetes access...
-      - kubectl version --client || { echo 'kubectl version failed'; exit 1; }
-
+      - kubectl get pods --all-namespaces
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com
       - echo Pre-build step completed.
-
   build:
     commands:
-      - echo Building Docker image for React App...
-      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .  # React 앱을 포함한 Docker 이미지 빌드
-      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG  # ECR로 태그
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG  # ECR로 푸시
-
+      - echo Building the Docker image...
+      - docker build -t bbc:latest .
+      - docker tag bbc:latest 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/bbc:latest
+      - echo Pushing Docker image to ECR...
+      - docker push 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/bbc:latest
   post_build:
     commands:
-      - echo Deploying to EKS...
-
-      - echo Deploying React App to EKS...
-      - AWS_ECR_URI=$AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
-      - DATE=$(date)
-      - sed -i.bak 's#AWS_ECR_URI#'"$AWS_ECR_URI"'#' ./EKS/deployment.yaml
-      - sed -i.bak 's#DATE_STRING#'"$DATE"'#' ./EKS/deployment.yaml
-      - kubectl apply -f ./EKS/deployment.yaml
-      - kubectl apply -f ./EKS/service.yaml
-
+      - echo Deploying application to EKS...
+      - export AWS_ECR_URI=440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/bbc:latest
+      - sed -i.bak 's#AWS_ECR_URI#'"$AWS_ECR_URI"'#g' ./EKS/Deployment.yaml
+      - kubectl apply -f ./EKS/Deployment.yaml
+      - kubectl apply -f ./EKS/Service.yaml
       - echo Deployment completed on $(date).
 
 artifacts:
   files:
-    - EKS/deployment.yaml
-    - EKS/service.yaml
->>>>>>> 036c696fee05a58a49fd252add13f5b087d08a8b
+    - EKS/Deployment.yaml
+    - EKS/Service.yaml

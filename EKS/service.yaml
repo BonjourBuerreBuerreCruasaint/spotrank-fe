@@ -4,9 +4,10 @@ metadata:
   name: spotrank-fe-service
 spec:
   selector:
-    app: spotrank-fe1
+    app: spotrank-fe
   ports:
     - protocol: TCP
       port: 80
       targetPort: 80
   type: LoadBalancer
+

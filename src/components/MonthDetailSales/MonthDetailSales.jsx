@@ -31,7 +31,7 @@ const MonthDetailSales = () => {
   const pieChartRef = React.useRef(null);
   const lineChartInstance = React.useRef(null);
   const pieChartInstance = React.useRef(null);
-  const storedId = sessionStorage.getItem('session_id');
+  const storedId = localStorage.getItem('user_id');
   
 
   // 월간 매출 데이터

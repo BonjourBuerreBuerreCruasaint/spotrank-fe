@@ -7,7 +7,7 @@ import { BarChart, Bar, Cell, Tooltip as RechartsTooltip, Legend as RechartsLege
 const DayDetailSales = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const storedId = sessionStorage.getItem('session_id');
+    const storedId = localStorage.getItem('user_id');
 
     const data = [
         { day: '월', sales: 300 },
@@ -34,7 +34,7 @@ const DayDetailSales = () => {
                 <img src="/logo.png" alt="Logo" className="logo" />
                 <h1 onClick={() => navigate(`/ceo-main?id=${storedId}`)} style={{ cursor: 'pointer' }}>SpotRank</h1>
                 <div className="day-detail-button-group">
-                    <button className="day-detail-sales-button" onClick={() => navigate('/detail-sales')}>나는 사장</button>
+                    <button className="day-detail-sales-button" onClick={() => navigate(`/detail-sales?id=${storedId}`)}>나는 사장</button>
                     <button className="day-detail-sales-logout-button" onClick={() => navigate('/logout')}>Logout</button>
                 </div>
             </header>

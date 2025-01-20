@@ -2,6 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './BusinessSignup.css';
 
+const menuCategories = [
+  "빵/도넛",
+  "돼지고기 구이/찜",
+  "요리 주점",
+  "카페",
+  "백반/한정식",
+  "경양식",
+  "일식 면 요리",
+  "생맥주 전문",
+  "일식 회/초밥",
+  "피자",
+  "파스타/스테이크",
+  "김밥/만두/분식",
+  "치킨",
+  "국/탕/찌개류",
+  "국수/칼국수",
+  "버거",
+  "중국집",
+  "일식 카레/돈가스/덮밥",
+  "마라탕/훠궈",
+  "닭/오리고기 구이/찜",
+];
+
+
 const BusinessSignup = () => {
   const [formData, setFormData] = useState({
     businessNumber: '',
@@ -9,6 +33,7 @@ const BusinessSignup = () => {
     storeName: '',
     address: '',
     category: 'restaurants',
+    subCategory: '',
     description: '',
     image: null,
     openingDate: '',
@@ -63,6 +88,7 @@ const BusinessSignup = () => {
     formDataToSend.append('storeName', formData.storeName);
     formDataToSend.append('address', formData.address);
     formDataToSend.append('category', formData.category);
+    formDataToSend.append('subCategory',formData.subCategory);
     formDataToSend.append('description', formData.description);
     formDataToSend.append('openingDate', formData.openingDate);
     formDataToSend.append('storePhoneNumber', formData.storePhoneNumber);
@@ -104,6 +130,7 @@ const BusinessSignup = () => {
         formData.storeName &&
         formData.address &&
         formData.category &&
+        formData.subCategory&&
         formData.openingDate &&
         formData.storePhoneNumber
     );
@@ -238,6 +265,22 @@ const BusinessSignup = () => {
           >
             <option value="restaurants">음식점</option>
             <option value="cafes">카페</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label>상권업종 카테고리</label>
+          <select
+            name="subCategory"
+            value={formData.subCategory}
+            onChange={handleChange}
+            required
+          >
+            <option value="">선택하세요</option>
+            {menuCategories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
           </select>
         </div>
         <div className="form-group">

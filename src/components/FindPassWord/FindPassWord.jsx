@@ -70,7 +70,7 @@ const FindPassWord = () => {
   };
 
   useEffect(() => {
-    const storedId = localStorage.getItem('id');
+    const storedId = localStorage.getItem('user_id');
     if (storedId) {
       setId(storedId);
     } else {

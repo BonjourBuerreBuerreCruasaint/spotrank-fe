@@ -8,9 +8,9 @@ const Logout = () => {
     const performLogout = async () => {
       try {
         // 세션 및 로컬스토리지 초기화
-        localStorage.removeItem('id');
+        localStorage.removeItem('user_id');
         localStorage.clear();
-        sessionStorage.removeItem('id');
+        sessionStorage.removeItem('user_id');
         sessionStorage.clear();
 
         // 메인 페이지로 리디렉션

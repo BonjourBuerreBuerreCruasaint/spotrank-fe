@@ -24,20 +24,21 @@ phases:
   build:
     commands:
       - echo Building the Docker image...
-      - docker build -t bbc:latest .
-      - docker tag bbc:latest 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/bbc:latest
+      - docker build -t front:latest .
+      - docker tag front:latest 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/bbc:front
       - echo Pushing Docker image to ECR...
-      - docker push 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/bbc:latest
+      - docker push 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/bbc:front
   post_build:
     commands:
       - echo Deploying application to EKS...
-      - export AWS_ECR_URI=440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/bbc:latest
-      - sed -i.bak 's#AWS_ECR_URI#'"$AWS_ECR_URI"'#g' ./EKS/Deployment.yaml
-      - kubectl apply -f ./EKS/Deployment.yaml
-      - kubectl apply -f ./EKS/Service.yaml
-      - echo Deployment completed on $(date).
+      - export AWS_ECR_URI=440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/bbc:front
+      - sed -i.bak 's#AWS_ECR_URI#'"$AWS_ECR_URI"'#g' ./EKS/deployment.yaml
+      - kubectl apply -f ./EKS/deployment.yaml
+      - kubectl apply -f ./EKS/service.yaml
+      - echo deployment completed on $(date).
 
 artifacts:
   files:
-    - EKS/Deployment.yaml
-    - EKS/Service.yaml
+    - EKS/deployment.yaml
+    - EKS/service.yaml
+

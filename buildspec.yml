@@ -41,3 +41,4 @@ artifacts:
   files:
     - EKS/deployment.yaml
     - EKS/service.yaml
+

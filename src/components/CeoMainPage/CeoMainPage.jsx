@@ -72,6 +72,7 @@ const CeoMainPage = () => {
   let polygons = []; // 폴리곤을 저장할 배열
   let circles = []; // 서클을 저장할 배열
   let zones = []; // 새로운 폴리곤을 저장할 배열
+  const storedId = sessionStorage.getItem('id');
 
   // 랜덤 추천 식당 업데이트
   useEffect(() => {
@@ -94,7 +95,6 @@ const CeoMainPage = () => {
       if (!seoulDataResponse.ok) throw new Error('서울 데이터 요청 실패');
       
       let seoulData = await seoulDataResponse.json();
-      console.log('API 응답:', seoulData); // 응답 데이터 확인
 
       if (!Array.isArray(seoulData)) {
         if (seoulData) {
@@ -107,7 +107,6 @@ const CeoMainPage = () => {
       const areas = seoulData; // DATA 배열 사용
 
       areas.forEach(area => {
-        console.log('현재 데이터:', area); // 현재 데이터 확인
         const latitude = area.latitude !== undefined ? parseFloat(area.latitude) : null; // "latitude" 값 사용
         const longitude = area.longitude !== undefined ? parseFloat(area.longitude) : null; // "longitude" 값 사용
 
@@ -190,7 +189,6 @@ const CeoMainPage = () => {
       if (!response.ok) throw new Error('유동인구 데이터 요청 실패');
       
       const rawData = await response.json();
-      console.log('유동인구 API 응답:', rawData);
   
       // 데이터 배열로 변환 (헤더 제외)
       const dataLines = rawData.content.slice(1); // 첫 번째 줄은 헤더
@@ -208,7 +206,6 @@ const CeoMainPage = () => {
       // 각 데이터 항목 출력
       data.forEach((item, index) => {
         const { TotalPeople, latitude, longitude } = item;
-        console.log(`데이터 ${index + 1}: TotalPeople=${TotalPeople}, latitude=${latitude}, longitude=${longitude}`);
       });
   
       // 지도에 Polyline 추가
@@ -254,9 +251,7 @@ const CeoMainPage = () => {
   };
   
   const showNewPolygons = (newPolygons) => {
-    console.log('showNewPolygons called');
     newPolygons.forEach(Newpolygon => {
-      console.log('Adding new polygon to map:', Newpolygon);
       Newpolygon.setMap(map); // 폴리곤을 지도에 추가
     });
   };
@@ -277,7 +272,6 @@ const CeoMainPage = () => {
       if (!response.ok) throw new Error('새로운 폴리곤 데이터 요청 실패');
 
       const newData = await response.json();
-      console.log('새로운 폴리곤 API 응답:', newData);
 
       const newPolygons = []; // 새로운 폴리곤을 저장할 배열
       const total_count = newData.length; // 전체 데이터 개수
@@ -336,11 +330,11 @@ const CeoMainPage = () => {
 
   const handleLogout = () => {
     console.log("로그아웃 버튼 클릭됨");
-    navigate('/'); // MainPage로 이동
+    navigate('/logout'); // MainPage로 이동
   };
 
   const handleOwner = () => {
-    navigate('/detail-sales'); // DetailSales 페이지로 이동
+    navigate(`/detail-sales?id=${storedId}`); // DetailSales 페이지로 이동
   };
 
   useEffect(() => {
@@ -405,16 +399,13 @@ const CeoMainPage = () => {
   }, []);
 
   const handleViewModeChange = (mode) => {
-    console.log(`Changing view mode to: ${mode}`);
     if (mode === '상권영역') {
-      console.log('Hiding circles and showing polygons');
       hideCircles(); // 서클을 숨김
       fetchPlacesFromAPI().then(() => {
         showPolygons(); // 폴리곤을 보여줌
         showNewPolygons(zones); // 새로운 폴리곤을 보여줌
       });
     } else if (mode === '유동인구') {
-      console.log('Hiding polygons and showing circles');
       hidePolygons(); // 폴리곤을 숨김
       fetchPopulationData().then(() => {
         showCircles(); // 서클을 보여줌
@@ -426,18 +417,14 @@ const CeoMainPage = () => {
 
   // 지도에 폴리곤 추가
   const showPolygons = () => {
-    console.log('showPolygons called');
     polygons.forEach(polygon => {
-      console.log('Adding polygon to map:', polygon);
       polygon.setMap(map); // 폴리곤을 지도에 추가
     });
   };
 
   // 지도에서 폴리곤 제거
   const hidePolygons = () => {
-    console.log('hidePolygons called');
     polygons.forEach(polygon => {
-      console.log('Removing polygon from map:', polygon);
       polygon.setMap(null); // 폴리곤을 지도에서 제거
     });
     polygons = []; // 배열 초기화
@@ -445,18 +432,14 @@ const CeoMainPage = () => {
 
   // 지도에 서클 추가
   const showCircles = () => {
-    console.log('showCircles called');
     circles.forEach(circle => {
-      console.log('Adding circle to map:', circle);
       circle.setMap(map); // 서클을 지도에 추가
     });
   };
 
   // 지도에서 서클 제거
   const hideCircles = () => {
-    console.log('hideCircles called');
     circles.forEach(circle => {
-      console.log('Removing circle from map:', circle);
       circle.setMap(null); // 서클을 지도에서 제거
     });
     circles = []; // 배열 초기화

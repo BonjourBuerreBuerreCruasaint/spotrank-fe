@@ -7,22 +7,14 @@ const Logout = () => {
   useEffect(() => {
     const performLogout = async () => {
       try {
-        const response = await fetch('/api/logout', {
-          method: 'POST',
-          credentials: 'include', // 세션 쿠키 포함
-        });
+        // 세션 및 로컬스토리지 초기화
+        localStorage.removeItem('id');
+        localStorage.clear();
+        sessionStorage.removeItem('id');
+        sessionStorage.clear();
 
-        if (response.ok) {
-          const data = await response.json();
-          localStorage.removeItem('id');
-          localStorage.clear();
-          sessionStorage.removeItem('id')
-          sessionStorage.clear();
-          navigate('/'); // 메인 페이지로 리디렉션
-        } else {
-          const errorData = await response.json();
-          alert(errorData.error || '로그아웃 실패');
-        }
+        // 메인 페이지로 리디렉션
+        navigate('/');
       } catch (error) {
         console.error('로그아웃 중 오류 발생:', error);
         alert('로그아웃 중 오류가 발생했습니다.');

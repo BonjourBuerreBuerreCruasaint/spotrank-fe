@@ -32,7 +32,7 @@ const Login = () => {
     }
 
     try {
-      const response = await fetch('/api/login', {
+      const response = await fetch('http://127.0.0.1:5000/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -43,14 +43,8 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        const { id } = data;
-
-        // 사용자 ID를 세션 스토리지에 저장
-        sessionStorage.setItem('id',id);
-        const storedId = sessionStorage.getItem('id');
-
-        // CEO 메인 페이지로 이동
-        navigate(`/ceo-main?id=${storedId}`);
+        localStorage.setItem('user_id',data.user_id);
+        navigate(`/ceo-main?id=${data.user_id}`);
       } else {
         alert(data.error || '로그인 실패');
       }

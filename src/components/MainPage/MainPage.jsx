@@ -92,52 +92,37 @@ const MainPage = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   const script = document.createElement('script');
-  //   script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_API_KEY}&autoload=false`;
-  //   document.head.appendChild(script);
+  // 카카오맵 로드 함수 추가
+  const loadKakaoMap = () => {
+    console.log('Loading Kakao Map...'); // 디버깅 로그 추가
+    const container = document.getElementById('map');
+    const options = {
+      center: new window.kakao.maps.LatLng(37.556229, 126.937079),
+      level: 3
+    };
 
-  //   script.onload = () => {
-  //     console.log('Kakao Maps API loaded');
-  //     // API 로드 후 추가 초기화 코드 작성 가능
-  //   };
+    // 지도 객체 생성
+    const map = new window.kakao.maps.Map(container, options);
+    
+    // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성
+    const mapTypeControl = new window.kakao.maps.MapTypeControl();
+    map.addControl(mapTypeControl, window.kakao.maps.ControlPosition.TOPRIGHT);
 
-  //   return () => {
-  //     document.head.removeChild(script); // 컴포넌트 언마운트 시 스크립트 제거
-  //   };
-  // }, []);
+    // 지도 확대 축소를 제어할 수 있는 줌 컨트롤을 생성
+    const zoomControl = new window.kakao.maps.ZoomControl();
+    map.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT);
 
-  useEffect(() => {
-    const loadKakaoMap = () => {
-      console.log('Loading Kakao Map...'); // 디버깅 로그 추가
-      const container = document.getElementById('map');
-      const options = {
-        center: new window.kakao.maps.LatLng(37.556229, 126.937079),
-        level: 3
-      };
+    if (userLocation) {
+      const userMarkerPosition = new window.kakao.maps.LatLng(
+        userLocation.latitude,
+        userLocation.longitude
+      );
 
-      // 지도 객체 생성
-      const map = new window.kakao.maps.Map(container, options);
-      
-      // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성
-      const mapTypeControl = new window.kakao.maps.MapTypeControl();
-      map.addControl(mapTypeControl, window.kakao.maps.ControlPosition.TOPRIGHT);
+      const userMarker = new window.kakao.maps.Marker({
+        position: userMarkerPosition,
+      });
 
-      // 지도 확대 축소를 제어할 수 있는 줌 컨트롤을 생성
-      const zoomControl = new window.kakao.maps.ZoomControl();
-      map.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT);
-
-      if (userLocation){
-        const userMarkerPosition = new window.kakao.maps.LatLng(
-          userLocation.latitude,
-          userLocation.longitude
-        );
-
-        const userMarker = new window.kakao.maps.Marker({
-          position: userMarkerPosition,
-        });
-
-        // 마커를 지도에 표시
+      // 마커를 지도에 표시
       userMarker.setMap(map);
       map.setCenter(userMarkerPosition);
 
@@ -156,8 +141,7 @@ const MainPage = () => {
             background-color: white;
             font-family: 'Pretendard', sans-serif;
           ">
-            <h4 style="margin: 0; font-size: 16px; color: #333;">커피빈 신촌점</h4>
-            <p style="margin: 5px 0 0; font-size: 14px; color: #666;">평점: 5.0</p>
+            <h4 style="margin: 0; font-size: 16px; color: #333;">사용자 위치</h4>
           </div>
         `,
         removable: true
@@ -172,34 +156,23 @@ const MainPage = () => {
       window.kakao.maps.event.addListener(userMarker, 'mouseout', () => {
         userInfoWindow.close();
       });
+    }
+  };
 
-      
+  // 카카오맵 SDK가 로드된 후 실행
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_API_KEY}&autoload=false`;
+    document.head.appendChild(script);
 
-      // 500m 범위 원 생성
-      const circle = new window.kakao.maps.Circle({
-        center: userMarkerPosition, // 원의 중심좌표
-        radius: 500, // 미터 단위의 반지름
-        strokeWeight: 2, // 선의 두께
-        strokeColor: '#87CEEB', // 선의 색깔
-        strokeOpacity: 0.8, // 선의 불투명도
-        strokeStyle: 'solid', // 선의 스타일
-        fillColor: '#87CEEB', // 채우기 색깔
-        fillOpacity: 0.2 // 채우기 불투명도
-      });
-
-      // 원을 지도에 표시
-      circle.setMap(map);
-
-      }
-
-    
+    script.onload = () => {
+      loadKakaoMap();
     };
 
-    // 카카오맵 SDK가 로드된 후 실행
-    if (window.kakao && window.kakao.maps && userLocation) {
-      loadKakaoMap();
-    }
-  }, [navigate, userLocation]);
+    return () => {
+      document.head.removeChild(script); // 컴포넌트 언마운트 시 스크립트 제거
+    };
+  }, [userLocation]);
 
   // 로그인 버튼 클릭 핸들러 추가
   const handleLoginClick = () => {

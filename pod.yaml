@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: frontend-backend-pod
+spec:
+  containers:
+  - name: spotrank-fe
+    image: 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/bbc:front
+    ports:
+    - containerPort: 80
+  - name: spotrank-be2
+    image: 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/bbc:backend
+    ports:
+    - containerPort: 8080

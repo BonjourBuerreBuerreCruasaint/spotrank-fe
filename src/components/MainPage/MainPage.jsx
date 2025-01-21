@@ -109,6 +109,7 @@ const MainPage = () => {
 
   useEffect(() => {
     const loadKakaoMap = () => {
+      console.log('Loading Kakao Map...'); // 디버깅 로그 추가
       const container = document.getElementById('map');
       const options = {
         center: new window.kakao.maps.LatLng(37.556229, 126.937079),

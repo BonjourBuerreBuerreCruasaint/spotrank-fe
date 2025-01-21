@@ -92,20 +92,20 @@ const MainPage = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_API_KEY}&autoload=false`;
-    document.head.appendChild(script);
+  // useEffect(() => {
+  //   const script = document.createElement('script');
+  //   script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_API_KEY}&autoload=false`;
+  //   document.head.appendChild(script);
 
-    script.onload = () => {
-      console.log('Kakao Maps API loaded');
-      // API 로드 후 추가 초기화 코드 작성 가능
-    };
+  //   script.onload = () => {
+  //     console.log('Kakao Maps API loaded');
+  //     // API 로드 후 추가 초기화 코드 작성 가능
+  //   };
 
-    return () => {
-      document.head.removeChild(script); // 컴포넌트 언마운트 시 스크립트 제거
-    };
-  }, []);
+  //   return () => {
+  //     document.head.removeChild(script); // 컴포넌트 언마운트 시 스크립트 제거
+  //   };
+  // }, []);
 
   useEffect(() => {
     const loadKakaoMap = () => {

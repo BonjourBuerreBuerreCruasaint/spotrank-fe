@@ -92,31 +92,19 @@ const MainPage = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   const script = document.createElement('script');
-  //   script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_API_KEY}&autoload=false`;
-  //   document.head.appendChild(script);
-
-  //   script.onload = () => {
-  //     console.log('Kakao Maps API loaded');
-  //     // API 로드 후 추가 초기화 코드 작성 가능
-  //   };
-
-  //   return () => {
-  //     document.head.removeChild(script); // 컴포넌트 언마운트 시 스크립트 제거
-  //   };
-  // }, []);
-
+  // 카카오맵 로드 및 초기화
   useEffect(() => {
     const loadKakaoMap = () => {
-      console.log('Loading Kakao Map...'); // 디버깅 로그 추가
+      if (!window.kakao || !window.kakao.maps) {
+        console.error("카카오맵 API가 로드되지 않았습니다.");
+        return;
+      }
+
       const container = document.getElementById('map');
       const options = {
         center: new window.kakao.maps.LatLng(37.556229, 126.937079),
         level: 3
       };
-
-      // 지도 객체 생성
       const map = new window.kakao.maps.Map(container, options);
       
       // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성
@@ -191,15 +179,20 @@ const MainPage = () => {
       circle.setMap(map);
 
       }
-
-    
     };
 
-    // 카카오맵 SDK가 로드된 후 실행
-    if (window.kakao && window.kakao.maps && userLocation) {
+    const script = document.createElement('script');
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_API_KEY}&autoload=false`;
+    document.head.appendChild(script);
+
+    script.onload = () => {
       loadKakaoMap();
-    }
-  }, [navigate, userLocation]);
+    };
+
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, [userLocation]);
 
   // 로그인 버튼 클릭 핸들러 추가
   const handleLoginClick = () => {

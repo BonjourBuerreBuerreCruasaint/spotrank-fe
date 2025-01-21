@@ -3,29 +3,42 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com
-
+      - echo Installing prerequisites...
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+      - AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID
+      - AWS_REGION=$AWS_DEFAULT_REGION
+      - curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.27.6/2023-10-17/bin/linux/amd64/kubectl
+      - chmod +x ./kubectl
+      - mv ./kubectl /usr/local/bin/kubectl
+      - mkdir -p ~/.kube
+      - echo Setting up kubeconfig for EKS...
+      - aws eks --region ap-northeast-2 update-kubeconfig --name spotrankeks 
+      - echo Verifying Kubernetes access...
+      - kubectl get pods --all-namespaces
   pre_build:
     commands:
-      - echo Build started on `date`
-      - echo Installing dependencies...
-      - npm install
-
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com
+      - echo Pre-build step completed.
   build:
     commands:
-      - echo Building React App...
-      - npm run build
-
+      - echo Building the Docker image...
+      - docker build -t front:latest .
+      - docker tag front:latest 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/bbc:front
+      - echo Pushing Docker image to ECR...
+      - docker push 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/bbc:front
   post_build:
     commands:
-      - echo Build completed on `date`
-      - docker build -t spotrank-fe:latest .  # .env 파일 포함된 상태로 빌드
-      - docker tag spotrank-fe:latest 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/spotrank-fe:latest
-      - docker push 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/spotrank-fe:latest  # 최신 태그로 푸시
+      - echo Deploying application to EKS...
+      - export AWS_ECR_URI=440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/bbc:front
+      - sed -i.bak 's#AWS_ECR_URI#'"$AWS_ECR_URI"'#g' ./EKS/deployment.yaml
+      - kubectl apply -f ./EKS/deployment.yaml
+      - kubectl apply -f ./EKS/service.yaml
+      - echo deployment completed on $(date).
 
 artifacts:
   files:
-    - '**/*'
-  discard-paths: yes
-  base-directory: 'build'
+    - EKS/deployment.yaml
+    - EKS/service.yaml
+

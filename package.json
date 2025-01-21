@@ -19,6 +19,7 @@
     "web-vitals": "^4.2.4"
   },
   "proxy": "http://localhost:5000",
+  "proxy": "http://localhost:8080",
   "scripts": {
     "start": "cross-env HOST=localhost react-app-rewired start",
     "build": "react-scripts build",
@@ -47,5 +48,5 @@
     "cross-env": "^7.0.3",
     "react-app-rewired": "^2.2.1"
   },
-  "proxy": "http://127.0.0.1:5000"
+  "proxy": "http://localhost:5000"
 }

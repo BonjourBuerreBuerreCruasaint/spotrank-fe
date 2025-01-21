@@ -96,6 +96,11 @@ const MainPage = () => {
   const loadKakaoMap = () => {
     console.log('Loading Kakao Map...'); // 디버깅 로그 추가
     const container = document.getElementById('map');
+    if (!container) {
+      console.error('Map container not found');
+      return;
+    }
+    
     const options = {
       center: new window.kakao.maps.LatLng(37.556229, 126.937079),
       level: 3
@@ -103,14 +108,17 @@ const MainPage = () => {
 
     // 지도 객체 생성
     const map = new window.kakao.maps.Map(container, options);
+    console.log('Kakao Map created:', map);
     
     // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성
     const mapTypeControl = new window.kakao.maps.MapTypeControl();
     map.addControl(mapTypeControl, window.kakao.maps.ControlPosition.TOPRIGHT);
+    console.log('Map type control added');
 
     // 지도 확대 축소를 제어할 수 있는 줌 컨트롤을 생성
     const zoomControl = new window.kakao.maps.ZoomControl();
     map.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT);
+    console.log('Zoom control added');
 
     if (userLocation) {
       const userMarkerPosition = new window.kakao.maps.LatLng(
@@ -125,9 +133,11 @@ const MainPage = () => {
       // 마커를 지도에 표시
       userMarker.setMap(map);
       map.setCenter(userMarkerPosition);
+      console.log('User marker added at:', userMarkerPosition);
 
       // 마커 클릭 이벤트 추가
       window.kakao.maps.event.addListener(userMarker, 'click', () => {
+        console.log('User marker clicked, navigating to store detail');
         navigate('/store-detail'); // StoreDetail 페이지로 이동
       });
 
@@ -149,13 +159,17 @@ const MainPage = () => {
 
       // 마커에 마우스 오버 이벤트 등록
       window.kakao.maps.event.addListener(userMarker, 'mouseover', () => {
+        console.log('User marker mouseover');
         userInfoWindow.open(map, userMarker);
       });
 
       // 마커에 마우스 아웃 이벤트 등록
       window.kakao.maps.event.addListener(userMarker, 'mouseout', () => {
+        console.log('User marker mouseout');
         userInfoWindow.close();
       });
+    } else {
+      console.warn('User location is not available');
     }
   };
 
@@ -166,6 +180,7 @@ const MainPage = () => {
     document.head.appendChild(script);
 
     script.onload = () => {
+      console.log('Kakao Maps SDK loaded');
       loadKakaoMap();
     };
 

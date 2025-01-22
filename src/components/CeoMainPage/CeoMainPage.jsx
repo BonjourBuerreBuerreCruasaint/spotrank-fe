@@ -186,7 +186,7 @@ const CeoMainPage = () => {
       circles.forEach(circle => circle.setMap(null)); // 기존 서클을 지도에서 제거
       circles = []; // 서클 배열 초기화
 
-      const response = await fetch('/api/jinfinalpeople');
+      const response = await fetch('http://a1a6372f9d2cc42db966213781f9a3a8-1937042680.ap-northeast-2.elb.amazonaws.com:5000/api/jinfinalpeople');
       if (!response.ok) throw new Error('유동인구 데이터 요청 실패');
       
       const rawData = await response.json();
@@ -205,11 +205,7 @@ const CeoMainPage = () => {
           };
         });
   
-      // 각 데이터 항목 출력
-      data.forEach((item, index) => {
-        const { TotalPeople, latitude, longitude } = item;
-        console.log(`데이터 ${index + 1}: TotalPeople=${TotalPeople}, latitude=${latitude}, longitude=${longitude}`);
-      });
+        
   
       // 지도에 Polyline 추가
       data.forEach((item) => {

@@ -30,7 +30,7 @@ spec:
             - name: BACKEND_URL
               valueFrom:
                 secretKeyRef:
-                  name: spotrank-fe-secret1  # Secret 이름
+                  name: spotrank-fe-secret  # Secret 이름
                   key: BACKEND_URL   # Secret 내의 키
 
             # 배포 시점 정보 (예: 빌드 시점 날짜)

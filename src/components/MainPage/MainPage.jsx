@@ -22,7 +22,7 @@ const MainPage = () => {
   // Flask API에서 데이터 가져오기
   const fetchPlacesFromAPI = useCallback(async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/api/ranking'); // Flask API URL
+      const response = await fetch('/api/ranking'); // Flask API URL
       if (!response.ok) throw new Error('API 요청 실패');
       const data = await response.json();
       setPlaces({

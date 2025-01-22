@@ -14,15 +14,25 @@ spec:
     spec:
       containers:
         - name: spotrank-fe
-          image: 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/bbc:front  # 이미지 URI는 `buildspec.yml`에서 동적으로 치환됩니다.
+          image: 440744225243.dkr.ecr.ap-northeast-2.amazonaws.com/bbc:front  # ECR에서 빌드된 최신 이미지
           ports:
-            - containerPort: 80
+            - containerPort: 80  # 컨테이너가 사용하는 포트
           imagePullPolicy: Always  # 항상 최신 이미지를 사용
           env:
+            # 카카오 API 키를 Secret에서 가져오기
             - name: REACT_APP_KAKAO_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: spotrank-fe-secret
-                  key: REACT_APP_KAKAO_API_KEY
-            - name: DATE  # 배포 시점 정보
-              value: 'DATE_STRING'
+                  name: spotrank-fe-secret  # Secret 이름
+                  key: REACT_APP_KAKAO_API_KEY  # Secret 내의 키
+
+            # 백엔드 URL을 Secret에서 가져오기
+            - name: BACKEND_URL
+              valueFrom:
+                secretKeyRef:
+                  name: spotrank-fe-secret1  # Secret 이름
+                  key: BACKEND_URL   # Secret 내의 키
+
+            # 배포 시점 정보 (예: 빌드 시점 날짜)
+            - name: DATE
+              value: 'DATE_STRING'  # 배포 시점에 자동으로 업데이트되어야 할 값

@@ -91,7 +91,7 @@ const CeoMainPage = () => {
       polygons = []; // 폴리곤 배열 초기화
 
       const seoulDataResponse = await fetch('/api/seouldata');
-      console.log('seouldata:', seoulDataResponseresponse);
+      console.log('seouldata:', seoulDataResponse);
       if (!seoulDataResponse.ok) throw new Error('서울 데이터 요청 실패');
       
       let seoulData = await seoulDataResponse.json();

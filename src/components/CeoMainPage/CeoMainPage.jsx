@@ -90,7 +90,7 @@ const CeoMainPage = () => {
       polygons.forEach(polygon => polygon.setMap(null)); // 기존 폴리곤을 지도에서 제거
       polygons = []; // 폴리곤 배열 초기화
 
-      const seoulDataResponse = await fetch('http://a1a6372f9d2cc42db966213781f9a3a8-1937042680.ap-northeast-2.elb.amazonaws.com:5000/seouldata');
+      const seoulDataResponse = await fetch('http://a1a6372f9d2cc42db966213781f9a3a8-1937042680.ap-northeast-2.elb.amazonaws.com:5000/api/seouldata');
       console.log('seouldata:', seoulDataResponse);
       if (!seoulDataResponse.ok) throw new Error('서울 데이터 요청 실패');
       
@@ -187,7 +187,7 @@ const CeoMainPage = () => {
       circles.forEach(circle => circle.setMap(null)); // 기존 서클을 지도에서 제거
       circles = []; // 서클 배열 초기화
 
-      const response = await fetch('http://a1a6372f9d2cc42db966213781f9a3a8-1937042680.ap-northeast-2.elb.amazonaws.com:5000/jinfinalpeople');
+      const response = await fetch('http://a1a6372f9d2cc42db966213781f9a3a8-1937042680.ap-northeast-2.elb.amazonaws.com:5000/api/jinfinalpeople');
       console.log('jinfinalpeople:', response);
       if (!response.ok) throw new Error('유동인구 데이터 요청 실패');
       
@@ -271,7 +271,7 @@ const CeoMainPage = () => {
 
   const fetchNewPolygonData = useCallback(async () => {
     try {
-      const response = await fetch('http://a1a6372f9d2cc42db966213781f9a3a8-1937042680.ap-northeast-2.elb.amazonaws.com:5000/colored-zones');
+      const response = await fetch('http://a1a6372f9d2cc42db966213781f9a3a8-1937042680.ap-northeast-2.elb.amazonaws.com:5000/api/colored-zones');
       console.log('colored-zones:', response);
       if (!response.ok) throw new Error('새로운 폴리곤 데이터 요청 실패');
 

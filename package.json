@@ -22,8 +22,7 @@
     "web-vitals": "^4.2.4",
     "xml2js": "^0.6.2"
   },
-  "proxy": "http://localhost:5000",
-  "proxy": "http://localhost:8080",
+  
 
   "scripts": {
     "start": "HTTPS=true react-scripts start",
@@ -49,7 +48,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://127.0.0.1:5000",
+  "proxy": "http://a1a6372f9d2cc42db966213781f9a3a8-1937042680.ap-northeast-2.elb.amazonaws.com:5000",
   "devDependencies": {
     "react-app-rewired": "^2.2.1"
 

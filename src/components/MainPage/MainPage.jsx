@@ -176,7 +176,7 @@ const MainPage = () => {
   // 카카오맵 SDK가 로드된 후 실행
   useEffect(() => {
     const script = document.createElement('script');
-    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=33f41b22037c7bb6ada97e6f7c625e0d&autoload=false`;
+    script.src = `http://dapi.kakao.com/v2/maps/sdk.js?appkey=33f41b22037c7bb6ada97e6f7c625e0d&autoload=false`;
     document.head.appendChild(script);
 
     script.onload = () => {

@@ -376,7 +376,7 @@ const CeoMainPage = () => {
             // 사용자 위치에 마커 추가
             createMarker(userLatitude, userLongitude); // 사용자 위치에 마커 생성
           }, (error) => {
-            console.error('사용자 위치를 가져오는 데 실패했습니다:', error);
+            console.error('사용자 위치를 가져오는 데 실패했습니다1:', error);
           });
         } else {
           console.error('이 브라우저는 Geolocation을 지원하지 않습니다.');
@@ -465,7 +465,7 @@ const CeoMainPage = () => {
 
   useEffect(() => {
     const script = document.createElement('script');
-    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_API_KEY}&autoload=false`;
+    script.src = `http://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_API_KEY}&autoload=false`;
     document.head.appendChild(script);
 
     script.onload = () => {

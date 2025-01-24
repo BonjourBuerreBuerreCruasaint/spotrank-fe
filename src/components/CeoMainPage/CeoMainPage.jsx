@@ -195,9 +195,9 @@ const CeoMainPage = () => {
       console.log('유동인구 API 응답:', rawData);
   
       // 데이터 배열로 변환 (헤더 제외)
-      const dataLines = rawData.content.slice(1); // 첫 번째 줄은 헤더
+      const dataLines = Array.isArray(rawData.content) ? rawData.content.slice(1) : rawData.content.split('\n').slice(1); // 배열 또는 문자열 처리
       const data = dataLines
-        .filter(line => line.trim() !== '') // 빈 줄 제거
+        .filter(line => typeof line === 'string' && line.trim() !== '') // 빈 줄 제거 및 문자열 확인
         .map(line => {
           const [ , , , TotalPeople, latitude, longitude] = line.split(',');
           return {
@@ -207,9 +207,7 @@ const CeoMainPage = () => {
           };
         });
   
-        
-  
-      // 지도에 Polyline 추가
+      // 지도에 Circle 추가
       data.forEach((item) => {
         const { TotalPeople, latitude, longitude } = item;
 

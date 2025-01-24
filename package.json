@@ -25,7 +25,7 @@
   
 
   "scripts": {
-    "start": "HTTPS=true react-scripts start",
+    "start": "HTTP=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -51,6 +51,5 @@
   "proxy": "http://a0d594b85a2bc445d8fefaeaa3100e5f-1256827131.ap-northeast-2.elb.amazonaws.com:5000",
   "devDependencies": {
     "react-app-rewired": "^2.2.1"
-
   }
 }

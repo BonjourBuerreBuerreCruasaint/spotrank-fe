@@ -199,9 +199,9 @@ const CeoMainPage = () => {
       const data = dataLines
         .filter(line => typeof line === 'string' && line.trim() !== '') // 빈 줄 제거 및 문자열 확인
         .map(line => {
-          const [ , , , TotalPeople, latitude, longitude] = line.split(',');
+          const [ , , , TotalPeoPle, latitude, longitude] = line.split(',');
           return {
-            TotalPeople: isNaN(parseInt(TotalPeople, 10)) ? 0 : parseInt(TotalPeople, 10),
+            TotalPeoPle: isNaN(parseInt(TotalPeoPle, 10)) ? 0 : parseInt(TotalPeoPle, 10),
             latitude: isNaN(parseFloat(latitude)) ? 0 : parseFloat(latitude),
             longitude: isNaN(parseFloat(longitude)) ? 0 : parseFloat(longitude),
           };
@@ -209,14 +209,14 @@ const CeoMainPage = () => {
   
       // 지도에 Circle 추가
       data.forEach((item) => {
-        const { TotalPeople, latitude, longitude } = item;
+        const { TotalPeoPle, latitude, longitude } = item;
 
         if (latitude === 0 || longitude === 0) {
           console.warn(`잘못된 좌표 데이터: ${item}`);
           return;
         }
 
-        const color = getColorByPopulation(TotalPeople);
+        const color = getColorByPopulation(TotalPeoPle);
   
         // Circle 객체 생성
         const circle = new window.kakao.maps.Circle({
@@ -239,10 +239,10 @@ const CeoMainPage = () => {
   }, []);
   
   // 유동인구 수에 따른 색상 결정 함수
-  const getColorByPopulation = (TotalPeople) => {
-    if (TotalPeople >= 10000000) {
+  const getColorByPopulation = (TotalPeoPle) => {
+    if (TotalPeoPle >= 10000000) {
       return "#FF0000"; // 빨간색
-    } else if (TotalPeople >= 1000000) {
+    } else if (TotalPeoPle >= 1000000) {
       return "#FFA500"; // 주황색
     } else {
       return "#FFF323"; // 노란색

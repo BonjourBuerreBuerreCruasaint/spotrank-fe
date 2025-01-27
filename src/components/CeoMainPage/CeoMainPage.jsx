@@ -194,8 +194,9 @@ const CeoMainPage = () => {
       const rawData = await response.text(); // CSV 형식으로 응답을 텍스트로 가져옴
       console.log('유동인구 API 응답:', rawData);
 
-      // CSV 데이터를 JSON으로 변환
-      const lines = rawData.split('\n').filter(line => line.trim() !== ''); // 빈 줄 제거
+      // BOM 제거 및 CSV 데이터를 JSON으로 변환
+      const cleanedData = rawData.replace(/^\uFEFF/, ''); // BOM 제거
+      const lines = cleanedData.split('\n').filter(line => line.trim() !== ''); // 빈 줄 제거
       const headers = lines[0].split(','); // 첫 번째 줄을 헤더로 사용
       const data = lines.slice(1).map(line => {
         const values = line.split(',');

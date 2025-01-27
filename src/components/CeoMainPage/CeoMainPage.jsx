@@ -193,9 +193,16 @@ const CeoMainPage = () => {
       
       const rawData = await response.json();
       console.log('유동인구 API 응답:', rawData);
+
+          // rawData.content가 문자열 또는 배열인지 확인 후 처리
+      const dataLines = Array.isArray(rawData.content)
+        ? rawData.content.slice(1) // 배열이라면 두 번째 요소부터
+        : typeof rawData.content === 'string'
+        ? rawData.content.split('\n').slice(1) // 문자열이라면 줄바꿈 기준으로 분리
+        : []; // 배열도 문자열도 아니라면 빈 배열로 처리
+      
   
       // 데이터 배열로 변환 (헤더 제외)
-      const dataLines = Array.isArray(rawData.content) ? rawData.content.slice(1) : rawData.content.split('\n').slice(1); // 배열 또는 문자열 처리
       const data = dataLines
         .filter(line => typeof line === 'string' && line.trim() !== '') // 빈 줄 제거 및 문자열 확인
         .map(line => {
@@ -374,7 +381,7 @@ const CeoMainPage = () => {
             // 사용자 위치에 마커 추가
             createMarker(userLatitude, userLongitude); // 사용자 위치에 마커 생성
           }, (error) => {
-            console.error('사용자 위치를 가져오는 데 실패했습니다3:', error);
+            console.error('사용자 위치를 가져오는 데 실패했습니다5:', error);
           });
         } else {
           console.error('이 브라우저는 Geolocation을 지원하지 않습니다.');

@@ -207,10 +207,12 @@ const CeoMainPage = () => {
 
       // 필요한 데이터만 필터링
       const filteredData = data.map(item => ({
-        TotalPeoPle: item.TotalPeoPle,
-        latitude: parseFloat(item.latitude),
-        longitude: parseFloat(item.longitude)
+        TotalPeoPle: parseInt(item.TotalPeoPle, 10), // 숫자로 변환
+        latitude: parseFloat(item.latitude), // 숫자로 변환
+        longitude: parseFloat(item.longitude) // 숫자로 변환
       }));
+
+      console.log('필터링된 데이터:', filteredData); // 필터링된 데이터 출력
 
       // 지도에 Circle 추가
       filteredData.forEach((item) => {

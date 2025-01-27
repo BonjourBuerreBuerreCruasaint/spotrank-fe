@@ -194,17 +194,11 @@ const CeoMainPage = () => {
       const rawData = await response.json();
       console.log('유동인구 API 응답:', rawData);
 
-          // rawData.content가 문자열 또는 배열인지 확인 후 처리
-      const dataLines = Array.isArray(rawData.content)
-        ? rawData.content.slice(1) // 배열이라면 두 번째 요소부터
-        : typeof rawData.content === 'string'
-        ? rawData.content.split('\n').slice(1) // 문자열이라면 줄바꿈 기준으로 분리
-        : []; // 배열도 문자열도 아니라면 빈 배열로 처리
-      
-  
-      // 데이터 배열로 변환 (헤더 제외)
+   
+       // 데이터 배열로 변환 (헤더 제외)
+      const dataLines = rawData.content.slice(1); // 첫 번째 줄은 헤더
       const data = dataLines
-        .filter(line => typeof line === 'string' && line.trim() !== '') // 빈 줄 제거 및 문자열 확인
+        .filter(line => line.trim() !== '') // 빈 줄 제거
         .map(line => {
           const [ , , , TotalPeoPle, latitude, longitude] = line.split(',');
           return {
@@ -213,6 +207,7 @@ const CeoMainPage = () => {
             longitude: isNaN(parseFloat(longitude)) ? 0 : parseFloat(longitude),
           };
         });
+
   
       // 지도에 Circle 추가
       data.forEach((item) => {
@@ -404,7 +399,7 @@ const CeoMainPage = () => {
       createMarker(37.556229, 126.937079); // 위도, 경도에 맞게 마커 생성
 
       // 유동인구 데이터 가져오기 및 Polyline 추가
-      // fetchPopulationData();
+      fetchPopulationData();
     };
 
     loadKakaoMap();

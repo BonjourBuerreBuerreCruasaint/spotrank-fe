@@ -44,7 +44,7 @@ const FindID = () => {
     }
 
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/find-id', formData);
+      const response = await axios.post('/api/find-id', formData);
 
       if (response.status === 200) {
         setResponseMessage(`이메일: ${response.data.email}`); // 성공 메시지 설정

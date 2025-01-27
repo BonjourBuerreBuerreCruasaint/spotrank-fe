@@ -194,21 +194,13 @@ const CeoMainPage = () => {
       const rawData = await response.json();
       console.log('유동인구 API 응답:', rawData);
 
-   
-       // 데이터 배열로 변환 (헤더 제외)
-      const dataLines = rawData.content.slice(1); // 첫 번째 줄은 헤더
-      const data = dataLines
-        .filter(line => line.trim() !== '') // 빈 줄 제거
-        .map(line => {
-          const [ , , , TotalPeoPle, latitude, longitude] = line.split(',');
-          return {
-            TotalPeoPle: isNaN(parseInt(TotalPeoPle, 10)) ? 0 : parseInt(TotalPeoPle, 10),
-            latitude: isNaN(parseFloat(latitude)) ? 0 : parseFloat(latitude),
-            longitude: isNaN(parseFloat(longitude)) ? 0 : parseFloat(longitude),
-          };
-        });
+      // 필요한 데이터만 필터링
+      const data = rawData.map(item => ({
+        TotalPeoPle: item.TotalPeoPle,
+        latitude: item.latitude,
+        longitude: item.longitude
+      }));
 
-  
       // 지도에 Circle 추가
       data.forEach((item) => {
         const { TotalPeoPle, latitude, longitude } = item;
@@ -218,8 +210,9 @@ const CeoMainPage = () => {
           return;
         }
 
-        const color = getColorByPopulation(TotalPeoPle);
-  
+        const color = getColorByPopulation(TotalPeoPle); // 필드 이름 수정
+        console.log(`서클 생성: TotalPeople=${TotalPeoPle}, latitude=${latitude}, longitude=${longitude}`); // 서클 생성 로그
+
         // Circle 객체 생성
         const circle = new window.kakao.maps.Circle({
           center: new window.kakao.maps.LatLng(latitude, longitude),
@@ -231,7 +224,7 @@ const CeoMainPage = () => {
           fillOpacity: 0.2,
         });
         circles.push(circle); // 서클 객체 저장
-  
+
         // Circle 지도에 추가
         circle.setMap(map);
       });
@@ -376,7 +369,7 @@ const CeoMainPage = () => {
             // 사용자 위치에 마커 추가
             createMarker(userLatitude, userLongitude); // 사용자 위치에 마커 생성
           }, (error) => {
-            console.error('사용자 위치를 가져오는 데 실패했습니다5:', error);
+            console.error('사용자 위치를 가져오는 데 실패했습니다6:', error);
           });
         } else {
           console.error('이 브라우저는 Geolocation을 지원하지 않습니다.');

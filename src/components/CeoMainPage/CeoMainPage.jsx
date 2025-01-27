@@ -191,18 +191,29 @@ const CeoMainPage = () => {
       console.log('jinfinalpeople:', response);
       if (!response.ok) throw new Error('유동인구 데이터 요청 실패');
       
-      const rawData = await response.json();
+      const rawData = await response.text(); // CSV 형식으로 응답을 텍스트로 가져옴
       console.log('유동인구 API 응답:', rawData);
 
+      // CSV 데이터를 JSON으로 변환
+      const lines = rawData.split('\n').filter(line => line.trim() !== ''); // 빈 줄 제거
+      const headers = lines[0].split(','); // 첫 번째 줄을 헤더로 사용
+      const data = lines.slice(1).map(line => {
+        const values = line.split(',');
+        return headers.reduce((obj, header, index) => {
+          obj[header.trim()] = values[index].trim(); // 헤더와 값을 매핑
+          return obj;
+        }, {});
+      });
+
       // 필요한 데이터만 필터링
-      const data = rawData.map(item => ({
+      const filteredData = data.map(item => ({
         TotalPeoPle: item.TotalPeoPle,
-        latitude: item.latitude,
-        longitude: item.longitude
+        latitude: parseFloat(item.latitude),
+        longitude: parseFloat(item.longitude)
       }));
 
       // 지도에 Circle 추가
-      data.forEach((item) => {
+      filteredData.forEach((item) => {
         const { TotalPeoPle, latitude, longitude } = item;
 
         if (latitude === 0 || longitude === 0) {

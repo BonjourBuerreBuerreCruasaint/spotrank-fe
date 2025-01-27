@@ -191,23 +191,11 @@ const CeoMainPage = () => {
       console.log('jinfinalpeople:', response);
       if (!response.ok) throw new Error('유동인구 데이터 요청 실패');
       
-      const rawData = await response.text(); // CSV 형식으로 응답을 텍스트로 가져옴
-      console.log('유동인구 API 응답:', rawData);
-
-      // BOM 제거 및 CSV 데이터를 JSON으로 변환
-      const cleanedData = rawData.replace(/^\uFEFF/, ''); // BOM 제거
-      const lines = cleanedData.split('\n').filter(line => line.trim() !== ''); // 빈 줄 제거
-      const headers = lines[0].split(',').map(header => header.trim()); // 첫 번째 줄을 헤더로 사용
-      const data = lines.slice(1).map(line => {
-        const values = line.split(',');
-        return headers.reduce((obj, header, index) => {
-          obj[header] = values[index] ? values[index].trim() : null; // 헤더와 값을 매핑
-          return obj;
-        }, {});
-      });
+      const jsonData = await response.json(); // JSON 형식으로 응답을 가져옴
+      console.log('유동인구 API 응답:', jsonData);
 
       // 필요한 데이터만 필터링
-      const filteredData = data.map(item => ({
+      const filteredData = jsonData.map(item => ({
         TotalPeoPle: parseInt(item.TotalPeoPle, 10), // 숫자로 변환
         latitude: parseFloat(item.latitude), // 숫자로 변환
         longitude: parseFloat(item.longitude) // 숫자로 변환
@@ -383,7 +371,7 @@ const CeoMainPage = () => {
             // 사용자 위치에 마커 추가
             createMarker(userLatitude, userLongitude); // 사용자 위치에 마커 생성
           }, (error) => {
-            console.error('사용자 위치를 가져오는 데 실패했습니다7:', error);
+            console.error('사용자 위치를 가져오는 데 실패했습니다8:', error);
           });
         } else {
           console.error('이 브라우저는 Geolocation을 지원하지 않습니다.');

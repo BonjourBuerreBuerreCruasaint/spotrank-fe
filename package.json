@@ -48,7 +48,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://a0d594b85a2bc445d8fefaeaa3100e5f-1256827131.ap-northeast-2.elb.amazonaws.com:5000",
+  "proxy": "http://a4f945aedaed34e96bae4f3e66c9fa95-2062784788.ap-northeast-2.elb.amazonaws.com:5000",
   "devDependencies": {
     "react-app-rewired": "^2.2.1"
   }

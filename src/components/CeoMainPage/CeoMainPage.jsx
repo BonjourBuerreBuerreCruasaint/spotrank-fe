@@ -371,7 +371,7 @@ const CeoMainPage = () => {
             // 사용자 위치에 마커 추가
             createMarker(userLatitude, userLongitude); // 사용자 위치에 마커 생성
           }, (error) => {
-            console.error('사용자 위치를 가져오는 데 실패했습니다8:', error);
+            console.error('사용자 위치를 가져오는 데 실패했습니다9:', error);
           });
         } else {
           console.error('이 브라우저는 Geolocation을 지원하지 않습니다.');

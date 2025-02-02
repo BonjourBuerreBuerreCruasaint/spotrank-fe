@@ -40,13 +40,15 @@ const Login = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
-
+      // 응답이 성공적이면 JSON 파싱
       if (response.ok) {
-        localStorage.setItem('user_id',data.user_id);
-        navigate(`/ceo-main?id=${data.user_id}`);
+        const data = await response.json();
+        localStorage.setItem('user_id', data.user_id);  // 사용자 ID를 로컬스토리지에 저장
+        navigate(`/ceo-main?id=${data.user_id}`);  // 로그인 성공 후 이동
       } else {
-        alert(data.error || '로그인 실패');
+        // 응답이 실패하면 에러 메시지 출력
+        const errorData = await response.json();
+        alert(errorData.error || '로그인 실패');
       }
     } catch (error) {
       console.error('로그인 중 오류 발생:', error);
